@@ -32,18 +32,30 @@ const HeroSection = () => {
             food service, and daily operations — all in real time.
           </p>
 
-          <div className="animate-fade-up opacity-0 flex flex-col sm:flex-row gap-4 justify-center pt-4" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
+          <div className="animate-fade-up opacity-0 flex flex-col sm:flex-row gap-4 justify-center pt-4 flex-wrap" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
             <a 
-              href="#features" 
+              href="https://host.palawancollective.com/transactions" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-primary text-primary-foreground font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5"
             >
-              Explore Features
+              Dashboard
             </a>
             <a 
-              href="#how-it-works" 
+              href="https://occupancy.palawancollective.com/" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-muted text-foreground font-semibold border border-border transition-all duration-300 hover:bg-muted/80 hover:border-primary/30"
             >
-              Learn More
+              Occupancy Heatmap
+            </a>
+            <a 
+              href="https://orderonline.palawancollective.com/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-muted text-foreground font-semibold border border-border transition-all duration-300 hover:bg-muted/80 hover:border-primary/30"
+            >
+              Online Order App
             </a>
           </div>
         </div>
