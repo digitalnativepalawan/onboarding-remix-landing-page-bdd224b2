@@ -49,8 +49,15 @@ const HeroSection = () => {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-24 text-center">
         <div className="max-w-3xl mx-auto space-y-8">
-          {/* Slim badge */}
+          {/* Quote */}
           <div className="animate-fade-up opacity-0" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
+            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground/90 italic font-light">
+              "From one Palawan resort owner to another: stop doing this the hard way."
+            </p>
+          </div>
+
+          {/* Slim badge */}
+          <div className="animate-fade-up opacity-0" style={{ animationDelay: '0.15s', animationFillMode: 'forwards' }}>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted/50 text-muted-foreground text-xs font-normal tracking-wide border border-border/30">
               Powered by Sirvoy.com & Palawan Collective
             </span>
