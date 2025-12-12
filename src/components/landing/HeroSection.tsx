@@ -1,5 +1,5 @@
 import heroBg from "@/assets/hero-palawan.jpg";
-import { ChevronDown, LayoutDashboard, MapPin, ShoppingCart, ScanLine, Clock, Download } from "lucide-react";
+import { ChevronDown, LayoutDashboard, MapPin, ShoppingCart, ScanLine, Clock } from "lucide-react";
 
 const appLinks = [
   {
@@ -27,12 +27,6 @@ const appLinks = [
     label: "Employee Timesheet",
     url: "https://timesheet.palawancollective.com/",
     icon: Clock
-  },
-  {
-    label: "Download BitChat",
-    url: "https://bitchat.free/",
-    icon: Download,
-    highlight: true
   }
 ];
 
@@ -80,9 +74,7 @@ const HeroSection = () => {
                     inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-0.5
                     ${link.primary 
                       ? 'bg-primary text-primary-foreground hover:shadow-lg hover:shadow-primary/30' 
-                      : link.highlight
-                        ? 'bg-secondary text-secondary-foreground hover:shadow-lg hover:shadow-secondary/30'
-                        : 'bg-muted text-foreground border border-border hover:bg-muted/80 hover:border-primary/30'
+                      : 'bg-muted text-foreground border border-border hover:bg-muted/80 hover:border-primary/30'
                     }
                   `}
                 >
