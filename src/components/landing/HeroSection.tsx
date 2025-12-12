@@ -57,6 +57,22 @@ const HeroSection = () => {
             >
               Online Order App
             </a>
+            <a 
+              href="https://scan.palawancollective.com/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-muted text-foreground font-semibold border border-border transition-all duration-300 hover:bg-muted/80 hover:border-primary/30"
+            >
+              OTR Scan App
+            </a>
+            <a 
+              href="https://timesheet.palawancollective.com/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-muted text-foreground font-semibold border border-border transition-all duration-300 hover:bg-muted/80 hover:border-primary/30"
+            >
+              Employee Timesheet App
+            </a>
           </div>
         </div>
       </div>
