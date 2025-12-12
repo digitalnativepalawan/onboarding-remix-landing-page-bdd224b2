@@ -25,33 +25,33 @@ const benefits = [
 
 const BenefitsSection = () => {
   return (
-    <section id="benefits" className="py-24 relative">
+    <section id="benefits" className="py-16 md:py-20 relative">
       <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-16">
-            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium border border-primary/20 mb-4">
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center px-3 py-1 rounded-md bg-muted/50 text-muted-foreground text-xs font-normal tracking-wide border border-border/30 mb-4">
               Benefits
             </span>
-            <h2 className="section-title mb-4">Why Resort Owners Love It</h2>
+            <h2 className="section-title mb-3">Why Resort Owners Love It</h2>
             <p className="section-subtitle mx-auto">
               Built specifically for the unique challenges of remote resort management
             </p>
           </div>
 
           {/* Benefits Grid */}
-          <div className="grid md:grid-cols-2 gap-8">
-            {benefits.map((benefit, index) => (
+          <div className="grid md:grid-cols-2 gap-4">
+            {benefits.map((benefit) => (
               <div 
                 key={benefit.title}
-                className="flex gap-5 p-6 rounded-2xl bg-gradient-to-br from-muted/50 to-transparent border border-border/50 transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
+                className="flex gap-4 p-4 rounded-lg bg-card/50 border border-border/30 transition-all duration-200 hover:border-primary/20 hover:bg-card"
               >
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-primary shrink-0">
-                  <benefit.icon className="w-7 h-7" />
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <benefit.icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">{benefit.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <h3 className="text-sm md:text-base font-medium mb-1">{benefit.title}</h3>
+                  <p className="text-muted-foreground text-xs md:text-sm leading-relaxed font-light">
                     {benefit.description}
                   </p>
                 </div>
@@ -60,16 +60,14 @@ const BenefitsSection = () => {
           </div>
 
           {/* Highlight Box */}
-          <div className="mt-12 p-8 rounded-2xl gradient-border overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5" />
-            <div className="relative z-10 text-center">
-              <h3 className="text-2xl font-bold mb-3 gradient-text inline-block">
+          <div className="mt-8 p-5 md:p-6 rounded-lg border border-border/30 bg-card/30">
+            <div className="text-center">
+              <h3 className="text-base md:text-lg font-medium mb-2 text-primary">
                 Offline Communication via BitChat
               </h3>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-muted-foreground text-sm font-light max-w-xl mx-auto">
                 When internet fails — and in remote Palawan, it often does — your team stays connected. 
-                BitChat uses Bluetooth mesh networking for reliable staff communication, 
-                even during storms or outages.
+                BitChat uses Bluetooth mesh networking for reliable staff communication.
               </p>
             </div>
           </div>

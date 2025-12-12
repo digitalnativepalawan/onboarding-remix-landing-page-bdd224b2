@@ -50,34 +50,34 @@ const tools = [
 
 const FeaturesSection = () => {
   return (
-    <section id="features" className="py-16 md:py-24 relative bg-muted/30">
+    <section id="features" className="py-16 md:py-20 relative bg-muted/20">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-10 md:mb-16">
-          <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium border border-primary/20 mb-4">
+        <div className="text-center mb-10 md:mb-14">
+          <span className="inline-flex items-center px-3 py-1 rounded-md bg-muted/50 text-muted-foreground text-xs font-normal tracking-wide border border-border/30 mb-4">
             Tools
           </span>
-          <h2 className="section-title mb-4">Everything You Need</h2>
-          <p className="section-subtitle mx-auto text-base md:text-lg">
+          <h2 className="section-title mb-3">Everything You Need</h2>
+          <p className="section-subtitle mx-auto">
             A comprehensive toolkit designed for modern resort management
           </p>
         </div>
 
-        {/* Tools Grid - Mobile-first stacked layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
+        {/* Tools Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 max-w-5xl mx-auto">
           {tools.map((tool, index) => (
             <div 
               key={tool.title}
-              className="glass-card-hover p-5 md:p-6 group"
+              className="glass-card-hover p-4 md:p-5 group"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="flex items-start gap-4">
-                <div className={`icon-wrapper${tool.color === 'secondary' ? '-secondary' : ''} shrink-0 group-hover:scale-110 transition-transform duration-300`}>
-                  <tool.icon className="w-5 h-5 md:w-6 md:h-6" />
+              <div className="flex items-start gap-3">
+                <div className={`icon-wrapper${tool.color === 'secondary' ? '-secondary' : ''} shrink-0 group-hover:scale-105 transition-transform duration-200`}>
+                  <tool.icon className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base md:text-lg font-semibold mb-1.5">{tool.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
+                  <h3 className="text-sm md:text-base font-medium mb-1">{tool.title}</h3>
+                  <p className="text-muted-foreground text-xs md:text-sm leading-relaxed font-light">
                     {tool.description}
                   </p>
                   {'downloadUrl' in tool && tool.downloadUrl && (
@@ -85,9 +85,9 @@ const FeaturesSection = () => {
                       href={tool.downloadUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-medium transition-all duration-300 hover:shadow-lg hover:shadow-secondary/30 hover:-translate-y-0.5"
+                      className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-md border border-primary/30 bg-primary/5 text-primary text-xs font-normal transition-all duration-200 hover:bg-primary/10 hover:border-primary/50"
                     >
-                      <Download className="w-4 h-4" />
+                      <Download className="w-3 h-3" />
                       Download BitChat
                     </a>
                   )}
