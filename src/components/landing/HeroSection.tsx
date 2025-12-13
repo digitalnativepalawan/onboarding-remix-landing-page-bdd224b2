@@ -47,7 +47,7 @@ const HeroSection = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-24 text-center">
+      <div className="relative z-10 container mx-auto px-4 pt-16 pb-24 text-center">
         <div className="max-w-3xl mx-auto space-y-8">
           {/* Quote */}
           <div className="animate-fade-up opacity-0" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
