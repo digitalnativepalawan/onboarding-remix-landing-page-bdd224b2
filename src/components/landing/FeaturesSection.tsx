@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { 
   LayoutDashboard, 
   Clock, 
@@ -7,13 +8,15 @@ import {
   Settings,
   Download
 } from "lucide-react";
+import FeatureDetailModal from "./FeatureDetailModal";
 
 const tools = [
   {
     icon: LayoutDashboard,
     title: "Occupancy & Profit Dashboard",
     description: "Shows live occupancy, revenue, break-even, expenses, add-ons, and forecasting. Get a complete financial picture at a glance.",
-    color: "primary" as const
+    color: "primary" as const,
+    hasDetail: true
   },
   {
     icon: Clock,
@@ -49,6 +52,8 @@ const tools = [
 ];
 
 const FeaturesSection = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <section id="features" className="py-16 md:py-20 relative bg-muted/20">
       <div className="container mx-auto px-4">
@@ -68,8 +73,9 @@ const FeaturesSection = () => {
           {tools.map((tool, index) => (
             <div 
               key={tool.title}
-              className="glass-card-hover p-4 md:p-5 group"
+              className={`glass-card-hover p-4 md:p-5 group ${tool.hasDetail ? 'cursor-pointer' : ''}`}
               style={{ animationDelay: `${index * 0.1}s` }}
+              onClick={tool.hasDetail ? () => setIsModalOpen(true) : undefined}
             >
               <div className="flex items-start gap-3">
                 <div className={`icon-wrapper${tool.color === 'secondary' ? '-secondary' : ''} shrink-0 group-hover:scale-105 transition-transform duration-200`}>
@@ -85,6 +91,7 @@ const FeaturesSection = () => {
                       href={tool.downloadUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
                       className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-md border border-primary/30 bg-primary/5 text-primary text-xs font-normal transition-all duration-200 hover:bg-primary/10 hover:border-primary/50"
                     >
                       <Download className="w-3 h-3" />
@@ -97,6 +104,9 @@ const FeaturesSection = () => {
           ))}
         </div>
       </div>
+
+      {/* Feature Detail Modal */}
+      <FeatureDetailModal open={isModalOpen} onOpenChange={setIsModalOpen} />
     </section>
   );
 };
