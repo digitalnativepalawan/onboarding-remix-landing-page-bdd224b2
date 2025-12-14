@@ -74,7 +74,7 @@ const OTRScanDetailModal = ({ open, onOpenChange }: OTRScanDetailModalProps) => 
                 <img 
                   src={otrScanReview} 
                   alt="OTR Scan Review Interface" 
-                  className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                  className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.02] -rotate-90"
                 />
                 <div className="absolute inset-0 bg-background/5 group-hover:bg-background/0 transition-colors duration-200" />
                 <span className="absolute bottom-2 right-2 text-xs text-muted-foreground bg-background/80 px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
