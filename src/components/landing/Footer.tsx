@@ -1,6 +1,12 @@
+import { useState } from "react";
 import { MapPin, Phone, Mail, Globe, ExternalLink } from "lucide-react";
+import LegalModal from "./LegalModal";
+
+type LegalType = "terms" | "privacy" | "security" | null;
 
 const Footer = () => {
+  const [activeLegal, setActiveLegal] = useState<LegalType>(null);
+
   const productLinks = [
     { name: "Dashboard Overview", href: "https://host.palawancollective.com/transactions" },
     { name: "Occupancy & Profit", href: "https://occupancy.palawancollective.com/" },
@@ -12,9 +18,9 @@ const Footer = () => {
   ];
 
   const legalLinks = [
-    { name: "Terms of Service", href: "#" },
-    { name: "Privacy Policy", href: "#" },
-    { name: "Data & Security", href: "#" },
+    { name: "Terms of Service", key: "terms" as LegalType },
+    { name: "Privacy Policy", key: "privacy" as LegalType },
+    { name: "Data & Security", key: "security" as LegalType },
   ];
 
   const bookingChannels = ["Airbnb", "Booking.com", "Agoda"];
@@ -131,17 +137,20 @@ const Footer = () => {
             <ul className="space-y-2.5">
               {legalLinks.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-muted-foreground/70 hover:text-foreground transition-colors"
+                  <button
+                    onClick={() => setActiveLegal(link.key)}
+                    className="text-sm text-muted-foreground/70 hover:text-foreground transition-colors text-left"
                   >
                     {link.name}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
           </div>
         </div>
+
+        {/* Legal Modal */}
+        <LegalModal open={activeLegal} onClose={() => setActiveLegal(null)} />
 
         {/* Bottom Bar */}
         <div className="border-t border-border/20 pt-6">
