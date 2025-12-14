@@ -6,9 +6,11 @@ import {
   MessageCircle, 
   ScanLine, 
   Settings,
-  Download
+  Download,
+  ArrowRight
 } from "lucide-react";
 import FeatureDetailModal from "./FeatureDetailModal";
+import occupancyPreview from "@/assets/occupancy-dashboard-preview.jpg";
 
 const tools = [
   {
@@ -73,9 +75,8 @@ const FeaturesSection = () => {
           {tools.map((tool, index) => (
             <div 
               key={tool.title}
-              className={`glass-card-hover p-4 md:p-5 group ${tool.hasDetail ? 'cursor-pointer' : ''}`}
+              className="glass-card-hover p-4 md:p-5 group"
               style={{ animationDelay: `${index * 0.1}s` }}
-              onClick={tool.hasDetail ? () => setIsModalOpen(true) : undefined}
             >
               <div className="flex items-start gap-3">
                 <div className={`icon-wrapper${tool.color === 'secondary' ? '-secondary' : ''} shrink-0 group-hover:scale-105 transition-transform duration-200`}>
@@ -86,20 +87,47 @@ const FeaturesSection = () => {
                   <p className="text-muted-foreground text-xs md:text-sm leading-relaxed font-light">
                     {tool.description}
                   </p>
-                  {'downloadUrl' in tool && tool.downloadUrl && (
-                    <a
-                      href={tool.downloadUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-md border border-primary/30 bg-primary/5 text-primary text-xs font-normal transition-all duration-200 hover:bg-primary/10 hover:border-primary/50"
-                    >
-                      <Download className="w-3 h-3" />
-                      Download BitChat
-                    </a>
-                  )}
                 </div>
               </div>
+
+              {/* Dashboard Preview Thumbnail */}
+              {tool.hasDetail && (
+                <div className="mt-4">
+                  <div 
+                    className="relative overflow-hidden rounded-md border border-border/40 cursor-pointer group/thumbnail"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    <img 
+                      src={occupancyPreview} 
+                      alt="Dashboard Preview" 
+                      className="w-full h-[120px] md:h-[140px] object-cover object-top transition-transform duration-300 group-hover/thumbnail:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-background/10 group-hover/thumbnail:bg-background/0 transition-colors duration-200" />
+                  </div>
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-md border border-primary/30 bg-primary/5 text-primary text-xs font-normal transition-all duration-200 hover:bg-primary/10 hover:border-primary/50"
+                  >
+                    View Full Details
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+
+              {/* BitChat Download Button */}
+              {'downloadUrl' in tool && tool.downloadUrl && (
+                <div className="mt-4">
+                  <a
+                    href={tool.downloadUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-primary/30 bg-primary/5 text-primary text-xs font-normal transition-all duration-200 hover:bg-primary/10 hover:border-primary/50"
+                  >
+                    <Download className="w-3 h-3" />
+                    Download BitChat
+                  </a>
+                </div>
+              )}
             </div>
           ))}
         </div>
