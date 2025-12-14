@@ -11,8 +11,10 @@ import {
 } from "lucide-react";
 import FeatureDetailModal from "./FeatureDetailModal";
 import TimesheetDetailModal from "./TimesheetDetailModal";
+import OTRScanDetailModal from "./OTRScanDetailModal";
 import occupancyPreview from "@/assets/occupancy-dashboard-preview.jpg";
 import timesheetPreview from "@/assets/timesheet-clockin.jpg";
+import otrScanPreview from "@/assets/otr-scan-review.jpg";
 
 const tools = [
   {
@@ -46,7 +48,8 @@ const tools = [
     icon: ScanLine,
     title: "OTR Scan – Receipt Scanner",
     description: "Scans handwritten + thermal receipts from markets, sari-sari stores, hardware, and official ORs. Generates clean PDFs.",
-    color: "primary" as const
+    color: "primary" as const,
+    hasOTRDetail: true
   },
   {
     icon: Settings,
@@ -59,6 +62,7 @@ const tools = [
 const FeaturesSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTimesheetModalOpen, setIsTimesheetModalOpen] = useState(false);
+  const [isOTRModalOpen, setIsOTRModalOpen] = useState(false);
 
   return (
     <section id="features" className="py-16 md:py-20 relative bg-muted/20">
@@ -142,6 +146,30 @@ const FeaturesSection = () => {
                 </div>
               )}
 
+              {/* OTR Scan Preview Thumbnail */}
+              {'hasOTRDetail' in tool && tool.hasOTRDetail && (
+                <div className="mt-4">
+                  <div 
+                    className="relative overflow-hidden rounded-md border border-border/40 cursor-pointer group/thumbnail"
+                    onClick={() => setIsOTRModalOpen(true)}
+                  >
+                    <img 
+                      src={otrScanPreview} 
+                      alt="OTR Scan Preview" 
+                      className="w-full h-[120px] md:h-[140px] object-cover object-top transition-transform duration-300 group-hover/thumbnail:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-background/10 group-hover/thumbnail:bg-background/0 transition-colors duration-200" />
+                  </div>
+                  <button
+                    onClick={() => setIsOTRModalOpen(true)}
+                    className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-md border border-primary/30 bg-primary/5 text-primary text-xs font-normal transition-all duration-200 hover:bg-primary/10 hover:border-primary/50"
+                  >
+                    View Full Details
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+
               {/* BitChat Download Button */}
               {'downloadUrl' in tool && tool.downloadUrl && (
                 <div className="mt-4">
@@ -164,6 +192,7 @@ const FeaturesSection = () => {
       {/* Feature Detail Modals */}
       <FeatureDetailModal open={isModalOpen} onOpenChange={setIsModalOpen} />
       <TimesheetDetailModal open={isTimesheetModalOpen} onOpenChange={setIsTimesheetModalOpen} />
+      <OTRScanDetailModal open={isOTRModalOpen} onOpenChange={setIsOTRModalOpen} />
     </section>
   );
 };
