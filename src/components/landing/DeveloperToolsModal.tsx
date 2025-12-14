@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import developerDashboard from "@/assets/developer-dashboard.jpg";
+import bingaBeachDashboard from "@/assets/binga-beach-dashboard.jpg";
 
 interface DeveloperToolsModalProps {
   open: boolean;
@@ -65,6 +66,16 @@ const DeveloperToolsModal = ({ open, onOpenChange }: DeveloperToolsModalProps) =
               <p className="text-muted-foreground text-sm font-light leading-relaxed mt-3">
                 Sirvoy is fully integrated as the source of truth for reservations. Any new booking, cancellation, or date change from Booking.com, Airbnb, Agoda, direct bookings, or iCal syncs automatically into this dashboard.
               </p>
+            </div>
+
+            {/* Binga Beach Resort Dashboard Image */}
+            <div className="relative overflow-hidden rounded-lg border border-border/40">
+              <img 
+                src={bingaBeachDashboard} 
+                alt="Binga Beach Resort Dashboard" 
+                className="w-full h-auto object-contain"
+                loading="lazy"
+              />
             </div>
 
             {/* Capabilities */}
