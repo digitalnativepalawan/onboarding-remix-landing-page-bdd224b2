@@ -15,7 +15,7 @@ const OTRScanDetailModal = ({ open, onOpenChange }: OTRScanDetailModalProps) => 
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-4xl w-full h-[100dvh] md:h-auto md:max-h-[90vh] p-0 gap-0 bg-background border-border/50 overflow-hidden md:rounded-xl rounded-none">
+        <DialogContent className="max-w-4xl w-full h-[100dvh] md:h-[85vh] md:max-h-[85vh] p-0 gap-0 bg-background border-border/50 overflow-hidden md:rounded-xl rounded-none flex flex-col">
           {/* Header */}
           <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border/30 px-4 md:px-6 py-4">
             <div className="flex items-start justify-between gap-4">
