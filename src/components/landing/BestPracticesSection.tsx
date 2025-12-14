@@ -1,45 +1,61 @@
-import { Check } from "lucide-react";
+import { Check, Calendar, Receipt, ClipboardList, ChartBar, Users, Utensils } from "lucide-react";
 
 const practices = [
-  "Always edit bookings in Sirvoy — dashboard updates automatically",
-  "Keep expenses updated monthly for accurate profit tracking",
-  "Use task and scheduling tools daily for staff coordination",
-  "Monitor food ordering inventory to prevent stockouts",
-  "Use OTR Scan for every purchase to avoid lost receipts",
-  "Review occupancy heatmap weekly to optimize pricing"
+  {
+    icon: Calendar,
+    text: "Edit bookings in Sirvoy — dashboard updates automatically"
+  },
+  {
+    icon: Receipt,
+    text: "Use OTR Scan for every purchase to track expenses"
+  },
+  {
+    icon: ClipboardList,
+    text: "Update expenses monthly for accurate profit tracking"
+  },
+  {
+    icon: Users,
+    text: "Use scheduling tools daily for staff coordination"
+  },
+  {
+    icon: Utensils,
+    text: "Monitor food inventory to prevent stockouts"
+  },
+  {
+    icon: ChartBar,
+    text: "Review occupancy heatmap weekly to optimize pricing"
+  }
 ];
 
 const BestPracticesSection = () => {
   return (
-    <section id="best-practices" className="py-24 relative bg-muted/30">
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto">
+    <section id="best-practices" className="py-12 sm:py-16 md:py-20 bg-muted/20">
+      <div className="px-5 sm:px-6">
+        <div className="max-w-2xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-12">
-            <span className="inline-block px-4 py-2 rounded-full bg-secondary/10 text-secondary text-sm font-medium border border-secondary/20 mb-4">
-              Tips
-            </span>
-            <h2 className="section-title mb-4">Best Practices</h2>
+          <div className="text-center mb-8">
+            <span className="section-tag mb-3">Tips</span>
+            <h2 className="section-title mb-2">Best Practices</h2>
             <p className="section-subtitle mx-auto">
-              Follow these guidelines to get the most out of your dashboard
+              Get the most out of your dashboard
             </p>
           </div>
 
-          {/* Checklist */}
-          <div className="glass-card p-8">
-            <ul className="space-y-4">
-              {practices.map((practice, index) => (
-                <li 
-                  key={index}
-                  className="flex items-start gap-4 p-4 rounded-xl bg-muted/50 border border-border/50 transition-all duration-300 hover:border-primary/30"
-                >
-                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0 mt-0.5">
-                    <Check className="w-4 h-4" />
-                  </div>
-                  <span className="text-foreground/90">{practice}</span>
-                </li>
-              ))}
-            </ul>
+          {/* Checklist Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {practices.map((practice, index) => (
+              <div 
+                key={index}
+                className="flex items-start gap-3 p-3 rounded-lg bg-card/40 border border-border/20"
+              >
+                <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <practice.icon className="w-3.5 h-3.5" />
+                </div>
+                <p className="text-xs text-foreground/80 leading-relaxed pt-1">
+                  {practice.text}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

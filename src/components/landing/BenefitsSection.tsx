@@ -1,57 +1,55 @@
-import { TrendingUp, Zap, Bot, Target } from "lucide-react";
+import { TrendingUp, Zap, Bot, Target, Wifi } from "lucide-react";
 
 const benefits = [
   {
     icon: TrendingUp,
     title: "Maximize Revenue",
-    description: "Real-time visibility of bookings and occupancy helps you optimize pricing and reduce empty nights."
+    description: "Real-time occupancy helps you optimize pricing and reduce empty nights."
   },
   {
     icon: Zap,
-    title: "Boost Efficiency",
-    description: "One ecosystem for staff management, payroll, food service, and guest experience — no more switching apps."
+    title: "One Ecosystem",
+    description: "Staff, payroll, food, and guests — stop switching between apps."
   },
   {
     icon: Bot,
-    title: "Smart Automation",
-    description: "Automatic sync with booking channels, receipt scanning, and timesheet calculations save hours every day."
+    title: "Automation",
+    description: "Booking sync, receipt scanning, and payroll run automatically."
   },
   {
     icon: Target,
-    title: "Perfect Accuracy",
-    description: "Reduce manual workload and errors with OTR Scan receipts and automated payroll calculations."
+    title: "Accuracy",
+    description: "OTR receipts and automated calculations reduce manual errors."
   }
 ];
 
 const BenefitsSection = () => {
   return (
-    <section id="benefits" className="py-16 md:py-20 relative">
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
+    <section id="benefits" className="py-12 sm:py-16 md:py-20">
+      <div className="px-5 sm:px-6">
+        <div className="max-w-3xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-12">
-            <span className="inline-flex items-center px-3 py-1 rounded-md bg-muted/50 text-muted-foreground text-xs font-normal tracking-wide border border-border/30 mb-4">
-              Benefits
-            </span>
-            <h2 className="section-title mb-3">Why Resort Owners Love It</h2>
+          <div className="text-center mb-8">
+            <span className="section-tag mb-3">Benefits</span>
+            <h2 className="section-title mb-2">Why Resort Owners Use It</h2>
             <p className="section-subtitle mx-auto">
-              Built specifically for the unique challenges of remote resort management
+              Built for the unique challenges of remote island resorts
             </p>
           </div>
 
           {/* Benefits Grid */}
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
             {benefits.map((benefit) => (
               <div 
                 key={benefit.title}
-                className="flex gap-4 p-4 rounded-lg bg-card/50 border border-border/30 transition-all duration-200 hover:border-primary/20 hover:bg-card"
+                className="flex items-start gap-3 p-4 rounded-lg bg-card/40 border border-border/20"
               >
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                  <benefit.icon className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <benefit.icon className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm md:text-base font-medium mb-1">{benefit.title}</h3>
-                  <p className="text-muted-foreground text-xs md:text-sm leading-relaxed font-light">
+                  <h3 className="text-sm font-normal mb-0.5">{benefit.title}</h3>
+                  <p className="text-xs text-muted-foreground/70 leading-relaxed">
                     {benefit.description}
                   </p>
                 </div>
@@ -59,17 +57,15 @@ const BenefitsSection = () => {
             ))}
           </div>
 
-          {/* Highlight Box */}
-          <div className="mt-8 p-5 md:p-6 rounded-lg border border-border/30 bg-card/30">
-            <div className="text-center">
-              <h3 className="text-base md:text-lg font-medium mb-2 text-primary">
-                Offline Communication via BitChat
-              </h3>
-              <p className="text-muted-foreground text-sm font-light max-w-xl mx-auto">
-                When internet fails — and in remote Palawan, it often does — your team stays connected. 
-                BitChat uses Bluetooth mesh networking for reliable staff communication.
-              </p>
+          {/* BitChat Highlight */}
+          <div className="p-4 rounded-lg border border-border/20 bg-card/20 text-center">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Wifi className="w-4 h-4 text-primary" />
+              <h3 className="text-sm font-normal text-primary">Offline Communication</h3>
             </div>
+            <p className="text-xs text-muted-foreground/70 max-w-sm mx-auto leading-relaxed">
+              When internet fails — and in Palawan, it often does — BitChat keeps your staff connected via Bluetooth mesh.
+            </p>
           </div>
         </div>
       </div>

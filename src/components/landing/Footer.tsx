@@ -8,155 +8,120 @@ const Footer = () => {
   const [activeLegal, setActiveLegal] = useState<LegalType>(null);
 
   const productLinks = [
-    { name: "Dashboard Overview", href: "https://host.palawancollective.com/transactions" },
-    { name: "Occupancy & Profit", href: "https://occupancy.palawancollective.com/" },
-    { name: "Timesheet & Payroll", href: "https://timesheet.palawancollective.com/" },
-    { name: "Online Ordering", href: "https://orderonline.palawancollective.com/" },
+    { name: "Dashboard", href: "https://host.palawancollective.com/transactions" },
+    { name: "Occupancy", href: "https://occupancy.palawancollective.com/" },
+    { name: "Timesheet", href: "https://timesheet.palawancollective.com/" },
+    { name: "Orders", href: "https://orderonline.palawancollective.com/" },
     { name: "OTR Scan", href: "https://scan.palawancollective.com/" },
-    { name: "Developer Tools", href: "#" },
-    { name: "Host Onboarding", href: "#" },
   ];
 
   const legalLinks = [
-    { name: "Terms of Service", key: "terms" as LegalType },
-    { name: "Privacy Policy", key: "privacy" as LegalType },
-    { name: "Data & Security", key: "security" as LegalType },
+    { name: "Terms", key: "terms" as LegalType },
+    { name: "Privacy", key: "privacy" as LegalType },
+    { name: "Security", key: "security" as LegalType },
   ];
 
-  const bookingChannels = ["Airbnb", "Booking.com", "Agoda"];
-
   return (
-    <footer className="bg-background border-t border-border/30 pt-12 pb-6">
-      <div className="container mx-auto px-4">
-        {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-10">
-          
-          {/* Brand & Contact Column */}
-          <div className="space-y-5">
-            <div>
-              <h3 className="text-foreground text-base font-medium mb-1">Palawan Collective Inc.</h3>
-              <p className="text-muted-foreground/70 text-sm leading-relaxed">
-                Resort Operations & Hospitality Software for Palawan
-              </p>
-            </div>
+    <footer className="bg-background border-t border-border/20 py-10">
+      <div className="px-5 sm:px-6">
+        <div className="max-w-4xl mx-auto">
+          {/* Main Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 mb-8">
             
-            <div className="space-y-3">
-              <div className="flex items-start gap-2.5 text-sm text-muted-foreground/70">
-                <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-primary/60" />
-                <span>Sitio Lumambong Beach, Palawan Island 5309, Philippines</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-muted-foreground/70">
-                <Phone className="w-4 h-4 shrink-0 text-primary/60" />
+            {/* Brand */}
+            <div className="col-span-2 sm:col-span-1">
+              <h3 className="text-sm font-normal text-foreground mb-2">Palawan Collective</h3>
+              <p className="text-xs text-muted-foreground/60 leading-relaxed mb-3">
+                Resort operations software for Palawan
+              </p>
+              <div className="space-y-1.5 text-xs text-muted-foreground/50">
                 <a 
                   href="https://wa.me/639474443597" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="hover:text-foreground transition-colors"
+                  className="flex items-center gap-1.5 hover:text-foreground/70 transition-colors"
                 >
+                  <Phone className="w-3 h-3" />
                   +63 947 444 3597
                 </a>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-muted-foreground/70">
-                <Mail className="w-4 h-4 shrink-0 text-primary/60" />
                 <a 
                   href="mailto:info@palawancollective.com"
-                  className="hover:text-foreground transition-colors"
+                  className="flex items-center gap-1.5 hover:text-foreground/70 transition-colors"
                 >
+                  <Mail className="w-3 h-3" />
                   info@palawancollective.com
                 </a>
               </div>
-              <div className="flex items-center gap-2.5 text-sm text-muted-foreground/70">
-                <Globe className="w-4 h-4 shrink-0 text-primary/60" />
+            </div>
+
+            {/* Products */}
+            <div>
+              <h4 className="text-xs font-normal text-foreground/80 mb-2">Products</h4>
+              <ul className="space-y-1.5">
+                {productLinks.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-muted-foreground/50 hover:text-foreground/70 transition-colors inline-flex items-center gap-1"
+                    >
+                      {link.name}
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Integration */}
+            <div>
+              <h4 className="text-xs font-normal text-foreground/80 mb-2">Integration</h4>
+              <p className="text-xs text-muted-foreground/50 mb-2">
+                Powered by{" "}
                 <a 
-                  href="https://www.palawancollective.com" 
+                  href="https://www.sirvoy.com" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="hover:text-foreground transition-colors"
+                  className="text-primary/70 hover:text-primary transition-colors"
                 >
-                  www.palawancollective.com
+                  Sirvoy
                 </a>
-              </div>
+              </p>
+              <ul className="space-y-1 text-xs text-muted-foreground/40">
+                <li>Booking.com</li>
+                <li>Agoda</li>
+                <li>Airbnb</li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h4 className="text-xs font-normal text-foreground/80 mb-2">Legal</h4>
+              <ul className="space-y-1.5">
+                {legalLinks.map((link) => (
+                  <li key={link.name}>
+                    <button
+                      onClick={() => setActiveLegal(link.key)}
+                      className="text-xs text-muted-foreground/50 hover:text-foreground/70 transition-colors text-left"
+                    >
+                      {link.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
-          {/* Product Links Column */}
-          <div>
-            <h4 className="text-foreground text-sm font-medium mb-4">Products</h4>
-            <ul className="space-y-2.5">
-              {productLinks.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="text-sm text-muted-foreground/70 hover:text-foreground transition-colors inline-flex items-center gap-1.5"
-                  >
-                    {link.name}
-                    {link.href.startsWith("http") && (
-                      <ExternalLink className="w-3 h-3" />
-                    )}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          {/* Legal Modal */}
+          <LegalModal open={activeLegal} onClose={() => setActiveLegal(null)} />
+
+          {/* Bottom */}
+          <div className="border-t border-border/10 pt-6 text-center">
+            <p className="text-[0.65rem] text-muted-foreground/40">
+              © {new Date().getFullYear()} Palawan Collective Inc.
+            </p>
           </div>
-
-          {/* Integrations Column */}
-          <div>
-            <h4 className="text-foreground text-sm font-medium mb-4">Integrations</h4>
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-muted-foreground/70 mb-2">
-                  Integrated with{" "}
-                  <a 
-                    href="https://www.sirvoy.com" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary/80 hover:text-primary transition-colors"
-                  >
-                    Sirvoy
-                  </a>
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground/50 mb-2">Booking Channels</p>
-                <ul className="space-y-1.5">
-                  {bookingChannels.map((channel) => (
-                    <li key={channel} className="text-sm text-muted-foreground/70">
-                      {channel}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* Legal Column */}
-          <div>
-            <h4 className="text-foreground text-sm font-medium mb-4">Legal</h4>
-            <ul className="space-y-2.5">
-              {legalLinks.map((link) => (
-                <li key={link.name}>
-                  <button
-                    onClick={() => setActiveLegal(link.key)}
-                    className="text-sm text-muted-foreground/70 hover:text-foreground transition-colors text-left"
-                  >
-                    {link.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Legal Modal */}
-        <LegalModal open={activeLegal} onClose={() => setActiveLegal(null)} />
-
-        {/* Bottom Bar */}
-        <div className="border-t border-border/20 pt-6">
-          <p className="text-center text-xs text-muted-foreground/50">
-            © {new Date().getFullYear()} Palawan Collective Inc. All rights reserved.
-          </p>
         </div>
       </div>
     </footer>
