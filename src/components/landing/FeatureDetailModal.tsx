@@ -6,8 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import occupancyPreview from "@/assets/occupancy-dashboard-preview.png";
-
+import occupancyPreview from "@/assets/occupancy-dashboard-preview.jpg";
 interface FeatureDetailModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
