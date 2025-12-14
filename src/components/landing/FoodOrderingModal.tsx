@@ -18,6 +18,7 @@ import {
 import foodOrderCheckout from "@/assets/food-order-checkout.jpg";
 import foodOrderMenuManagement from "@/assets/food-order-menu-management.jpg";
 import foodOrderProfitReports from "@/assets/food-order-profit-reports.jpg";
+import foodOrderGuestMenu from "@/assets/food-order-guest-menu.jpg";
 
 interface FoodOrderingModalProps {
   open: boolean;
@@ -28,6 +29,7 @@ const FoodOrderingModal = ({ open, onOpenChange }: FoodOrderingModalProps) => {
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
   const images = [
+    { src: foodOrderGuestMenu, alt: "Guest Menu App View", label: "Guest Menu (What Users See)" },
     { src: foodOrderMenuManagement, alt: "Menu Management Dashboard", label: "Menu Management" },
     { src: foodOrderCheckout, alt: "Guest Checkout Screen", label: "Guest Checkout" },
     { src: foodOrderProfitReports, alt: "Profit Reports Dashboard", label: "Profit Reports" },
