@@ -12,9 +12,11 @@ import {
 import FeatureDetailModal from "./FeatureDetailModal";
 import TimesheetDetailModal from "./TimesheetDetailModal";
 import OTRScanDetailModal from "./OTRScanDetailModal";
+import DeveloperToolsModal from "./DeveloperToolsModal";
 import occupancyPreview from "@/assets/occupancy-dashboard-preview.jpg";
 import timesheetPreview from "@/assets/timesheet-clockin.jpg";
 import otrScanPreview from "@/assets/otr-scan-review.jpg";
+import developerPreview from "@/assets/developer-dashboard.jpg";
 
 const tools = [
   {
@@ -55,7 +57,8 @@ const tools = [
     icon: Settings,
     title: "External / Developer Tools",
     description: "Links for admin-only settings, GitHub, and system management. Full control over your resort ecosystem.",
-    color: "secondary" as const
+    color: "secondary" as const,
+    hasDeveloperDetail: true
   }
 ];
 
@@ -63,6 +66,7 @@ const FeaturesSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTimesheetModalOpen, setIsTimesheetModalOpen] = useState(false);
   const [isOTRModalOpen, setIsOTRModalOpen] = useState(false);
+  const [isDeveloperModalOpen, setIsDeveloperModalOpen] = useState(false);
 
   return (
     <section id="features" className="py-16 md:py-20 relative bg-muted/20">
@@ -170,6 +174,30 @@ const FeaturesSection = () => {
                 </div>
               )}
 
+              {/* Developer Tools Preview Thumbnail */}
+              {'hasDeveloperDetail' in tool && tool.hasDeveloperDetail && (
+                <div className="mt-4">
+                  <div 
+                    className="relative overflow-hidden rounded-md border border-border/40 cursor-pointer group/thumbnail"
+                    onClick={() => setIsDeveloperModalOpen(true)}
+                  >
+                    <img 
+                      src={developerPreview} 
+                      alt="Developer Dashboard Preview" 
+                      className="w-full h-[120px] md:h-[140px] object-cover object-top transition-transform duration-300 group-hover/thumbnail:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-background/10 group-hover/thumbnail:bg-background/0 transition-colors duration-200" />
+                  </div>
+                  <button
+                    onClick={() => setIsDeveloperModalOpen(true)}
+                    className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 rounded-md border border-primary/30 bg-primary/5 text-primary text-xs font-normal transition-all duration-200 hover:bg-primary/10 hover:border-primary/50"
+                  >
+                    View Full Details
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+
               {/* BitChat Download Button */}
               {'downloadUrl' in tool && tool.downloadUrl && (
                 <div className="mt-4">
@@ -193,6 +221,7 @@ const FeaturesSection = () => {
       <FeatureDetailModal open={isModalOpen} onOpenChange={setIsModalOpen} />
       <TimesheetDetailModal open={isTimesheetModalOpen} onOpenChange={setIsTimesheetModalOpen} />
       <OTRScanDetailModal open={isOTRModalOpen} onOpenChange={setIsOTRModalOpen} />
+      <DeveloperToolsModal open={isDeveloperModalOpen} onOpenChange={setIsDeveloperModalOpen} />
     </section>
   );
 };
