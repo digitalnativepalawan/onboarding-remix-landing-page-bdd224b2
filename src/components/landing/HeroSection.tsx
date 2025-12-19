@@ -10,7 +10,7 @@ const appLinks = [
   },
   {
     label: "Occupancy Heatmap",
-    url: "https://occupancy.palawancollective.com/",
+    url: "https://palawancollective.bolt.host/",
     icon: MapPin
   },
   {
