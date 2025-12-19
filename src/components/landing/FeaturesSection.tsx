@@ -14,7 +14,7 @@ import TimesheetDetailModal from "./TimesheetDetailModal";
 import OTRScanDetailModal from "./OTRScanDetailModal";
 import DeveloperToolsModal from "./DeveloperToolsModal";
 import FoodOrderingModal from "./FoodOrderingModal";
-import occupancyPreview from "@/assets/occupancy-dashboard-preview.jpg";
+import occupancyPreview from "@/assets/occupancy-profit-dashboard.jpg";
 import timesheetPreview from "@/assets/timesheet-clockin.jpg";
 import otrScanPreview from "@/assets/otr-scan-review.jpg";
 import developerPreview from "@/assets/developer-dashboard.jpg";
@@ -27,7 +27,8 @@ const tools = [
     description: "See live occupancy, revenue, expenses, and break-even at a glance.",
     color: "primary" as const,
     hasDetail: true,
-    preview: occupancyPreview
+    preview: occupancyPreview,
+    previewPosition: "bottom" as const
   },
   {
     icon: Clock,
@@ -128,7 +129,7 @@ const FeaturesSection = () => {
                   <img 
                     src={tool.preview} 
                     alt={`${tool.title} Preview`} 
-                    className="w-full h-24 object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                    className={`w-full h-24 object-cover transition-transform duration-300 group-hover:scale-105 ${tool.previewPosition === 'bottom' ? 'object-bottom' : 'object-top'}`}
                   />
                   <div className="absolute inset-0 bg-background/5 group-hover:bg-background/0 transition-colors" />
                 </div>
