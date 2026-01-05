@@ -1,5 +1,6 @@
 import Header from "@/components/landing/Header";
 import HeroSection from "@/components/landing/HeroSection";
+import OnboardingChecklist from "@/components/landing/OnboardingChecklist";
 import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import FeaturesSection from "@/components/landing/FeaturesSection";
 import BenefitsSection from "@/components/landing/BenefitsSection";
@@ -13,6 +14,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <HeroSection />
+      <OnboardingChecklist />
       <HowItWorksSection />
       <FeaturesSection />
       <BenefitsSection />

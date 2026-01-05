@@ -163,6 +163,27 @@ const FoodOrderingModal = ({ open, onOpenChange }: FoodOrderingModalProps) => {
                 </p>
               </div>
 
+              {/* Empty State Guidance */}
+              <div className="mt-6 p-4 rounded-lg border border-border/30 bg-muted/10">
+                <h3 className="text-sm md:text-base font-medium text-foreground mb-2">
+                  When you first open this module
+                </h3>
+                <ul className="space-y-2 text-xs md:text-sm text-muted-foreground font-light">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>Your menu will be empty until you add your first item.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>Once you create menu items in the admin panel, guests can start ordering.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-muted-foreground/60 mt-1">→</span>
+                    <span className="text-muted-foreground/80 italic">Nothing is broken — this module activates when you build your menu.</span>
+                  </li>
+                </ul>
+              </div>
+
               {/* Close Button */}
               <div className="mt-6 flex justify-center">
                 <button

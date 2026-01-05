@@ -103,6 +103,27 @@ const FeatureDetailModal = ({ open, onOpenChange }: FeatureDetailModalProps) => 
                 automatically from Sirvoy.
               </p>
             </div>
+
+            {/* Empty State Guidance */}
+            <div className="p-4 rounded-lg border border-border/30 bg-muted/10">
+              <h3 className="text-sm sm:text-base font-medium text-foreground mb-2">
+                When you first open this module
+              </h3>
+              <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground font-light">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Your dashboard will be empty until Sirvoy sends booking data.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Once your first reservation syncs, occupancy and revenue will populate automatically.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-muted-foreground/60 mt-1">→</span>
+                  <span className="text-muted-foreground/80 italic">Nothing is broken — this module activates when bookings flow in.</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
           {/* Close Button for Mobile */}

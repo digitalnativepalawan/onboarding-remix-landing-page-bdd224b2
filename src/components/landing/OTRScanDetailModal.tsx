@@ -144,6 +144,25 @@ const OTRScanDetailModal = ({ open, onOpenChange }: OTRScanDetailModalProps) => 
                   Works with photos taken on low-signal devices. Designed for the reality of Palawan operations where receipts come in all formats and internet connectivity isn't guaranteed.
                 </p>
               </div>
+
+              {/* Empty State Guidance */}
+              <div className="glass-card p-4 md:p-5 border-border/30 bg-muted/10">
+                <h3 className="text-sm md:text-base font-medium text-foreground mb-3">When you first open this module</h3>
+                <ul className="space-y-2">
+                  <li className="flex items-start gap-2 text-muted-foreground text-sm font-light">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
+                    Your receipt list will be empty until you scan your first receipt.
+                  </li>
+                  <li className="flex items-start gap-2 text-muted-foreground text-sm font-light">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
+                    Once you upload or photograph a receipt, it will be processed and appear here.
+                  </li>
+                  <li className="flex items-start gap-2 text-muted-foreground/80 text-sm font-light italic">
+                    <span className="text-muted-foreground/60 mt-0.5">→</span>
+                    Nothing is broken — this module activates when you start scanning.
+                  </li>
+                </ul>
+              </div>
             </div>
 
             {/* Footer Note */}

@@ -79,19 +79,22 @@ const HeroSection = () => {
         <div className="max-w-2xl mx-auto text-center space-y-5">
           {/* Primary headline */}
           <h1 className="animate-fade-up opacity-0 text-[1.65rem] sm:text-3xl md:text-4xl font-medium tracking-tight leading-[1.15]" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
-            Run Your Resort with{" "}
-            <span className="gradient-text">Palawan Collective</span>
+            One System.{" "}
+            <span className="gradient-text">Every Module You Need.</span>
           </h1>
           
           {/* Supporting sub-headline */}
-          <p className="animate-fade-up opacity-0 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-md mx-auto" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
-            Sirvoy manages your bookings. Palawan Collective runs your staff, finances, food, and daily resort operations.
+          <p className="animate-fade-up opacity-0 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg mx-auto" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
+            Sirvoy handles bookings. Palawan Collective handles everything else — staff, finances, food, inventory, and daily operations. Start with what you need. Add more as you grow.
           </p>
 
-          {/* Context line */}
-          <div className="animate-fade-up opacity-0" style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}>
+          {/* Context badges */}
+          <div className="animate-fade-up opacity-0 flex flex-wrap justify-center gap-2" style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted/30 text-muted-foreground/60 text-xs border border-border/20">
               Connected to Sirvoy for real-time booking data
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/10 text-primary/80 text-xs border border-primary/20">
+              You don't need every module on day one
             </span>
           </div>
 

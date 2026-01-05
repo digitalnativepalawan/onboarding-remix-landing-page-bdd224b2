@@ -6,6 +6,7 @@ import {
   MessageCircle, 
   ScanLine, 
   Settings,
+  Package,
   Download,
   ArrowRight
 } from "lucide-react";
@@ -14,6 +15,7 @@ import TimesheetDetailModal from "./TimesheetDetailModal";
 import OTRScanDetailModal from "./OTRScanDetailModal";
 import DeveloperToolsModal from "./DeveloperToolsModal";
 import FoodOrderingModal from "./FoodOrderingModal";
+import InventoryModal from "./InventoryModal";
 import occupancyPreview from "@/assets/occupancy-profit-dashboard.jpg";
 import timesheetPreview from "@/assets/timesheet-clockin.jpg";
 import otrScanPreview from "@/assets/otr-scan-review.jpg";
@@ -62,6 +64,13 @@ const tools = [
     preview: otrScanPreview
   },
   {
+    icon: Package,
+    title: "Inventory",
+    description: "Track supplies, materials, and stock levels across operations.",
+    color: "secondary" as const,
+    hasInventoryDetail: true
+  },
+  {
     icon: Settings,
     title: "Developer Tools",
     description: "Admin settings and system control for power users.",
@@ -77,6 +86,7 @@ const FeaturesSection = () => {
   const [isOTRModalOpen, setIsOTRModalOpen] = useState(false);
   const [isDeveloperModalOpen, setIsDeveloperModalOpen] = useState(false);
   const [isFoodOrderModalOpen, setIsFoodOrderModalOpen] = useState(false);
+  const [isInventoryModalOpen, setIsInventoryModalOpen] = useState(false);
 
   const openModal = (tool: typeof tools[0]) => {
     if (tool.hasDetail) setIsModalOpen(true);
@@ -84,6 +94,7 @@ const FeaturesSection = () => {
     if (tool.hasOTRDetail) setIsOTRModalOpen(true);
     if (tool.hasDeveloperDetail) setIsDeveloperModalOpen(true);
     if (tool.hasFoodOrderDetail) setIsFoodOrderModalOpen(true);
+    if (tool.hasInventoryDetail) setIsInventoryModalOpen(true);
   };
 
   return (
@@ -136,7 +147,7 @@ const FeaturesSection = () => {
               )}
 
               {/* Action Button */}
-              {(tool.hasDetail || tool.hasTimesheetDetail || tool.hasOTRDetail || tool.hasDeveloperDetail || tool.hasFoodOrderDetail) && (
+              {(tool.hasDetail || tool.hasTimesheetDetail || tool.hasOTRDetail || tool.hasDeveloperDetail || tool.hasFoodOrderDetail || tool.hasInventoryDetail) && (
                 <button
                   onClick={() => openModal(tool)}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-primary/20 bg-primary/5 text-primary text-xs transition-all hover:bg-primary/10 hover:border-primary/40 w-fit"
@@ -169,6 +180,7 @@ const FeaturesSection = () => {
       <OTRScanDetailModal open={isOTRModalOpen} onOpenChange={setIsOTRModalOpen} />
       <DeveloperToolsModal open={isDeveloperModalOpen} onOpenChange={setIsDeveloperModalOpen} />
       <FoodOrderingModal open={isFoodOrderModalOpen} onOpenChange={setIsFoodOrderModalOpen} />
+      <InventoryModal open={isInventoryModalOpen} onOpenChange={setIsInventoryModalOpen} />
     </section>
   );
 };
