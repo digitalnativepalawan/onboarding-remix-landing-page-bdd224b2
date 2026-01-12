@@ -55,23 +55,29 @@ export interface TranslationKeys {
     tag: string;
     title: string;
     subtitle: string;
+    sirvoyIntegration: string;
+    sirvoyDescription: string;
+    syncStatus: string;
     features: {
-      dataSync: { title: string; description: string };
-      modular: { title: string; description: string };
-      tracking: { title: string; description: string };
+      liveWebhooks: { title: string; description: string };
+      multiChannel: { title: string; description: string };
+      dataExport: { title: string; description: string };
+      webhookSlots: { title: string; description: string };
     };
   };
   features: {
     tag: string;
     title: string;
     subtitle: string;
-    learnMore: string;
+    viewDetails: string;
+    downloadBitChat: string;
     tools: {
       occupancy: { title: string; description: string };
       timesheet: { title: string; description: string };
       inventory: { title: string; description: string };
       foodOrdering: { title: string; description: string };
       otrScan: { title: string; description: string };
+      bitChat: { title: string; description: string };
       developer: { title: string; description: string };
     };
   };
@@ -79,17 +85,27 @@ export interface TranslationKeys {
     tag: string;
     title: string;
     subtitle: string;
+    offlineTitle: string;
+    offlineDescription: string;
     items: {
-      noLockIn: { title: string; description: string };
-      modular: { title: string; description: string };
-      transparent: { title: string; description: string };
-      ownership: { title: string; description: string };
+      maximizeRevenue: { title: string; description: string };
+      oneEcosystem: { title: string; description: string };
+      automation: { title: string; description: string };
+      accuracy: { title: string; description: string };
     };
   };
   bestPractices: {
     tag: string;
     title: string;
-    items: string[];
+    subtitle: string;
+    items: {
+      editBookings: string;
+      useOtrScan: string;
+      updateExpenses: string;
+      useScheduling: string;
+      monitorFood: string;
+      reviewOccupancy: string;
+    };
   };
   faq: {
     tag: string;
@@ -103,14 +119,15 @@ export interface TranslationKeys {
     tag: string;
     title: string;
     subtitle: string;
+    nameLabel: string;
     namePlaceholder: string;
+    feedbackLabel: string;
     messagePlaceholder: string;
     submitButton: string;
     submitting: string;
     successTitle: string;
-    successMessage: string;
     errorTitle: string;
-    errorMessage: string;
+    emptyValidation: string;
     recentTitle: string;
     anonymous: string;
     noFeedback: string;
@@ -118,9 +135,14 @@ export interface TranslationKeys {
   footer: {
     brand: string;
     tagline: string;
-    builtWith: string;
-    termsOfService: string;
-    privacyPolicy: string;
+    products: string;
+    integration: string;
+    legal: string;
+    poweredBy: string;
+    terms: string;
+    privacy: string;
+    security: string;
+    copyright: string;
   };
   common: {
     loading: string;
