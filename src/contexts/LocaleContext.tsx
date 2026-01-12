@@ -133,12 +133,21 @@ export function LocaleProvider({ children }: LocaleProviderProps) {
   );
 }
 
-// Hook to use locale context
+// Hook to use locale context - with fallback for HMR edge cases
 export function useLocale(): LocaleContextValue {
   const context = useContext(LocaleContext);
   
+  // Provide a fallback context during HMR edge cases to prevent crashes
   if (context === undefined) {
-    throw new Error('useLocale must be used within a LocaleProvider');
+    // Return a fallback that works during initial render/HMR
+    return {
+      language: getDefaultLanguage(),
+      currency: getDefaultCurrency(),
+      setLanguage: () => {},
+      setCurrency: () => {},
+      t: (key: string) => getTranslation(key, getDefaultLanguage()),
+      formatPrice: (amount: number) => formatCurrencyUtil(amount, getDefaultCurrency()),
+    };
   }
   
   return context;
