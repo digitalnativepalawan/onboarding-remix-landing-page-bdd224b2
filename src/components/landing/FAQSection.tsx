@@ -5,10 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import FAQAdminModal from "./FAQAdminModal";
 
 interface FAQ {
   id: string;
@@ -19,20 +16,9 @@ interface FAQ {
 
 const FAQSection = () => {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
-  const [adminOpen, setAdminOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     fetchFaqs();
-
-    // Check for admin mode (same as other sections - using keyboard shortcut)
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === "F") {
-        setIsAdmin((prev) => !prev);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const fetchFaqs = async () => {
@@ -46,38 +32,17 @@ const FAQSection = () => {
     }
   };
 
-  // Refetch when admin modal closes
-  const handleAdminClose = (open: boolean) => {
-    setAdminOpen(open);
-    if (!open) {
-      fetchFaqs();
-    }
-  };
-
   return (
     <section className="py-12 sm:py-16 md:py-20">
       <div className="px-5 sm:px-6">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-8 relative">
+          <div className="text-center mb-8">
             <span className="section-tag mb-3">FAQ</span>
             <h2 className="section-title mb-2">Common Questions</h2>
             <p className="section-subtitle mx-auto">
               Quick answers for Palawan resort owners
             </p>
-            
-            {/* Admin button */}
-            {isAdmin && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="absolute right-0 top-0"
-                onClick={() => setAdminOpen(true)}
-              >
-                <Settings className="w-4 h-4 mr-1" />
-                Manage FAQs
-              </Button>
-            )}
           </div>
 
           {/* Accordion */}
@@ -99,8 +64,6 @@ const FAQSection = () => {
           </Accordion>
         </div>
       </div>
-
-      <FAQAdminModal open={adminOpen} onOpenChange={handleAdminClose} />
     </section>
   );
 };
