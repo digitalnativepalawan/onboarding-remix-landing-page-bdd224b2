@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AdminSettingsModal from "./AdminSettingsModal";
 import LocaleSwitcher from "./LocaleSwitcher";
+import { useTranslation } from "@/contexts/LocaleContext";
 
 const ADMIN_PASSKEY = "5309";
 
@@ -22,6 +23,7 @@ const TIMEZONES = [
 ];
 
 const Header = () => {
+  const { t } = useTranslation();
   const [times, setTimes] = useState<Record<string, string>>({});
   const [showPasskeyDialog, setShowPasskeyDialog] = useState(false);
   const [showAdminSettings, setShowAdminSettings] = useState(false);
@@ -64,7 +66,7 @@ const Header = () => {
       setPasskey("");
       setError("");
     } else {
-      setError("Incorrect passkey");
+      setError(t("header.incorrectPasskey"));
     }
   };
 
@@ -108,11 +110,11 @@ const Header = () => {
       <Dialog open={showPasskeyDialog} onOpenChange={setShowPasskeyDialog}>
         <DialogContent className="max-w-xs">
           <DialogHeader>
-            <DialogTitle>Admin Access</DialogTitle>
+            <DialogTitle>{t("header.adminAccess")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handlePasskeySubmit} className="space-y-4 mt-2">
             <div className="space-y-2">
-              <Label htmlFor="passkey">Enter Passkey</Label>
+              <Label htmlFor="passkey">{t("header.enterPasskey")}</Label>
               <Input
                 id="passkey"
                 type="password"
@@ -124,7 +126,7 @@ const Header = () => {
               {error && <p className="text-xs text-destructive">{error}</p>}
             </div>
             <Button type="submit" className="w-full">
-              Access Settings
+              {t("header.accessSettings")}
             </Button>
           </form>
         </DialogContent>
