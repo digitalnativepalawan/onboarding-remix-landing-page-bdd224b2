@@ -114,6 +114,7 @@ export interface TranslationKeys {
     loading: string;
     error: string;
     empty: string;
+    fallbackNotice: string;
   };
   feedback: {
     tag: string;

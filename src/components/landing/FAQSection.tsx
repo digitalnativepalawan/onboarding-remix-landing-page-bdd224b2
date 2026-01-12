@@ -15,9 +15,12 @@ const FAQSection = () => {
   const { t } = useTranslation();
   const { language } = useLocale();
   const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [isUsingFallback, setIsUsingFallback] = useState(false);
 
   useEffect(() => {
     const fetchFaqs = async () => {
+      setIsUsingFallback(false);
+      
       // First try to get FAQs in the current language
       const { data: localizedData, error: localizedError } = await supabase
         .from("faqs")
@@ -38,8 +41,9 @@ const FAQSection = () => {
           .eq("language", "en")
           .order("display_order", { ascending: true });
 
-        if (!englishError && englishData) {
+        if (!englishError && englishData && englishData.length > 0) {
           setFaqs(englishData);
+          setIsUsingFallback(true);
           return;
         }
       }
@@ -59,6 +63,12 @@ const FAQSection = () => {
             <h2 className="section-title mb-2">{t("faq.title")}</h2>
             <p className="section-subtitle mx-auto">{t("faq.subtitle")}</p>
           </div>
+
+          {isUsingFallback && (
+            <p className="text-xs text-muted-foreground/70 text-center mb-4 italic">
+              {t("faq.fallbackNotice")}
+            </p>
+          )}
 
           <Accordion type="single" collapsible className="space-y-2">
             {faqs.map((faq, index) => (

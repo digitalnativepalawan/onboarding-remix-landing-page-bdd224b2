@@ -163,6 +163,7 @@ export const it: TranslationKeys = {
     loading: 'Caricamento domande...',
     error: 'Caricamento domande fallito',
     empty: 'Nessuna domanda disponibile',
+    fallbackNotice: 'Le FAQ sono attualmente visualizzate in inglese. Le traduzioni arriveranno presto.',
   },
   feedback: {
     tag: 'Feedback',

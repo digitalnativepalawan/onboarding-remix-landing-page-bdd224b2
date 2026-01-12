@@ -163,6 +163,7 @@ export const tl: TranslationKeys = {
     loading: 'Naglo-load ng mga tanong...',
     error: 'Hindi na-load ang mga tanong',
     empty: 'Walang available na tanong',
+    fallbackNotice: 'Ang mga FAQ ay kasalukuyang ipinapakita sa Ingles. Malapit nang magkaroon ng mga pagsasalin.',
   },
   feedback: {
     tag: 'Feedback',

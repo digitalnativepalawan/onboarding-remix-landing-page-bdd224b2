@@ -163,6 +163,7 @@ export const de: TranslationKeys = {
     loading: 'Fragen werden geladen...',
     error: 'Fragen konnten nicht geladen werden',
     empty: 'Keine Fragen verfügbar',
+    fallbackNotice: 'FAQs werden derzeit auf Englisch angezeigt. Übersetzungen folgen in Kürze.',
   },
   feedback: {
     tag: 'Feedback',
