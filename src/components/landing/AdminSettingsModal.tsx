@@ -410,7 +410,8 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                         placeholder="Answer"
                         value={editFaqForm.answer}
                         onChange={(e) => setEditFaqForm({ ...editFaqForm, answer: e.target.value })}
-                        rows={3}
+                        rows={8}
+                        className="whitespace-pre-wrap"
                       />
                     </div>
                     <div className="flex gap-2">
@@ -425,8 +426,8 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                 ) : (
                   <>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{faq.question}</p>
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{faq.answer}</p>
+                      <p className="text-sm font-medium mb-2">{faq.question}</p>
+                      <p className="text-xs text-muted-foreground whitespace-pre-wrap leading-relaxed">{faq.answer}</p>
                     </div>
                     <div className="flex gap-1 shrink-0">
                       <Button size="icon" variant="ghost" onClick={() => handleEditFaq(faq)}>
@@ -464,7 +465,8 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                     placeholder="Enter the answer"
                     value={newFaqForm.answer}
                     onChange={(e) => setNewFaqForm({ ...newFaqForm, answer: e.target.value })}
-                    rows={3}
+                    rows={8}
+                    className="whitespace-pre-wrap"
                   />
                 </div>
                 <div className="flex gap-2">
