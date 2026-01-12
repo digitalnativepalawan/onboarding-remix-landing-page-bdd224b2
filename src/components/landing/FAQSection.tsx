@@ -1,26 +1,54 @@
 import { useState, useEffect } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { supabase } from "@/integrations/supabase/client";
-import { useTranslation } from "@/contexts/LocaleContext";
+import { useTranslation, useLocale } from "@/contexts/LocaleContext";
 
 interface FAQ {
   id: string;
   question: string;
   answer: string;
   display_order: number;
+  language: string;
 }
 
 const FAQSection = () => {
   const { t } = useTranslation();
+  const { language } = useLocale();
   const [faqs, setFaqs] = useState<FAQ[]>([]);
 
   useEffect(() => {
     const fetchFaqs = async () => {
-      const { data, error } = await supabase.from("faqs").select("*").order("display_order", { ascending: true });
-      if (!error && data) setFaqs(data);
+      // First try to get FAQs in the current language
+      const { data: localizedData, error: localizedError } = await supabase
+        .from("faqs")
+        .select("*")
+        .eq("language", language)
+        .order("display_order", { ascending: true });
+
+      if (!localizedError && localizedData && localizedData.length > 0) {
+        setFaqs(localizedData);
+        return;
+      }
+
+      // Fallback to English if no FAQs found for current language
+      if (language !== "en") {
+        const { data: englishData, error: englishError } = await supabase
+          .from("faqs")
+          .select("*")
+          .eq("language", "en")
+          .order("display_order", { ascending: true });
+
+        if (!englishError && englishData) {
+          setFaqs(englishData);
+          return;
+        }
+      }
+
+      // If nothing found, set empty array
+      setFaqs([]);
     };
     fetchFaqs();
-  }, []);
+  }, [language]);
 
   return (
     <section className="py-12 sm:py-16 md:py-20">

@@ -28,7 +28,15 @@ interface FAQ {
   question: string;
   answer: string;
   display_order: number;
+  language: string;
 }
+
+const LANGUAGE_OPTIONS = [
+  { value: "en", label: "English" },
+  { value: "tl", label: "Tagalog" },
+  { value: "it", label: "Italiano" },
+  { value: "de", label: "Deutsch" },
+];
 
 interface AdminSettingsModalProps {
   open: boolean;
@@ -64,9 +72,9 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   // FAQ state
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [editingFaqId, setEditingFaqId] = useState<string | null>(null);
-  const [editFaqForm, setEditFaqForm] = useState({ question: "", answer: "" });
+  const [editFaqForm, setEditFaqForm] = useState({ question: "", answer: "", language: "en" });
   const [isAddingFaq, setIsAddingFaq] = useState(false);
-  const [newFaqForm, setNewFaqForm] = useState({ question: "", answer: "" });
+  const [newFaqForm, setNewFaqForm] = useState({ question: "", answer: "", language: "en" });
   
   const [loading, setLoading] = useState(false);
 
@@ -177,7 +185,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   // FAQ handlers
   const handleEditFaq = (faq: FAQ) => {
     setEditingFaqId(faq.id);
-    setEditFaqForm({ question: faq.question, answer: faq.answer });
+    setEditFaqForm({ question: faq.question, answer: faq.answer, language: faq.language });
   };
 
   const handleSaveEditFaq = async () => {
@@ -188,7 +196,8 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
       .from("faqs")
       .update({ 
         question: editFaqForm.question, 
-        answer: editFaqForm.answer 
+        answer: editFaqForm.answer,
+        language: editFaqForm.language
       })
       .eq("id", editingFaqId);
 
@@ -227,6 +236,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     const { error } = await supabase.from("faqs").insert({
       question: newFaqForm.question,
       answer: newFaqForm.answer,
+      language: newFaqForm.language,
       display_order: maxOrder + 1,
     });
 
@@ -234,7 +244,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
       toast.error("Failed to add FAQ");
     } else {
       toast.success("FAQ added");
-      setNewFaqForm({ question: "", answer: "" });
+      setNewFaqForm({ question: "", answer: "", language: "en" });
       setIsAddingFaq(false);
       fetchFaqs();
     }
@@ -414,6 +424,20 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                         className="whitespace-pre-wrap"
                       />
                     </div>
+                    <div>
+                      <Label className="text-xs">Language</Label>
+                      <select
+                        className="w-full p-2 rounded-md border border-border bg-background text-sm"
+                        value={editFaqForm.language}
+                        onChange={(e) => setEditFaqForm({ ...editFaqForm, language: e.target.value })}
+                      >
+                        {LANGUAGE_OPTIONS.map((lang) => (
+                          <option key={lang.value} value={lang.value}>
+                            {lang.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     <div className="flex gap-2">
                       <Button size="sm" onClick={handleSaveEditFaq} disabled={loading}>
                         <Check className="w-3 h-3 mr-1" /> Save
@@ -426,7 +450,12 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                 ) : (
                   <>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium mb-2">{faq.question}</p>
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-sm font-medium">{faq.question}</p>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground uppercase">
+                          {faq.language}
+                        </span>
+                      </div>
                       <p className="text-xs text-muted-foreground whitespace-pre-wrap leading-relaxed">{faq.answer}</p>
                     </div>
                     <div className="flex gap-1 shrink-0">
@@ -468,6 +497,20 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                     rows={8}
                     className="whitespace-pre-wrap"
                   />
+                </div>
+                <div>
+                  <Label className="text-xs">Language</Label>
+                  <select
+                    className="w-full p-2 rounded-md border border-border bg-background text-sm"
+                    value={newFaqForm.language}
+                    onChange={(e) => setNewFaqForm({ ...newFaqForm, language: e.target.value })}
+                  >
+                    {LANGUAGE_OPTIONS.map((lang) => (
+                      <option key={lang.value} value={lang.value}>
+                        {lang.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" onClick={handleAddFaq} disabled={loading}>
