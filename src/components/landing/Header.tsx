@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AdminSettingsModal from "./AdminSettingsModal";
+import LocaleSwitcher from "./LocaleSwitcher";
 
 const ADMIN_PASSKEY = "5309";
 
@@ -81,6 +82,7 @@ const Header = () => {
               ))}
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
+              <LocaleSwitcher />
               <button
                 onClick={handleSettingsClick}
                 className="text-muted-foreground/60 hover:text-foreground transition-colors"
