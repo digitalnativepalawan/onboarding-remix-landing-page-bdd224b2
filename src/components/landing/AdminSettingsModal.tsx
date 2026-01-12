@@ -71,10 +71,11 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   
   // FAQ state
   const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [faqLanguageFilter, setFaqLanguageFilter] = useState("en");
   const [editingFaqId, setEditingFaqId] = useState<string | null>(null);
-  const [editFaqForm, setEditFaqForm] = useState({ question: "", answer: "", language: "en" });
+  const [editFaqForm, setEditFaqForm] = useState({ question: "", answer: "" });
   const [isAddingFaq, setIsAddingFaq] = useState(false);
-  const [newFaqForm, setNewFaqForm] = useState({ question: "", answer: "", language: "en" });
+  const [newFaqForm, setNewFaqForm] = useState({ question: "", answer: "" });
   
   const [loading, setLoading] = useState(false);
 
@@ -91,10 +92,11 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     setLinks(data || []);
   };
 
-  const fetchFaqs = async () => {
+  const fetchFaqs = async (lang: string) => {
     const { data, error } = await supabase
       .from("faqs")
       .select("*")
+      .eq("language", lang)
       .order("display_order", { ascending: true });
 
     if (error) {
@@ -107,9 +109,9 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   useEffect(() => {
     if (open) {
       fetchLinks();
-      fetchFaqs();
+      fetchFaqs(faqLanguageFilter);
     }
-  }, [open]);
+  }, [open, faqLanguageFilter]);
 
   // App Links handlers
   const handleEditLink = (link: AppLink) => {
@@ -185,7 +187,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   // FAQ handlers
   const handleEditFaq = (faq: FAQ) => {
     setEditingFaqId(faq.id);
-    setEditFaqForm({ question: faq.question, answer: faq.answer, language: faq.language });
+    setEditFaqForm({ question: faq.question, answer: faq.answer });
   };
 
   const handleSaveEditFaq = async () => {
@@ -196,8 +198,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
       .from("faqs")
       .update({ 
         question: editFaqForm.question, 
-        answer: editFaqForm.answer,
-        language: editFaqForm.language
+        answer: editFaqForm.answer
       })
       .eq("id", editingFaqId);
 
@@ -206,7 +207,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     } else {
       toast.success("FAQ updated");
       setEditingFaqId(null);
-      fetchFaqs();
+      fetchFaqs(faqLanguageFilter);
     }
     setLoading(false);
   };
@@ -219,7 +220,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
       toast.error("Failed to delete FAQ");
     } else {
       toast.success("FAQ deleted");
-      fetchFaqs();
+      fetchFaqs(faqLanguageFilter);
     }
     setLoading(false);
   };
@@ -236,7 +237,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     const { error } = await supabase.from("faqs").insert({
       question: newFaqForm.question,
       answer: newFaqForm.answer,
-      language: newFaqForm.language,
+      language: faqLanguageFilter,
       display_order: maxOrder + 1,
     });
 
@@ -244,9 +245,9 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
       toast.error("Failed to add FAQ");
     } else {
       toast.success("FAQ added");
-      setNewFaqForm({ question: "", answer: "", language: "en" });
+      setNewFaqForm({ question: "", answer: "" });
       setIsAddingFaq(false);
-      fetchFaqs();
+      fetchFaqs(faqLanguageFilter);
     }
     setLoading(false);
   };
@@ -397,6 +398,24 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
 
           {/* FAQs Tab */}
           <TabsContent value="faqs" className="space-y-3 mt-4">
+            {/* Language Filter */}
+            <div className="flex items-center gap-2 pb-2 border-b border-border/30">
+              <Label className="text-xs text-muted-foreground">Language:</Label>
+              <div className="flex gap-1">
+                {LANGUAGE_OPTIONS.map((lang) => (
+                  <Button
+                    key={lang.value}
+                    size="sm"
+                    variant={faqLanguageFilter === lang.value ? "default" : "outline"}
+                    className="h-7 px-2.5 text-xs"
+                    onClick={() => setFaqLanguageFilter(lang.value)}
+                  >
+                    {lang.value.toUpperCase()}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
             {faqs.map((faq, index) => (
               <div
                 key={faq.id}
@@ -424,20 +443,6 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                         className="whitespace-pre-wrap"
                       />
                     </div>
-                    <div>
-                      <Label className="text-xs">Language</Label>
-                      <select
-                        className="w-full p-2 rounded-md border border-border bg-background text-sm"
-                        value={editFaqForm.language}
-                        onChange={(e) => setEditFaqForm({ ...editFaqForm, language: e.target.value })}
-                      >
-                        {LANGUAGE_OPTIONS.map((lang) => (
-                          <option key={lang.value} value={lang.value}>
-                            {lang.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
                     <div className="flex gap-2">
                       <Button size="sm" onClick={handleSaveEditFaq} disabled={loading}>
                         <Check className="w-3 h-3 mr-1" /> Save
@@ -450,12 +455,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                 ) : (
                   <>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="text-sm font-medium">{faq.question}</p>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground uppercase">
-                          {faq.language}
-                        </span>
-                      </div>
+                      <p className="text-sm font-medium mb-1">{faq.question}</p>
                       <p className="text-xs text-muted-foreground whitespace-pre-wrap leading-relaxed">{faq.answer}</p>
                     </div>
                     <div className="flex gap-1 shrink-0">
@@ -497,20 +497,6 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                     rows={8}
                     className="whitespace-pre-wrap"
                   />
-                </div>
-                <div>
-                  <Label className="text-xs">Language</Label>
-                  <select
-                    className="w-full p-2 rounded-md border border-border bg-background text-sm"
-                    value={newFaqForm.language}
-                    onChange={(e) => setNewFaqForm({ ...newFaqForm, language: e.target.value })}
-                  >
-                    {LANGUAGE_OPTIONS.map((lang) => (
-                      <option key={lang.value} value={lang.value}>
-                        {lang.label}
-                      </option>
-                    ))}
-                  </select>
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" onClick={handleAddFaq} disabled={loading}>
