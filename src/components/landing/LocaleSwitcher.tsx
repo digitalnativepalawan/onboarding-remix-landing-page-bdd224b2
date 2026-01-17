@@ -15,12 +15,12 @@ const LocaleSwitcher = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-1.5 text-muted-foreground/60 hover:text-foreground transition-colors text-[10px] sm:text-xs">
-        <Globe className="w-3.5 h-3.5" />
+      <DropdownMenuTrigger className="flex items-center gap-2 text-white/80 hover:text-white transition-colors text-xs sm:text-sm p-1.5">
+        <Globe className="w-4 h-4 sm:w-5 sm:h-5" />
         <span className="hidden sm:inline">{currentLanguage.flag}</span>
         <span className="font-medium">{language.toUpperCase()}</span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[140px]">
+      <DropdownMenuContent align="end" className="min-w-[140px] bg-card border-border">
         {(Object.entries(LANGUAGES) as [Language, typeof LANGUAGES[Language]][]).map(
           ([code, lang]) => (
             <DropdownMenuItem

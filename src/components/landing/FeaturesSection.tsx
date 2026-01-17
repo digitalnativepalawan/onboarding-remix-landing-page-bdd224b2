@@ -59,7 +59,7 @@ const FeaturesSection = () => {
                 </div>
                 <div className="min-w-0">
                   <h3 className="text-sm font-normal mb-0.5">{t(tool.titleKey)}</h3>
-                  <p className="text-xs text-muted-foreground/70 leading-relaxed">{t(tool.descKey)}</p>
+                  <p className="text-xs text-white/70 leading-relaxed">{t(tool.descKey)}</p>
                 </div>
               </div>
               {tool.preview && (

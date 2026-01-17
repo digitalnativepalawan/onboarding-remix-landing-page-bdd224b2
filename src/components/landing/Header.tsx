@@ -70,36 +70,52 @@ const Header = () => {
     }
   };
 
+  // Show only first 2 timezones on mobile, all on tablet+
+  const mobileTimezones = TIMEZONES.slice(0, 2);
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/30">
         <div className="px-3 sm:px-6">
-          <div className="flex items-center justify-between h-10">
-            <div className="flex items-center gap-2 sm:gap-4">
-              {TIMEZONES.map(({ id, label }) => (
-                <div key={id} className="flex items-center gap-1">
-                  <span className="text-[10px] sm:text-xs text-muted-foreground/50 font-medium">{label}</span>
-                  <span className="text-[10px] sm:text-xs text-muted-foreground/80 font-mono tabular-nums">{times[id] || "--:--"}</span>
-                </div>
-              ))}
+          <div className="flex items-center justify-between h-12 sm:h-14">
+            {/* Mobile: show 2 timezones, Tablet+: show all */}
+            <div className="flex items-center gap-3 sm:gap-4">
+              {/* Mobile timezones */}
+              <div className="flex sm:hidden items-center gap-3">
+                {mobileTimezones.map(({ id, label }) => (
+                  <div key={id} className="flex items-center gap-1.5">
+                    <span className="text-xs text-white/70 font-medium">{label}</span>
+                    <span className="text-xs text-white font-mono tabular-nums">{times[id] || "--:--"}</span>
+                  </div>
+                ))}
+              </div>
+              {/* Tablet+ timezones */}
+              <div className="hidden sm:flex items-center gap-4">
+                {TIMEZONES.map(({ id, label }) => (
+                  <div key={id} className="flex items-center gap-1.5">
+                    <span className="text-xs text-white/70 font-medium">{label}</span>
+                    <span className="text-xs text-white font-mono tabular-nums">{times[id] || "--:--"}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-3 sm:gap-4">
               <LocaleSwitcher />
               <button
                 onClick={handleSettingsClick}
-                className="text-muted-foreground/60 hover:text-foreground transition-colors"
+                className="text-white/80 hover:text-white transition-colors p-1.5"
                 aria-label="Settings"
               >
-                <Settings className="w-4 h-4" />
+                <Settings className="w-5 h-5" />
               </button>
               <a
                 href="https://github.com/palawancollective"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground/60 hover:text-foreground transition-colors"
+                className="text-white/80 hover:text-white transition-colors p-1.5"
                 aria-label="GitHub"
               >
-                <Github className="w-4 h-4" />
+                <Github className="w-5 h-5" />
               </a>
             </div>
           </div>

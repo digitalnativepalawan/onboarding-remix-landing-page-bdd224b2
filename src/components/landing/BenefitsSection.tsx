@@ -29,7 +29,7 @@ const BenefitsSection = () => {
                 </div>
                 <div>
                   <h3 className="text-sm font-normal mb-0.5">{t(benefit.titleKey)}</h3>
-                  <p className="text-xs text-muted-foreground/70 leading-relaxed">{t(benefit.descKey)}</p>
+                  <p className="text-xs text-white/70 leading-relaxed">{t(benefit.descKey)}</p>
                 </div>
               </div>
             ))}
@@ -40,7 +40,7 @@ const BenefitsSection = () => {
               <Wifi className="w-4 h-4 text-primary" />
               <h3 className="text-sm font-normal text-primary">{t("benefits.offlineTitle")}</h3>
             </div>
-            <p className="text-xs text-muted-foreground/70 max-w-sm mx-auto leading-relaxed">{t("benefits.offlineDescription")}</p>
+            <p className="text-xs text-white/70 max-w-sm mx-auto leading-relaxed">{t("benefits.offlineDescription")}</p>
           </div>
         </div>
       </div>

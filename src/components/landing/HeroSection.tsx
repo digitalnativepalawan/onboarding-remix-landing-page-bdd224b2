@@ -86,23 +86,23 @@ const HeroSection = () => {
           </h1>
           
           {/* Supporting sub-headline */}
-          <p className="animate-fade-up opacity-0 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-lg mx-auto" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
+          <p className="animate-fade-up opacity-0 text-sm sm:text-base text-white/80 leading-relaxed max-w-lg mx-auto" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
             {t("hero.subheadline")}
           </p>
 
           {/* Context badges */}
           <div className="animate-fade-up opacity-0 flex flex-wrap justify-center gap-2" style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted/30 text-muted-foreground/60 text-xs border border-border/20">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted/30 text-white/70 text-xs border border-border/20">
               {t("hero.badge1")}
             </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/10 text-primary/80 text-xs border border-primary/20">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/10 text-primary text-xs border border-primary/20">
               {t("hero.badge2")}
             </span>
           </div>
 
           {/* App features grid */}
           <div className="animate-fade-up opacity-0 pt-4" style={{ animationDelay: '0.35s', animationFillMode: 'forwards' }}>
-            <p className="text-[0.65rem] text-muted-foreground/50 uppercase tracking-widest mb-3">{t("hero.yourTools")}</p>
+            <p className="text-[0.65rem] text-white/60 uppercase tracking-widest mb-3">{t("hero.yourTools")}</p>
             <div className="flex flex-wrap justify-center gap-2.5 max-w-lg mx-auto">
               {appLinks.map((link) => {
                 const IconComponent = iconMap[link.icon] || LayoutDashboard;
@@ -119,7 +119,7 @@ const HeroSection = () => {
                     }`}
                   >
                     <IconComponent className="w-4 h-4 text-primary shrink-0" />
-                    <span className="text-xs text-foreground/80">{link.name}</span>
+                    <span className="text-xs text-white">{link.name}</span>
                   </a>
                 );
               })}
@@ -130,7 +130,7 @@ const HeroSection = () => {
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce">
-        <a href="#how-it-works" className="text-muted-foreground/40 hover:text-primary transition-colors">
+        <a href="#how-it-works" className="text-white/60 hover:text-primary transition-colors">
           <ChevronDown className="w-5 h-5" />
         </a>
       </div>

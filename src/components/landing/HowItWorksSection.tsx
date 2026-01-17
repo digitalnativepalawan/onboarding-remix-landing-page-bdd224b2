@@ -28,7 +28,7 @@ const HowItWorksSection = () => {
               </div>
               <div>
                 <h3 className="text-sm sm:text-base font-normal mb-1">{t("howItWorks.sirvoyIntegration")}</h3>
-                <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">{t("howItWorks.sirvoyDescription")}</p>
+                <p className="text-white/80 text-xs sm:text-sm leading-relaxed">{t("howItWorks.sirvoyDescription")}</p>
               </div>
             </div>
 
@@ -40,13 +40,13 @@ const HowItWorksSection = () => {
                   </div>
                   <div className="min-w-0">
                     <h4 className="text-xs font-normal mb-0.5 truncate">{t(feature.titleKey)}</h4>
-                    <p className="text-[0.65rem] text-muted-foreground/70 leading-tight">{t(feature.descKey)}</p>
+                    <p className="text-[0.65rem] text-white/70 leading-tight">{t(feature.descKey)}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-5 pt-4 border-t border-border/20 flex items-center justify-center gap-2 text-muted-foreground/50">
+            <div className="mt-5 pt-4 border-t border-border/20 flex items-center justify-center gap-2 text-white/60">
               <RefreshCw className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: '3s' }} />
               <span className="text-[0.65rem]">{t("howItWorks.syncStatus")}</span>
             </div>

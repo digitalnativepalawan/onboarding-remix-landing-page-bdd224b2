@@ -65,7 +65,7 @@ const FAQSection = () => {
           </div>
 
           {isUsingFallback && (
-            <p className="text-xs text-muted-foreground/70 text-center mb-4 italic">
+            <p className="text-xs text-white/70 text-center mb-4 italic">
               {t("faq.fallbackNotice")}
             </p>
           )}
@@ -73,8 +73,8 @@ const FAQSection = () => {
           <Accordion type="single" collapsible className="space-y-2">
             {faqs.map((faq, index) => (
               <AccordionItem key={faq.id} value={`item-${index}`} className="border border-border/20 rounded-lg px-4 bg-card/30 data-[state=open]:bg-card/50 transition-colors">
-                <AccordionTrigger className="text-left text-sm font-normal text-foreground/90 hover:no-underline hover:text-foreground py-3.5">{faq.question}</AccordionTrigger>
-                <AccordionContent className="text-xs text-muted-foreground/80 leading-relaxed pb-3.5 whitespace-pre-line">{faq.answer}</AccordionContent>
+                <AccordionTrigger className="text-left text-sm font-normal text-white hover:no-underline hover:text-white py-3.5">{faq.question}</AccordionTrigger>
+                <AccordionContent className="text-xs text-white/80 leading-relaxed pb-3.5 whitespace-pre-line">{faq.answer}</AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
