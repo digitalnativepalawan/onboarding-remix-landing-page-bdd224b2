@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Github, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -108,15 +108,6 @@ const Header = () => {
               >
                 <Settings className="w-5 h-5" />
               </button>
-              <a
-                href="https://github.com/palawancollective"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/80 hover:text-white transition-colors p-1.5"
-                aria-label="GitHub"
-              >
-                <Github className="w-5 h-5" />
-              </a>
             </div>
           </div>
         </div>
