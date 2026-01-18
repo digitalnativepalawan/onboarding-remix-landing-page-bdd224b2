@@ -92,10 +92,16 @@ export default function Setup() {
     }
   };
 
-  const handleStartApp = (appUrl: string) => {
-    const url = new URL(appUrl);
-    url.searchParams.set("mode", mode);
-    window.open(url.toString(), "_blank");
+  const handleStartApp = (appId: string, appUrl: string) => {
+    // Use internal routing for backoffice dashboard
+    if (appId === "backoffice") {
+      navigate(`/dashboard?mode=${mode}&source=setup`);
+    } else {
+      // External apps - open in new tab
+      const url = new URL(appUrl);
+      url.searchParams.set("mode", mode);
+      window.open(url.toString(), "_blank");
+    }
   };
 
   const selectedAppDetails = APPS.filter((app) => selectedApps.includes(app.id));
@@ -297,7 +303,7 @@ export default function Setup() {
                 return (
                   <Button
                     key={app.id}
-                    onClick={() => handleStartApp(app.url)}
+                    onClick={() => handleStartApp(app.id, app.url)}
                     variant={isRecommended ? "default" : "outline"}
                     className={cn(
                       "w-full h-auto p-4 flex items-center gap-4 justify-start",
