@@ -59,12 +59,16 @@ export default function Setup() {
   
   // Pre-select app from URL param if provided
   const preselectedApp = searchParams.get("app");
+  // Pre-select mode from URL param if provided (demo or live)
+  const preselectedMode = searchParams.get("mode");
   
   const [step, setStep] = useState(1);
   const [selectedApps, setSelectedApps] = useState<string[]>(
     preselectedApp ? [preselectedApp, "backoffice"].filter((v, i, a) => a.indexOf(v) === i) : ["backoffice"]
   );
-  const [mode, setMode] = useState<"demo" | "live">("demo");
+  const [mode, setMode] = useState<"demo" | "live">(
+    preselectedMode === "live" ? "live" : "demo"
+  );
 
   const toggleApp = (appId: string) => {
     setSelectedApps((prev) =>

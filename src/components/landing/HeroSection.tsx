@@ -1,8 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import heroBg from "@/assets/hero-palawan.jpg";
 import { ChevronDown, Play, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -36,6 +39,7 @@ const HeroSection = () => {
             <Button 
               size="lg"
               className="w-full sm:w-auto gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+              onClick={() => navigate("/setup?mode=demo")}
             >
               <Play className="w-4 h-4" />
               Start with Demo Data
@@ -44,6 +48,7 @@ const HeroSection = () => {
               variant="outline"
               size="lg"
               className="w-full sm:w-auto gap-2 border-border/50 bg-card/50 hover:bg-card"
+              onClick={() => navigate("/setup?mode=live")}
             >
               <Link2 className="w-4 h-4" />
               Connect My Resort
