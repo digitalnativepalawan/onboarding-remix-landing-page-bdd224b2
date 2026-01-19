@@ -29,6 +29,15 @@ const Dashboard = () => {
   // For now, demo mode always has data, live mode has no data
   const hasData = mode === "demo";
 
+  // External app URLs
+  const EXTERNAL_APP_URLS: Record<string, string> = {
+    rooms: "https://onboarding.heatmap.palawancollective.com",
+    orders: "https://onboarding.online.order.palawancollective.com",
+    inventory: "https://onboarding.inventory.palawancollective.com",
+    receipts: "https://scan.palawancollective.com",
+    timesheet: "https://onboarding.timesheet.palawancollective.com",
+  };
+
   // Quick nav apps
   const quickApps = [
     { id: "rooms", name: "Rooms", icon: Home, color: "primary" },
@@ -37,6 +46,12 @@ const Dashboard = () => {
     { id: "receipts", name: "Receipts", icon: Receipt, color: "secondary" },
     { id: "timesheet", name: "Timesheet", icon: Clock, color: "primary" },
   ];
+
+  const openExternalApp = (appId: string) => {
+    const url = new URL(EXTERNAL_APP_URLS[appId]);
+    url.searchParams.set("mode", mode);
+    window.open(url.toString(), "_blank");
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -85,6 +100,7 @@ const Dashboard = () => {
               {quickApps.map((app) => (
                 <button
                   key={app.id}
+                  onClick={() => openExternalApp(app.id)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg border shrink-0 transition-colors ${
                     app.color === "primary"
                       ? "border-primary/20 bg-primary/5 hover:bg-primary/10"

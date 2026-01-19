@@ -21,35 +21,35 @@ const APPS: App[] = [
     name: "Backoffice Dashboard",
     shortDesc: "Occupancy, income, expenses",
     icon: Building2,
-    url: "https://backoffice.palawancollective.com",
+    url: "https://onboarding.heatmap.palawancollective.com",
   },
   {
     id: "orders",
     name: "Online Orders",
     shortDesc: "Guest food, drinks, tours",
     icon: UtensilsCrossed,
-    url: "https://orders.palawancollective.com",
+    url: "https://onboarding.online.order.palawancollective.com",
   },
   {
     id: "inventory",
     name: "Kitchen Inventory",
     shortDesc: "Stock and food cost",
     icon: Package,
-    url: "https://inventory.palawancollective.com",
+    url: "https://onboarding.inventory.palawancollective.com",
   },
   {
     id: "otr",
     name: "OTR Scan",
     shortDesc: "Scan receipts to expenses",
     icon: Receipt,
-    url: "https://otr.palawancollective.com",
+    url: "https://scan.palawancollective.com",
   },
   {
     id: "timesheet",
     name: "Timesheet",
     shortDesc: "Staff clock-in and payroll",
     icon: Clock,
-    url: "https://timesheet.palawancollective.com",
+    url: "https://onboarding.timesheet.palawancollective.com",
   },
 ];
 
@@ -93,15 +93,10 @@ export default function Setup() {
   };
 
   const handleStartApp = (appId: string, appUrl: string) => {
-    // Use internal routing for backoffice dashboard
-    if (appId === "backoffice") {
-      navigate(`/dashboard?mode=${mode}&source=setup`);
-    } else {
-      // External apps - open in new tab
-      const url = new URL(appUrl);
-      url.searchParams.set("mode", mode);
-      window.open(url.toString(), "_blank");
-    }
+    // All apps are external - open in new tab with mode param
+    const url = new URL(appUrl);
+    url.searchParams.set("mode", mode);
+    window.open(url.toString(), "_blank");
   };
 
   const selectedAppDetails = APPS.filter((app) => selectedApps.includes(app.id));

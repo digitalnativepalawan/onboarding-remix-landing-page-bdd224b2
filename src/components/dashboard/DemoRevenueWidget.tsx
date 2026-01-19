@@ -24,7 +24,12 @@ const DemoRevenueWidget = ({ mode, hasData = false }: DemoRevenueWidgetProps) =>
           <p className="text-sm text-muted-foreground mb-3 max-w-[200px]">
             Revenue will appear once reservations or orders are recorded.
           </p>
-          <Button size="sm" variant="outline" className="gap-1.5 text-xs">
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="gap-1.5 text-xs"
+            onClick={() => window.open("https://onboarding.heatmap.palawancollective.com?mode=live", "_blank")}
+          >
             <Link2 className="w-3 h-3" />
             Connect Booking Source
           </Button>

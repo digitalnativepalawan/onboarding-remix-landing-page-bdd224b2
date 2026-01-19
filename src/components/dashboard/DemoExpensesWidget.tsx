@@ -24,7 +24,12 @@ const DemoExpensesWidget = ({ mode, hasData = false }: DemoExpensesWidgetProps) 
           <p className="text-sm text-muted-foreground mb-3 max-w-[200px]">
             Add monthly expenses to track real profit.
           </p>
-          <Button size="sm" variant="outline" className="gap-1.5 text-xs">
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="gap-1.5 text-xs"
+            onClick={() => window.open("https://scan.palawancollective.com?mode=live", "_blank")}
+          >
             <Plus className="w-3 h-3" />
             Add Expense
           </Button>

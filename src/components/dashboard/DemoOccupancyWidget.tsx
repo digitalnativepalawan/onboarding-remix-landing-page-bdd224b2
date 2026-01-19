@@ -44,11 +44,21 @@ const DemoOccupancyWidget = ({ mode, hasData = false }: DemoOccupancyWidgetProps
             No bookings yet. Connect Sirvoy or add manual reservations.
           </p>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" className="gap-1.5 text-xs">
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="gap-1.5 text-xs"
+              onClick={() => window.open("https://onboarding.heatmap.palawancollective.com?mode=live", "_blank")}
+            >
               <Link2 className="w-3 h-3" />
               Connect Sirvoy
             </Button>
-            <Button size="sm" variant="ghost" className="gap-1.5 text-xs">
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              className="gap-1.5 text-xs"
+              onClick={() => window.open("https://onboarding.heatmap.palawancollective.com?mode=live", "_blank")}
+            >
               <Plus className="w-3 h-3" />
               Add Manual
             </Button>
