@@ -9,6 +9,7 @@ import BestPracticesSection from "@/components/landing/BestPracticesSection";
 import FAQSection from "@/components/landing/FAQSection";
 import FeedbackSection from "@/components/landing/FeedbackSection";
 import Footer from "@/components/landing/Footer";
+import ScrollFloaters from "@/components/landing/ScrollFloaters";
 
 const Index = () => {
   return (
@@ -24,6 +25,7 @@ const Index = () => {
       <FAQSection />
       <FeedbackSection />
       <Footer />
+      <ScrollFloaters />
     </div>
   );
 };
