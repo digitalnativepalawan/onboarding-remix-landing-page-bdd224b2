@@ -35,6 +35,17 @@ export interface TranslationKeys {
     badge1: string;
     badge2: string;
     yourTools: string;
+    sirvoyNote: string;
+    startDemo: string;
+    connectResort: string;
+    trustNote: string;
+  };
+  onboardingStrip: {
+    title: string;
+    step1: { title: string; subtitle: string; description: string };
+    step2: { title: string; subtitle: string; description: string };
+    step3: { title: string; subtitle: string; description: string };
+    footer: string;
   };
   onboarding: {
     tag: string;

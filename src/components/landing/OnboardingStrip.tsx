@@ -1,37 +1,40 @@
 import { Eye, ClipboardList, Rocket } from "lucide-react";
-
-const steps = [
-  {
-    icon: Eye,
-    step: "1",
-    title: "Explore",
-    subtitle: "Demo Mode",
-    description: "View real dashboards with sample bookings, staff, orders, and expenses."
-  },
-  {
-    icon: ClipboardList,
-    step: "2",
-    title: "Add Your Basics",
-    subtitle: "",
-    description: "Units, staff, menu, and inventory using simple forms or CSV upload."
-  },
-  {
-    icon: Rocket,
-    step: "3",
-    title: "Go Live",
-    subtitle: "",
-    description: "Connect Sirvoy and start tracking real bookings, profit, and payroll."
-  }
-];
+import { useTranslation } from "@/contexts/LocaleContext";
 
 const OnboardingStrip = () => {
+  const { t } = useTranslation();
+
+  const steps = [
+    {
+      icon: Eye,
+      step: "1",
+      title: t("onboardingStrip.step1.title"),
+      subtitle: t("onboardingStrip.step1.subtitle"),
+      description: t("onboardingStrip.step1.description")
+    },
+    {
+      icon: ClipboardList,
+      step: "2",
+      title: t("onboardingStrip.step2.title"),
+      subtitle: t("onboardingStrip.step2.subtitle"),
+      description: t("onboardingStrip.step2.description")
+    },
+    {
+      icon: Rocket,
+      step: "3",
+      title: t("onboardingStrip.step3.title"),
+      subtitle: t("onboardingStrip.step3.subtitle"),
+      description: t("onboardingStrip.step3.description")
+    }
+  ];
+
   return (
     <section id="onboarding-steps" className="py-10 sm:py-14 bg-muted/20 border-y border-border/30">
       <div className="px-5 sm:px-6 max-w-3xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-8">
           <h2 className="text-lg sm:text-xl font-medium text-foreground">
-            From signup to real operations
+            {t("onboardingStrip.title")}
           </h2>
         </div>
 
@@ -70,7 +73,7 @@ const OnboardingStrip = () => {
 
         {/* Footer Note */}
         <p className="text-xs text-muted-foreground/80 text-center mt-6">
-          You can switch between demo and live data anytime while setting up.
+          {t("onboardingStrip.footer")}
         </p>
       </div>
     </section>

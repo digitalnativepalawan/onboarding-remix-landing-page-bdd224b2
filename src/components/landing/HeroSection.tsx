@@ -2,9 +2,11 @@ import { useNavigate } from "react-router-dom";
 import heroBg from "@/assets/hero-palawan.jpg";
 import { ChevronDown, Play, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/contexts/LocaleContext";
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
@@ -21,17 +23,17 @@ const HeroSection = () => {
         <div className="max-w-2xl mx-auto text-center space-y-6">
           {/* Primary headline */}
           <h1 className="animate-fade-up opacity-0 text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight leading-[1.15]" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
-            Run Your Resort in One Dashboard
+            {t("hero.headline")} {t("hero.headlineGradient")}
           </h1>
           
           {/* Subheadline */}
           <p className="animate-fade-up opacity-0 text-sm sm:text-base text-foreground/80 leading-relaxed max-w-lg mx-auto" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
-            Bookings, staff, food, inventory, and cash — all connected in real time, built for small and off-grid resorts.
+            {t("hero.subheadline")}
           </p>
 
           {/* Support line */}
           <p className="animate-fade-up opacity-0 text-xs text-muted-foreground" style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}>
-            Sirvoy manages your bookings. Palawan Collective runs your daily operations.
+            {t("hero.sirvoyNote")}
           </p>
 
           {/* CTAs */}
@@ -42,7 +44,7 @@ const HeroSection = () => {
               onClick={() => navigate("/setup?mode=demo")}
             >
               <Play className="w-4 h-4" />
-              Start with Demo Data
+              {t("hero.startDemo")}
             </Button>
             <Button 
               variant="outline"
@@ -51,13 +53,13 @@ const HeroSection = () => {
               onClick={() => navigate("/setup?mode=live")}
             >
               <Link2 className="w-4 h-4" />
-              Connect My Resort
+              {t("hero.connectResort")}
             </Button>
           </div>
 
           {/* Trust note */}
           <p className="animate-fade-up opacity-0 text-xs text-muted-foreground/80 max-w-sm mx-auto" style={{ animationDelay: '0.45s', animationFillMode: 'forwards' }}>
-            No changes to your booking channels. You stay in control of your data.
+            {t("hero.trustNote")}
           </p>
         </div>
       </div>
