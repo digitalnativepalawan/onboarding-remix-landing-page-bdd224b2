@@ -41,7 +41,7 @@ const DemoOccupancyWidget = ({ mode, hasData = false }: DemoOccupancyWidgetProps
             <Home className="w-6 h-6 text-muted-foreground" />
           </div>
           <p className="text-sm text-muted-foreground mb-4 max-w-[200px]">
-            No bookings yet. Connect Sirvoy or add manual reservations.
+            No bookings yet. Connect Cloudbeds or add manual reservations.
           </p>
           <div className="flex gap-2">
             <Button 
@@ -51,7 +51,7 @@ const DemoOccupancyWidget = ({ mode, hasData = false }: DemoOccupancyWidgetProps
               onClick={() => window.open("https://onboarding.heatmap.palawancollective.com?mode=live", "_blank")}
             >
               <Link2 className="w-3 h-3" />
-              Connect Sirvoy
+              Connect Cloudbeds
             </Button>
             <Button 
               size="sm" 

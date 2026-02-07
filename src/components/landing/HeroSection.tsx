@@ -33,7 +33,7 @@ const HeroSection = () => {
 
           {/* Support line */}
           <p className="animate-fade-up opacity-0 text-xs text-muted-foreground" style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}>
-            {t("hero.sirvoyNote")}
+            {t("hero.cloudbedsNote")}
           </p>
 
           {/* CTAs */}

@@ -15,10 +15,10 @@ export const tl: TranslationKeys = {
     headline: 'Patakbuhin ang Iyong Resort',
     headlineGradient: 'sa Isang Dashboard',
     subheadline: 'Mga booking, staff, pagkain, imbentaryo, at pera — lahat konektado sa real time, ginawa para sa maliliit at off-grid na resort.',
-    badge1: 'Konektado sa Sirvoy para sa real-time na booking data',
+    badge1: 'Konektado sa Cloudbeds para sa real-time na booking data',
     badge2: 'Hindi mo kailangan ang lahat ng module sa unang araw',
     yourTools: 'Mga Tool Mo',
-    sirvoyNote: 'Ang Sirvoy ang bahala sa mga booking mo. Ang Palawan Collective ang nagpapatakbo ng araw-araw na operasyon.',
+    cloudbedsNote: 'Ang Cloudbeds ang bahala sa mga booking mo. Ang Palawan Collective ang nagpapatakbo ng araw-araw na operasyon.',
     startDemo: 'Magsimula sa Demo Data',
     connectResort: 'I-connect ang Aking Resort',
     trustNote: 'Walang pagbabago sa iyong booking channels. Ikaw ang may kontrol sa iyong data.',
@@ -27,7 +27,7 @@ export const tl: TranslationKeys = {
     title: 'Mula sa signup hanggang sa tunay na operasyon',
     step1: { title: 'Galugarin', subtitle: 'Demo Mode', description: 'Tingnan ang mga tunay na dashboard na may sample na booking, staff, order, at gastos.' },
     step2: { title: 'Ilagay ang mga Basic', subtitle: '', description: 'Mga unit, staff, menu, at imbentaryo gamit ang simpleng form o CSV upload.' },
-    step3: { title: 'Magsimula na', subtitle: '', description: 'I-connect ang Sirvoy at simulang i-track ang tunay na booking, kita, at payroll.' },
+    step3: { title: 'Magsimula na', subtitle: '', description: 'I-connect ang Cloudbeds at simulang i-track ang tunay na booking, kita, at payroll.' },
     footer: 'Maaari kang magpalit ng demo at live data anumang oras habang nagse-setup.',
   },
   onboarding: {
@@ -36,8 +36,8 @@ export const tl: TranslationKeys = {
     subtitle: 'Opsyonal na gabay para makapagsimula ka sa mga karaniwang hakbang ng setup. Bawat aksyon ay nakalink sa tamang module.',
     footer: 'Ang checklist na ito ay pang-impormasyon lamang. Hindi sinusubaybayan ang progreso at opsyonal ang pagkumpleto.',
     items: {
-      connectSirvoy: {
-        title: 'I-connect ang Sirvoy',
+      connectCloudbeds: {
+        title: 'I-connect ang Cloudbeds',
         description: 'I-link ang iyong property management system para sa real-time na occupancy tracking.',
       },
       setupOccupancy: {
@@ -69,9 +69,9 @@ export const tl: TranslationKeys = {
   howItWorks: {
     tag: 'Integration',
     title: 'Paano Ito Gumagana',
-    subtitle: 'Ang Sirvoy ay nagpapadala ng booking data sa Palawan Collective sa real time',
-    sirvoyIntegration: 'Sirvoy Integration',
-    sirvoyDescription: 'Ang Sirvoy ang iyong booking engine. Ang Palawan Collective ang iyong operations dashboard. Gumagana sila ng sabay sa pamamagitan ng live webhooks.',
+    subtitle: 'Ang Cloudbeds ay nagpapadala ng booking data sa Palawan Collective sa real time',
+    cloudbedsIntegration: 'Cloudbeds Integration',
+    cloudbedsDescription: 'Ang Cloudbeds ang iyong booking engine. Ang Palawan Collective ang iyong operations dashboard. Gumagana sila ng sabay sa pamamagitan ng live webhooks.',
     syncStatus: 'Nagsi-sync sa mga booking channel',
     features: {
       liveWebhooks: {
@@ -159,7 +159,7 @@ export const tl: TranslationKeys = {
     title: 'Best Practices',
     subtitle: 'Sulitin ang iyong dashboard',
     items: {
-      editBookings: 'I-edit ang bookings sa Sirvoy — awtomatikong mag-a-update ang dashboard',
+      editBookings: 'I-edit ang bookings sa Cloudbeds — awtomatikong mag-a-update ang dashboard',
       useOtrScan: 'Gamitin ang OTR Scan sa bawat pagbili para ma-track ang expenses',
       updateExpenses: 'I-update ang expenses monthly para sa tumpak na profit tracking',
       useScheduling: 'Gamitin ang scheduling tools araw-araw para sa staff coordination',

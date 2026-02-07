@@ -49,7 +49,7 @@ const FeatureDetailModal = ({ open, onOpenChange }: FeatureDetailModalProps) => 
                 What it is
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
-                Our Occupancy Heatmap + Profit Dashboard connected to Sirvoy webhooks. 
+                Our Occupancy Heatmap + Profit Dashboard connected to Cloudbeds webhooks. 
                 Any new booking, cancellation, or date change from all channels automatically 
                 updates here—so you avoid double bookings and always see real occupancy.
               </p>
@@ -100,7 +100,7 @@ const FeatureDetailModal = ({ open, onOpenChange }: FeatureDetailModalProps) => 
               </h3>
               <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
                 Run your resort like a dashboard: one view for occupancy, costs, and upsells—updated 
-                automatically from Sirvoy.
+                automatically from Cloudbeds.
               </p>
             </div>
 
@@ -112,7 +112,7 @@ const FeatureDetailModal = ({ open, onOpenChange }: FeatureDetailModalProps) => 
               <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground font-light">
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">•</span>
-                  <span>Your dashboard will be empty until Sirvoy sends booking data.</span>
+                  <span>Your dashboard will be empty until Cloudbeds sends booking data.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">•</span>

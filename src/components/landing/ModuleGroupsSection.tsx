@@ -16,9 +16,9 @@ const moduleGroups: ModuleGroup[] = [
     icon: Home,
     title: "Run Your Rooms",
     color: "primary",
-    dataEnters: "Reservations from Sirvoy, manual bookings, occupancy logs",
+    dataEnters: "Reservations from Cloudbeds, manual bookings, occupancy logs",
     ownerSees: "Occupancy calendar, revenue per unit, booking timeline, profit margin",
-    setupRequired: "Connect Sirvoy API key, add room/unit list with rates"
+    setupRequired: "Connect Cloudbeds API key, add room/unit list with rates"
   },
   {
     icon: Users,

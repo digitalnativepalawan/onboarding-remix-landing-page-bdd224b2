@@ -35,7 +35,7 @@ export interface TranslationKeys {
     badge1: string;
     badge2: string;
     yourTools: string;
-    sirvoyNote: string;
+    cloudbedsNote: string;
     startDemo: string;
     connectResort: string;
     trustNote: string;
@@ -53,7 +53,7 @@ export interface TranslationKeys {
     subtitle: string;
     footer: string;
     items: {
-      connectSirvoy: { title: string; description: string };
+      connectCloudbeds: { title: string; description: string };
       setupOccupancy: { title: string; description: string };
       addInventory: { title: string; description: string };
       enableTimesheet: { title: string; description: string };
@@ -66,8 +66,8 @@ export interface TranslationKeys {
     tag: string;
     title: string;
     subtitle: string;
-    sirvoyIntegration: string;
-    sirvoyDescription: string;
+    cloudbedsIntegration: string;
+    cloudbedsDescription: string;
     syncStatus: string;
     features: {
       liveWebhooks: { title: string; description: string };

@@ -48,7 +48,7 @@ const Footer = () => {
             </div>
             <div>
               <h4 className="text-xs font-medium text-white/90 mb-3">{t("footer.integration")}</h4>
-              <p className="text-xs text-white/60 mb-2">{t("footer.poweredBy")} <a href="https://www.sirvoy.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary transition-colors">Sirvoy</a></p>
+              <p className="text-xs text-white/60 mb-2">{t("footer.poweredBy")} <a href="https://www.cloudbeds.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary transition-colors">Cloudbeds</a></p>
               <p className="text-xs text-white/50">Booking.com · Agoda · Airbnb</p>
             </div>
           </div>
@@ -68,7 +68,7 @@ const Footer = () => {
             </div>
             <div>
               <h4 className="text-xs font-medium text-white/90 mb-3">{t("footer.integration")}</h4>
-              <p className="text-xs text-white/60 mb-2">{t("footer.poweredBy")} <a href="https://www.sirvoy.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary transition-colors">Sirvoy</a></p>
+              <p className="text-xs text-white/60 mb-2">{t("footer.poweredBy")} <a href="https://www.cloudbeds.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary transition-colors">Cloudbeds</a></p>
               <ul className="space-y-1 text-xs text-white/50"><li>Booking.com</li><li>Agoda</li><li>Airbnb</li></ul>
             </div>
             <div>

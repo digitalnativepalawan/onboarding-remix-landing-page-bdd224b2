@@ -15,10 +15,10 @@ export const de: TranslationKeys = {
     headline: 'Führen Sie Ihr Resort',
     headlineGradient: 'in einem Dashboard',
     subheadline: 'Buchungen, Personal, Essen, Inventar und Finanzen — alles in Echtzeit verbunden, entwickelt für kleine und netzunabhängige Resorts.',
-    badge1: 'Mit Sirvoy für Echtzeit-Buchungsdaten verbunden',
+    badge1: 'Mit Cloudbeds für Echtzeit-Buchungsdaten verbunden',
     badge2: 'Sie brauchen nicht jedes Modul am ersten Tag',
     yourTools: 'Ihre Werkzeuge',
-    sirvoyNote: 'Sirvoy verwaltet Ihre Buchungen. Palawan Collective führt Ihren täglichen Betrieb.',
+    cloudbedsNote: 'Cloudbeds verwaltet Ihre Buchungen. Palawan Collective führt Ihren täglichen Betrieb.',
     startDemo: 'Mit Demo-Daten starten',
     connectResort: 'Mein Resort verbinden',
     trustNote: 'Keine Änderungen an Ihren Buchungskanälen. Sie behalten die Kontrolle über Ihre Daten.',
@@ -27,7 +27,7 @@ export const de: TranslationKeys = {
     title: 'Von der Anmeldung zum echten Betrieb',
     step1: { title: 'Erkunden', subtitle: 'Demo-Modus', description: 'Sehen Sie echte Dashboards mit Beispielbuchungen, Personal, Bestellungen und Ausgaben.' },
     step2: { title: 'Grundlagen hinzufügen', subtitle: '', description: 'Einheiten, Personal, Menü und Inventar mit einfachen Formularen oder CSV-Upload.' },
-    step3: { title: 'Live gehen', subtitle: '', description: 'Sirvoy verbinden und echte Buchungen, Gewinn und Lohnabrechnung verfolgen.' },
+    step3: { title: 'Live gehen', subtitle: '', description: 'Cloudbeds verbinden und echte Buchungen, Gewinn und Lohnabrechnung verfolgen.' },
     footer: 'Sie können beim Einrichten jederzeit zwischen Demo- und Live-Daten wechseln.',
   },
   onboarding: {
@@ -36,8 +36,8 @@ export const de: TranslationKeys = {
     subtitle: 'Ein optionaler Leitfaden für die häufigsten Einrichtungsschritte. Jede Aktion verlinkt zum relevanten Modul.',
     footer: 'Diese Checkliste dient nur zur Information. Der Fortschritt wird nicht verfolgt und die Fertigstellung ist optional.',
     items: {
-      connectSirvoy: {
-        title: 'Sirvoy verbinden',
+      connectCloudbeds: {
+        title: 'Cloudbeds verbinden',
         description: 'Verbinden Sie Ihr Property-Management-System für Echtzeit-Belegungsverfolgung.',
       },
       setupOccupancy: {
@@ -69,9 +69,9 @@ export const de: TranslationKeys = {
   howItWorks: {
     tag: 'Integration',
     title: 'So funktioniert es',
-    subtitle: 'Sirvoy sendet Buchungsdaten in Echtzeit an Palawan Collective',
-    sirvoyIntegration: 'Sirvoy-Integration',
-    sirvoyDescription: 'Sirvoy ist Ihre Buchungsmaschine. Palawan Collective ist Ihr Betriebs-Dashboard. Sie arbeiten über Live-Webhooks zusammen.',
+    subtitle: 'Cloudbeds sendet Buchungsdaten in Echtzeit an Palawan Collective',
+    cloudbedsIntegration: 'Cloudbeds-Integration',
+    cloudbedsDescription: 'Cloudbeds ist Ihre Buchungsmaschine. Palawan Collective ist Ihr Betriebs-Dashboard. Sie arbeiten über Live-Webhooks zusammen.',
     syncStatus: 'Synchronisierung mit Buchungskanälen',
     features: {
       liveWebhooks: {
@@ -159,7 +159,7 @@ export const de: TranslationKeys = {
     title: 'Best Practices',
     subtitle: 'Holen Sie das Beste aus Ihrem Dashboard',
     items: {
-      editBookings: 'Buchungen in Sirvoy bearbeiten — Dashboard aktualisiert sich automatisch',
+      editBookings: 'Buchungen in Cloudbeds bearbeiten — Dashboard aktualisiert sich automatisch',
       useOtrScan: 'OTR Scan für jeden Einkauf nutzen, um Ausgaben zu verfolgen',
       updateExpenses: 'Ausgaben monatlich aktualisieren für genaue Gewinnverfolgung',
       useScheduling: 'Planungstools täglich für Personalkoordination nutzen',

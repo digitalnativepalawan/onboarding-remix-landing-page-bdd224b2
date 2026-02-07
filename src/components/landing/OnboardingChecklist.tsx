@@ -12,7 +12,7 @@ import {
 const checklistItems = [
   {
     icon: Link2,
-    title: "Connect Sirvoy",
+    title: "Connect Cloudbeds",
     description: "Link your booking engine to start receiving real-time reservation data"
   },
   {
@@ -38,7 +38,7 @@ const checklistItems = [
   {
     icon: RefreshCw,
     title: "Review your first booking sync",
-    description: "Check that Sirvoy data is flowing into Occupancy"
+    description: "Check that Cloudbeds data is flowing into Occupancy"
   },
   {
     icon: LayoutDashboard,

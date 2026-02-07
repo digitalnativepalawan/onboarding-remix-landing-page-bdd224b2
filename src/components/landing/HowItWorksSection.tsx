@@ -27,8 +27,8 @@ const HowItWorksSection = () => {
                 <Zap className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm sm:text-base font-normal mb-1">{t("howItWorks.sirvoyIntegration")}</h3>
-                <p className="text-white/80 text-xs sm:text-sm leading-relaxed">{t("howItWorks.sirvoyDescription")}</p>
+                <h3 className="text-sm sm:text-base font-normal mb-1">{t("howItWorks.cloudbedsIntegration")}</h3>
+                <p className="text-white/80 text-xs sm:text-sm leading-relaxed">{t("howItWorks.cloudbedsDescription")}</p>
               </div>
             </div>
 

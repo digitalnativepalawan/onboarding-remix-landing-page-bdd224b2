@@ -24,7 +24,7 @@ const legalContent = {
       },
       {
         heading: "What We Provide",
-        content: `Palawan Collective offers operational tools for small to mid-size accommodations including occupancy tracking, employee timesheets, online ordering, and data management. Our tools are designed to complement your existing booking system (like Sirvoy), not replace it.`,
+        content: `Palawan Collective offers operational tools for small to mid-size accommodations including occupancy tracking, employee timesheets, online ordering, and data management. Our tools are designed to complement your existing booking system (like Cloudbeds), not replace it.`,
       },
       {
         heading: "Your Responsibilities",
@@ -61,11 +61,11 @@ const legalContent = {
       },
       {
         heading: "We Don't Sell Your Data",
-        content: `We do not sell, rent, or trade your personal information to third parties. Your data is yours. We only share data when necessary to provide our services (like syncing with Sirvoy) or when required by law.`,
+        content: `We do not sell, rent, or trade your personal information to third parties. Your data is yours. We only share data when necessary to provide our services (like syncing with Cloudbeds) or when required by law.`,
       },
       {
         heading: "Third-Party Integrations",
-        content: `When you connect to Sirvoy or other booking channels, some data flows between systems. We only sync what's necessary for the integration to work. Each third-party has their own privacy policy.`,
+        content: `When you connect to Cloudbeds or other booking channels, some data flows between systems. We only sync what's necessary for the integration to work. Each third-party has their own privacy policy.`,
       },
       {
         heading: "Contact Us",
@@ -85,8 +85,8 @@ const legalContent = {
         content: `We use industry-standard encryption for data in transit and at rest. Our infrastructure is hosted on secure cloud services. We regularly review and update our security practices.`,
       },
       {
-        heading: "Sirvoy Integration",
-        content: `Palawan Collective connects to Sirvoy via secure webhooks. When a booking is made or updated in Sirvoy, the relevant data syncs to our platform automatically. We only receive what's needed for operations—nothing more.`,
+        heading: "Cloudbeds Integration",
+        content: `Palawan Collective connects to Cloudbeds via secure webhooks. When a booking is made or updated in Cloudbeds, the relevant data syncs to our platform automatically. We only receive what's needed for operations—nothing more.`,
       },
       {
         heading: "Syncing Behavior",

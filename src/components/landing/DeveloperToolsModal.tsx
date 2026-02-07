@@ -10,7 +10,7 @@ interface DeveloperToolsModalProps {
 
 const DeveloperToolsModal = ({ open, onOpenChange }: DeveloperToolsModalProps) => {
   const capabilities = [
-    "Download bookings, transactions, income, and expense data synced from Sirvoy",
+    "Download bookings, transactions, income, and expense data synced from Cloudbeds",
     "View real-time financial performance (income vs expenses, profit & loss)",
     "Export data for accounting, tax reporting, and audits",
     "Access admin-only tools, GitHub repositories, and system configurations",
@@ -61,10 +61,10 @@ const DeveloperToolsModal = ({ open, onOpenChange }: DeveloperToolsModalProps) =
                 Centralized Control Over Your Entire Resort Ecosystem
               </h3>
               <p className="text-muted-foreground text-sm font-light leading-relaxed">
-                This section acts as the system backbone of Palawan Collective. It is where all operational data converges — bookings, finances, staff activity, and integrations — with Sirvoy at the core.
+                This section acts as the system backbone of Palawan Collective. It is where all operational data converges — bookings, finances, staff activity, and integrations — with Cloudbeds at the core.
               </p>
               <p className="text-muted-foreground text-sm font-light leading-relaxed mt-3">
-                Sirvoy is fully integrated as the source of truth for reservations. Any new booking, cancellation, or date change from Booking.com, Airbnb, Agoda, direct bookings, or iCal syncs automatically into this dashboard.
+                Cloudbeds is fully integrated as the source of truth for reservations. Any new booking, cancellation, or date change from Booking.com, Airbnb, Agoda, direct bookings, or iCal syncs automatically into this dashboard.
               </p>
             </div>
 

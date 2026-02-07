@@ -20,8 +20,8 @@ const OnboardingChecklist = ({ mode }: OnboardingChecklistProps) => {
   // In live mode, show actual progress (all incomplete for now)
   const items: ChecklistItem[] = [
     {
-      id: "sirvoy",
-      label: "Connect Sirvoy bookings",
+      id: "cloudbeds",
+      label: "Connect Cloudbeds bookings",
       icon: Link2,
       completed: false,
     },
