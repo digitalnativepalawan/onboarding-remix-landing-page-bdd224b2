@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Pencil, Trash2, Plus, Check, X, Star, Link, HelpCircle } from "lucide-react";
+import { Pencil, Trash2, Plus, Check, X, Star, Link, HelpCircle, Download } from "lucide-react";
 
 interface AppLink {
   id: string;
@@ -76,6 +76,11 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   const [editFaqForm, setEditFaqForm] = useState({ question: "", answer: "" });
   const [isAddingFaq, setIsAddingFaq] = useState(false);
   const [newFaqForm, setNewFaqForm] = useState({ question: "", answer: "" });
+
+  // Header link state
+  const [headerLinkTitle, setHeaderLinkTitle] = useState("");
+  const [headerLinkUrl, setHeaderLinkUrl] = useState("");
+  const [headerLinkId, setHeaderLinkId] = useState<string | null>(null);
   
   const [loading, setLoading] = useState(false);
 
@@ -106,10 +111,63 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     setFaqs(data || []);
   };
 
+  const fetchHeaderLink = async () => {
+    const { data } = await supabase
+      .from("header_link")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
+    if (data) {
+      setHeaderLinkId(data.id);
+      setHeaderLinkTitle(data.title);
+      setHeaderLinkUrl(data.url);
+    } else {
+      setHeaderLinkId(null);
+      setHeaderLinkTitle("");
+      setHeaderLinkUrl("");
+    }
+  };
+
+  const handleSaveHeaderLink = async () => {
+    if (!headerLinkTitle || !headerLinkUrl) {
+      toast.error("Title and URL are required");
+      return;
+    }
+    setLoading(true);
+    if (headerLinkId) {
+      const { error } = await supabase
+        .from("header_link")
+        .update({ title: headerLinkTitle, url: headerLinkUrl })
+        .eq("id", headerLinkId);
+      if (error) toast.error("Failed to update");
+      else toast.success("Header link updated");
+    } else {
+      const { error } = await supabase
+        .from("header_link")
+        .insert({ title: headerLinkTitle, url: headerLinkUrl });
+      if (error) toast.error("Failed to save");
+      else toast.success("Header link saved");
+    }
+    await fetchHeaderLink();
+    setLoading(false);
+  };
+
+  const handleDeleteHeaderLink = async () => {
+    if (!headerLinkId) return;
+    setLoading(true);
+    await supabase.from("header_link").delete().eq("id", headerLinkId);
+    setHeaderLinkId(null);
+    setHeaderLinkTitle("");
+    setHeaderLinkUrl("");
+    toast.success("Header link removed");
+    setLoading(false);
+  };
+
   useEffect(() => {
     if (open) {
       fetchLinks();
       fetchFaqs(faqLanguageFilter);
+      fetchHeaderLink();
     }
   }, [open, faqLanguageFilter]);
 
@@ -260,7 +318,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
         </DialogHeader>
 
         <Tabs defaultValue="links" className="mt-4">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="links" className="flex items-center gap-2">
               <Link className="w-4 h-4" />
               App Links
@@ -268,6 +326,10 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
             <TabsTrigger value="faqs" className="flex items-center gap-2">
               <HelpCircle className="w-4 h-4" />
               FAQs
+            </TabsTrigger>
+            <TabsTrigger value="header" className="flex items-center gap-2">
+              <Download className="w-4 h-4" />
+              Header Link
             </TabsTrigger>
           </TabsList>
 
@@ -515,6 +577,56 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
               >
                 <Plus className="w-4 h-4 mr-2" /> Add New FAQ
               </Button>
+            )}
+          </TabsContent>
+
+          {/* Header Link Tab */}
+          <TabsContent value="header" className="space-y-4 mt-4">
+            <p className="text-sm text-muted-foreground">
+              Configure a download link or URL that appears in the header bar. Users will see a button with your title.
+            </p>
+            <div className="space-y-3 p-4 rounded-lg border border-border/50 bg-card/50">
+              <div className="space-y-2">
+                <Label htmlFor="header-title" className="text-xs">Title (subject)</Label>
+                <Input
+                  id="header-title"
+                  placeholder="e.g. Staff Manual, Menu PDF"
+                  value={headerLinkTitle}
+                  onChange={(e) => setHeaderLinkTitle(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="header-url" className="text-xs">URL (image or link)</Label>
+                <Input
+                  id="header-url"
+                  placeholder="https://example.com/file.pdf"
+                  value={headerLinkUrl}
+                  onChange={(e) => setHeaderLinkUrl(e.target.value)}
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" onClick={handleSaveHeaderLink} disabled={loading}>
+                  <Check className="w-3 h-3 mr-1" /> {headerLinkId ? "Update" : "Save"}
+                </Button>
+                {headerLinkId && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive hover:text-destructive"
+                    onClick={handleDeleteHeaderLink}
+                    disabled={loading}
+                  >
+                    <Trash2 className="w-3 h-3 mr-1" /> Remove
+                  </Button>
+                )}
+              </div>
+            </div>
+            {headerLinkId && (
+              <div className="p-3 rounded-lg bg-muted/50 border border-border/30">
+                <p className="text-xs text-muted-foreground">
+                  ✅ Active — "<span className="text-foreground font-medium">{headerLinkTitle}</span>" is visible in the header.
+                </p>
+              </div>
             )}
           </TabsContent>
         </Tabs>
