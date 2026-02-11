@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Settings } from "lucide-react";
+import { Settings, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,6 +12,13 @@ import { Label } from "@/components/ui/label";
 import AdminSettingsModal from "./AdminSettingsModal";
 import LocaleSwitcher from "./LocaleSwitcher";
 import { useTranslation } from "@/contexts/LocaleContext";
+import { supabase } from "@/integrations/supabase/client";
+
+interface HeaderLink {
+  id: string;
+  title: string;
+  url: string;
+}
 
 const ADMIN_PASSKEY = "5309";
 
@@ -29,6 +36,20 @@ const Header = () => {
   const [showAdminSettings, setShowAdminSettings] = useState(false);
   const [passkey, setPasskey] = useState("");
   const [error, setError] = useState("");
+  const [headerLink, setHeaderLink] = useState<HeaderLink | null>(null);
+
+  const fetchHeaderLink = async () => {
+    const { data } = await supabase
+      .from("header_link")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
+    setHeaderLink(data);
+  };
+
+  useEffect(() => {
+    fetchHeaderLink();
+  }, []);
 
   useEffect(() => {
     const updateTimes = () => {
@@ -84,7 +105,19 @@ const Header = () => {
                 </div>
               ))}
             </div>
-            <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              {headerLink && (
+                <a
+                  href={headerLink.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-white/80 hover:text-white transition-colors px-2 py-1 rounded-md hover:bg-white/10"
+                  title={headerLink.title}
+                >
+                  <Download className="w-4 h-4" />
+                  <span className="text-[10px] sm:text-xs font-medium truncate max-w-[80px] sm:max-w-[120px]">{headerLink.title}</span>
+                </a>
+              )}
               <LocaleSwitcher />
               <button
                 onClick={handleSettingsClick}
@@ -127,7 +160,10 @@ const Header = () => {
       {/* Admin Settings Modal */}
       <AdminSettingsModal
         open={showAdminSettings}
-        onOpenChange={setShowAdminSettings}
+        onOpenChange={(open) => {
+          setShowAdminSettings(open);
+          if (!open) fetchHeaderLink();
+        }}
       />
     </>
   );
