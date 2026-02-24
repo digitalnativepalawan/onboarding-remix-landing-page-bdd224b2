@@ -1,83 +1,94 @@
 
 
-## Plan: Make Footer and Setup Page Dynamic from Database
+## Plan: Consolidate to Single App at account.palawancollective.com
 
-### Problem
-When you add a new app link in Admin Settings, it saves to the `app_links` table in the database. However, the **Footer** and **Setup** page both use hardcoded arrays of links, so new apps never appear there.
-
-### Root Cause
-- **Footer** has a hardcoded `productLinks` array (Dashboard, Occupancy, Timesheet, Orders, OTR Scan)
-- **Setup** has a hardcoded `APPS` array (same 5 apps with icons and URLs)
-- Neither component queries the `app_links` database table
+### Context
+You've merged all 5 separate apps (Dashboard, Timesheet, Inventory, Orders, OTR Scan) into one unified app at `account.palawancollective.com`. The current landing page and dashboard still reference the old multi-app setup with demo/live modes and individual app URLs.
 
 ---
 
-### Solution
+### Changes Overview
 
-#### 1. Footer -- Fetch links from database
+#### 1. HeroSection -- Single CTA pointing to account.palawancollective.com
 
-**File:** `src/components/landing/Footer.tsx`
+**File:** `src/components/landing/HeroSection.tsx`
 
-- Remove the hardcoded `productLinks` array
-- Fetch from `app_links` table using Supabase, ordered by `display_order`
-- Display all links dynamically in the Products column
-- Show a loading skeleton or empty state while fetching
+- Remove the "Start with Demo Data" button entirely
+- Change "Connect My Resort" to open `https://account.palawancollective.com` directly (no longer navigates to `/setup`)
+- Keep the trust note and Cloudbeds note as-is
 
-#### 2. Setup -- Fetch links from database
+#### 2. OnboardingStrip -- Simplify steps
+
+**File:** `src/components/landing/OnboardingStrip.tsx`
+
+- Update Step 1 to reference exploring the landing page (not demo mode)
+- Update Step 3 to say "Sign up at account.palawancollective.com" instead of referencing multiple apps
+
+Update corresponding translations in all 4 language files.
+
+#### 3. Dashboard -- Replace hardcoded quick-nav apps with single link
+
+**File:** `src/pages/Dashboard.tsx`
+
+- Remove the hardcoded `EXTERNAL_APP_URLS` map (5 old URLs)
+- Remove the `quickApps` array with 5 separate app buttons
+- Replace with a single "Open Backoffice" button pointing to `https://account.palawancollective.com`
+
+#### 4. Dashboard Widgets -- Update empty-state URLs
+
+**File:** `src/components/dashboard/DemoOccupancyWidget.tsx`
+- Change "Connect Cloudbeds" and "Add Manual" buttons from `onboarding.heatmap.palawancollective.com` to `account.palawancollective.com`
+
+**File:** `src/components/dashboard/DemoRevenueWidget.tsx`
+- Change "Connect Booking Source" button URL to `account.palawancollective.com`
+
+**File:** `src/components/dashboard/DemoExpensesWidget.tsx`
+- Change "Add Expense" button URL to `account.palawancollective.com`
+
+#### 5. Dashboard OnboardingChecklist -- Update setup link
+
+**File:** `src/components/dashboard/OnboardingChecklist.tsx`
+- Change "Go to Setup" button to open `account.palawancollective.com` instead of navigating to `/setup`
+
+#### 6. Setup Page -- Simplify to single-app redirect
 
 **File:** `src/pages/Setup.tsx`
 
-- Remove the hardcoded `APPS` array
-- Fetch from `app_links` table on mount
-- Map the database `icon` field (e.g., "Clock", "UtensilsCrossed") to the actual Lucide icon components using a lookup map
-- Keep the "Backoffice Dashboard" detection logic (match by name or add a flag) for the "Default" badge and recommendation
-- Show a loading state while fetching
+The 3-step wizard (choose tools, choose mode, pick starting app) no longer makes sense with 1 unified app. Simplify to:
+- A brief welcome/confirmation screen
+- A single "Go to My Account" button that opens `account.palawancollective.com`
+- Keep the back button to return to landing page
 
-#### 3. Icon Mapping Utility
+#### 7. Translation updates
 
-**New file:** `src/lib/iconMap.ts`
-
-Create a simple mapping from icon name strings (stored in the database) to Lucide React icon components. This is needed because the database stores icon names as strings like "Clock", "UtensilsCrossed", etc.
-
-```
-LayoutDashboard -> LayoutDashboard component
-Clock -> Clock component
-UtensilsCrossed -> UtensilsCrossed component
-Package -> Package component
-ScanLine -> ScanLine component
-...etc (all icons from AdminSettingsModal ICON_OPTIONS)
-```
+**Files:** `en.ts`, `tl.ts`, `de.ts`, `it.ts`
+- Update `hero.startDemo` key -- remove or repurpose
+- Update `hero.connectResort` text if needed
+- Update `onboardingStrip.step3` description to reference single app
+- Add/update any new keys for the simplified setup page
 
 ---
 
-### Technical Details
-
-**Footer changes:**
-- Use `useEffect` + `useState` to fetch `app_links` on mount
-- Replace `productLinks.map(...)` with the fetched data
-- Each link opens in a new tab with the external URL from the database
-
-**Setup changes:**
-- Fetch `app_links` on mount, store in state
-- Map each database record to the existing `App` interface shape using the icon lookup
-- The first app (or the one named "Backoffice Dashboard") gets the "Default" badge
-- The `?mode=` parameter logic stays the same
-
-**Icon map:**
-- A record mapping string names to Lucide components
-- Fallback to `LayoutDashboard` for unknown icon names
-- Used by both Setup and potentially other components
-
----
-
-### Summary of Changes
+### Summary of Files
 
 | File | Change |
 |------|--------|
-| `src/lib/iconMap.ts` | New -- map icon name strings to Lucide components |
-| `src/components/landing/Footer.tsx` | Fetch product links from `app_links` table instead of hardcoded array |
-| `src/pages/Setup.tsx` | Fetch apps from `app_links` table instead of hardcoded array, use icon map |
+| `src/components/landing/HeroSection.tsx` | Remove demo button, single CTA to account.palawancollective.com |
+| `src/components/landing/OnboardingStrip.tsx` | Update step 3 text |
+| `src/pages/Dashboard.tsx` | Remove 5-app quick nav, single "Open Backoffice" link |
+| `src/components/dashboard/DemoOccupancyWidget.tsx` | Update URLs to account.palawancollective.com |
+| `src/components/dashboard/DemoRevenueWidget.tsx` | Update URL |
+| `src/components/dashboard/DemoExpensesWidget.tsx` | Update URL |
+| `src/components/dashboard/OnboardingChecklist.tsx` | Point to account.palawancollective.com |
+| `src/pages/Setup.tsx` | Simplify to single-app welcome page |
+| `src/lib/i18n/translations/en.ts` | Update translations |
+| `src/lib/i18n/translations/tl.ts` | Update translations |
+| `src/lib/i18n/translations/de.ts` | Update translations |
+| `src/lib/i18n/translations/it.ts` | Update translations |
 
-### Result
-After these changes, any app link added through Admin Settings will automatically appear in both the Footer and the Setup wizard.
+### What stays the same
+- Footer product links (still dynamic from `app_links` database -- you can clean those up via Admin Settings)
+- ModuleGroupsSection (describes operational areas, still relevant)
+- All other landing page sections (FAQ, Benefits, Features, etc.)
+- The `/dashboard` route itself (still useful as a preview/demo page)
 
