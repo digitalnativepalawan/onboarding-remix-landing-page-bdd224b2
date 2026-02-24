@@ -2,11 +2,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
   ArrowLeft,
-  Home,
-  UtensilsCrossed,
-  Package,
-  Receipt,
-  Clock
+  ExternalLink
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ModeBanner from "@/components/dashboard/ModeBanner";
@@ -29,28 +25,8 @@ const Dashboard = () => {
   // For now, demo mode always has data, live mode has no data
   const hasData = mode === "demo";
 
-  // External app URLs
-  const EXTERNAL_APP_URLS: Record<string, string> = {
-    rooms: "https://onboarding.heatmap.palawancollective.com",
-    orders: "https://onboarding.online.order.palawancollective.com",
-    inventory: "https://onboarding.inventory.palawancollective.com",
-    receipts: "https://scan.palawancollective.com",
-    timesheet: "https://onboarding.timesheet.palawancollective.com",
-  };
-
-  // Quick nav apps
-  const quickApps = [
-    { id: "rooms", name: "Rooms", icon: Home, color: "primary" },
-    { id: "orders", name: "Orders", icon: UtensilsCrossed, color: "primary" },
-    { id: "inventory", name: "Inventory", icon: Package, color: "secondary" },
-    { id: "receipts", name: "Receipts", icon: Receipt, color: "secondary" },
-    { id: "timesheet", name: "Timesheet", icon: Clock, color: "primary" },
-  ];
-
-  const openExternalApp = (appId: string) => {
-    const url = new URL(EXTERNAL_APP_URLS[appId]);
-    url.searchParams.set("mode", mode);
-    window.open(url.toString(), "_blank");
+  const openBackoffice = () => {
+    window.open("https://account.palawancollective.com", "_blank");
   };
 
   return (
@@ -95,25 +71,15 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Dashboard Area */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Quick App Access */}
-            <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 lg:mx-0 lg:px-0">
-              {quickApps.map((app) => (
-                <button
-                  key={app.id}
-                  onClick={() => openExternalApp(app.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg border shrink-0 transition-colors ${
-                    app.color === "primary"
-                      ? "border-primary/20 bg-primary/5 hover:bg-primary/10"
-                      : "border-border bg-card hover:bg-muted"
-                  }`}
-                >
-                  <app.icon className={`w-4 h-4 ${
-                    app.color === "primary" ? "text-primary" : "text-muted-foreground"
-                  }`} />
-                  <span className="text-sm text-foreground">{app.name}</span>
-                </button>
-              ))}
-            </div>
+            {/* Open Backoffice */}
+            <Button
+              onClick={openBackoffice}
+              variant="outline"
+              className="gap-2 w-full sm:w-auto"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Open Backoffice
+            </Button>
 
             {/* Occupancy Widget - Full width on top */}
             <DemoOccupancyWidget mode={mode} hasData={hasData} />

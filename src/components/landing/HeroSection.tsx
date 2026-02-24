@@ -1,11 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import heroBg from "@/assets/hero-palawan.jpg";
-import { ChevronDown, Play, Link2 } from "lucide-react";
+import { ChevronDown, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/contexts/LocaleContext";
 
 const HeroSection = () => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   return (
@@ -41,16 +39,7 @@ const HeroSection = () => {
             <Button 
               size="lg"
               className="w-full sm:w-auto gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
-              onClick={() => navigate("/setup?mode=demo")}
-            >
-              <Play className="w-4 h-4" />
-              {t("hero.startDemo")}
-            </Button>
-            <Button 
-              variant="outline"
-              size="lg"
-              className="w-full sm:w-auto gap-2 border-border/50 bg-card/50 hover:bg-card"
-              onClick={() => navigate("/setup?mode=live")}
+              onClick={() => window.open("https://account.palawancollective.com", "_blank")}
             >
               <Link2 className="w-4 h-4" />
               {t("hero.connectResort")}

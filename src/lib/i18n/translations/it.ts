@@ -25,10 +25,10 @@ export const it: TranslationKeys = {
   },
   onboardingStrip: {
     title: 'Dalla registrazione alle operazioni reali',
-    step1: { title: 'Esplora', subtitle: 'Modalità Demo', description: 'Visualizza dashboard reali con prenotazioni di esempio, personale, ordini e spese.' },
+    step1: { title: 'Esplora', subtitle: '', description: 'Esplora questa pagina per vedere quali strumenti sono disponibili per il tuo resort.' },
     step2: { title: 'Aggiungi le Basi', subtitle: '', description: 'Unità, personale, menu e inventario usando moduli semplici o caricamento CSV.' },
-    step3: { title: 'Vai Live', subtitle: '', description: 'Collega Cloudbeds e inizia a tracciare prenotazioni reali, profitto e buste paga.' },
-    footer: 'Puoi passare tra dati demo e live in qualsiasi momento durante la configurazione.',
+    step3: { title: 'Vai Live', subtitle: '', description: 'Registrati su account.palawancollective.com e inizia a gestire il tuo resort.' },
+    footer: 'Tutto funziona da un unico account — nessuna app separata da installare.',
   },
   onboarding: {
     tag: 'Per Iniziare',

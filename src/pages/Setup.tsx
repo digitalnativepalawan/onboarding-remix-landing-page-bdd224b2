@@ -1,97 +1,9 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Check, Sparkles, Building2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-import { supabase } from "@/integrations/supabase/client";
-import { getIcon } from "@/lib/iconMap";
-import { Skeleton } from "@/components/ui/skeleton";
-import type { LucideIcon } from "lucide-react";
-
-interface App {
-  id: string;
-  name: string;
-  shortDesc: string;
-  icon: LucideIcon;
-  url: string;
-  is_primary: boolean;
-}
 
 export default function Setup() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  
-  const preselectedApp = searchParams.get("app");
-  const preselectedMode = searchParams.get("mode");
-  
-  const [step, setStep] = useState(1);
-  const [apps, setApps] = useState<App[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedApps, setSelectedApps] = useState<string[]>([]);
-  const [mode, setMode] = useState<"demo" | "live">(
-    preselectedMode === "live" ? "live" : "demo"
-  );
-
-  useEffect(() => {
-    const fetchApps = async () => {
-      const { data } = await supabase
-        .from("app_links")
-        .select("*")
-        .order("display_order");
-      if (data) {
-        const mapped: App[] = data.map((link) => ({
-          id: link.id,
-          name: link.name,
-          shortDesc: link.url,
-          icon: getIcon(link.icon),
-          url: link.url,
-          is_primary: link.is_primary,
-        }));
-        setApps(mapped);
-        
-        // Set default selections
-        const primaryId = mapped.find((a) => a.is_primary)?.id || mapped[0]?.id;
-        const initial = preselectedApp
-          ? [preselectedApp, primaryId].filter((v, i, a) => v && a.indexOf(v) === i)
-          : primaryId ? [primaryId] : [];
-        setSelectedApps(initial);
-      }
-      setLoading(false);
-    };
-    fetchApps();
-  }, [preselectedApp]);
-
-  const toggleApp = (appId: string) => {
-    setSelectedApps((prev) =>
-      prev.includes(appId) ? prev.filter((id) => id !== appId) : [...prev, appId]
-    );
-  };
-
-  const handleContinue = () => { if (step < 3) setStep(step + 1); };
-  const handleBack = () => { if (step > 1) setStep(step - 1); else navigate("/"); };
-
-  const handleStartApp = (appId: string, appUrl: string) => {
-    const url = new URL(appUrl);
-    url.searchParams.set("mode", mode);
-    window.open(url.toString(), "_blank");
-  };
-
-  const selectedAppDetails = apps.filter((app) => selectedApps.includes(app.id));
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        <div className="space-y-4 w-full max-w-md px-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-20 w-full rounded-xl" />
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -99,156 +11,44 @@ export default function Setup() {
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={handleBack} className="shrink-0">
+            <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="shrink-0">
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="flex-1 min-w-0">
-              <h1 className="text-lg font-semibold truncate">Set Up Your Resort Tools</h1>
-              <p className="text-sm text-muted-foreground truncate">Choose what you want to use now. You can add more later.</p>
+              <h1 className="text-lg font-semibold truncate">Welcome to Palawan Collective</h1>
+              <p className="text-sm text-muted-foreground truncate">Your resort operations platform</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 mt-4">
-            {[1, 2, 3].map((s) => (
-              <div key={s} className="flex items-center gap-2 flex-1">
-                <div className={cn("h-2 flex-1 rounded-full transition-colors", s <= step ? "bg-primary" : "bg-muted")} />
-              </div>
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground mt-2">Step {step} of 3</p>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 pb-24">
-        {/* Step 1: Choose Tools */}
-        {step === 1 && (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Choose Your Tools</h2>
-              <p className="text-sm text-muted-foreground">You can start with one app and add others later.</p>
-            </div>
-            <div className="space-y-3">
-              {apps.map((app) => {
-                const Icon = app.icon;
-                const isSelected = selectedApps.includes(app.id);
-                return (
-                  <button
-                    key={app.id}
-                    onClick={() => toggleApp(app.id)}
-                    className={cn(
-                      "w-full flex items-start gap-4 p-4 rounded-xl border-2 transition-all text-left",
-                      isSelected ? "border-primary bg-primary/10" : "border-border bg-card hover:border-primary/50"
-                    )}
-                  >
-                    <div className={cn("shrink-0 w-12 h-12 rounded-lg flex items-center justify-center", isSelected ? "bg-primary text-primary-foreground" : "bg-muted")}>
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{app.name}</span>
-                        {app.is_primary && (
-                          <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">Default</span>
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-0.5">{app.shortDesc}</p>
-                    </div>
-                    <div className="shrink-0 mt-1">
-                      <Checkbox checked={isSelected} className="pointer-events-none" />
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+      <main className="container mx-auto px-4 py-12">
+        <div className="max-w-md mx-auto text-center space-y-6">
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto">
+            <ExternalLink className="w-8 h-8 text-primary" />
           </div>
-        )}
 
-        {/* Step 2: Choose Mode */}
-        {step === 2 && (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Choose Your Mode</h2>
-              <p className="text-sm text-muted-foreground">Demo mode is safe and does not affect your real systems.</p>
-            </div>
-            <RadioGroup value={mode} onValueChange={(value) => setMode(value as "demo" | "live")} className="space-y-3">
-              <label className={cn("flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all", mode === "demo" ? "border-primary bg-primary/10" : "border-border bg-card hover:border-primary/50")}>
-                <div className={cn("shrink-0 w-12 h-12 rounded-lg flex items-center justify-center", mode === "demo" ? "bg-primary text-primary-foreground" : "bg-muted")}>
-                  <Sparkles className="h-6 w-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">Explore with Demo Data</span>
-                    <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">Recommended</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">View sample bookings, staff, orders, and expenses to see how everything works.</p>
-                </div>
-                <RadioGroupItem value="demo" className="mt-1 shrink-0" />
-              </label>
-              <label className={cn("flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all", mode === "live" ? "border-primary bg-primary/10" : "border-border bg-card hover:border-primary/50")}>
-                <div className={cn("shrink-0 w-12 h-12 rounded-lg flex items-center justify-center", mode === "live" ? "bg-primary text-primary-foreground" : "bg-muted")}>
-                  <Building2 className="h-6 w-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <span className="font-medium">Connect My Real Resort Data</span>
-                  <p className="text-sm text-muted-foreground mt-1">Use your own bookings and operations right away.</p>
-                </div>
-                <RadioGroupItem value="live" className="mt-1 shrink-0" />
-              </label>
-            </RadioGroup>
-            <div className="bg-muted/50 rounded-lg p-4 border border-border">
-              <p className="text-sm text-muted-foreground">💡 <strong className="text-foreground">Tip:</strong> You can switch between demo and live data anytime from within each app.</p>
-            </div>
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">Get Started</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Sign in or create your account to manage bookings, staff, inventory, orders, and expenses — all in one place.
+            </p>
           </div>
-        )}
 
-        {/* Step 3: Choose Starting App */}
-        {step === 3 && (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Start with Your First App</h2>
-              <p className="text-sm text-muted-foreground">You can open other apps anytime from the dashboard or bookmarks.</p>
-            </div>
-            <div className="space-y-3">
-              {selectedAppDetails.map((app) => {
-                const Icon = app.icon;
-                return (
-                  <Button
-                    key={app.id}
-                    onClick={() => handleStartApp(app.id, app.url)}
-                    variant={app.is_primary ? "default" : "outline"}
-                    className={cn("w-full h-auto p-4 flex items-center gap-4 justify-start", app.is_primary && "bg-primary hover:bg-primary/90")}
-                  >
-                    <div className={cn("shrink-0 w-10 h-10 rounded-lg flex items-center justify-center", app.is_primary ? "bg-primary-foreground/20" : "bg-muted")}>
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <div className="flex-1 text-left">
-                      <div className="flex items-center gap-2">
-                        {app.is_primary && <span className="text-yellow-300">⭐</span>}
-                        <span className="font-medium">{app.is_primary ? `${app.name} (recommended)` : `Start with ${app.name}`}</span>
-                      </div>
-                      <p className={cn("text-sm mt-0.5", app.is_primary ? "text-primary-foreground/70" : "text-muted-foreground")}>{app.shortDesc}</p>
-                    </div>
-                  </Button>
-                );
-              })}
-            </div>
-            <div className="bg-muted/50 rounded-lg p-4 border border-border">
-              <p className="text-sm text-muted-foreground">🚀 <strong className="text-foreground">Mode:</strong> {mode === "demo" ? "Demo Data" : "Live Data"} — All apps will open in this mode.</p>
-            </div>
-          </div>
-        )}
-      </main>
+          <Button
+            size="lg"
+            className="w-full gap-2"
+            onClick={() => window.open("https://account.palawancollective.com", "_blank")}
+          >
+            <ExternalLink className="w-4 h-4" />
+            Go to My Account
+          </Button>
 
-      {step < 3 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border p-4">
-          <div className="container mx-auto">
-            <Button onClick={handleContinue} disabled={step === 1 && selectedApps.length === 0} className="w-full h-12 text-base font-medium">
-              Continue
-              {step === 1 && selectedApps.length > 0 && (
-                <span className="ml-2 bg-primary-foreground/20 px-2 py-0.5 rounded-full text-sm">{selectedApps.length} selected</span>
-              )}
-            </Button>
-          </div>
+          <p className="text-xs text-muted-foreground">
+            You'll be redirected to account.palawancollective.com
+          </p>
         </div>
-      )}
+      </main>
     </div>
   );
 }
