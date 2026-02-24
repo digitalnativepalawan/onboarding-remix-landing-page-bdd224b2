@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { Check, Circle, Link2, DollarSign, Home, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -14,8 +13,6 @@ interface OnboardingChecklistProps {
 }
 
 const OnboardingChecklist = ({ mode }: OnboardingChecklistProps) => {
-  const navigate = useNavigate();
-  
   // In demo mode, show as informational
   // In live mode, show actual progress (all incomplete for now)
   const items: ChecklistItem[] = [
@@ -77,9 +74,9 @@ const OnboardingChecklist = ({ mode }: OnboardingChecklistProps) => {
         size="sm"
         variant="outline"
         className="w-full"
-        onClick={() => navigate("/setup?mode=live")}
+        onClick={() => window.open("https://account.palawancollective.com", "_blank")}
       >
-        Go to Setup
+        Go to My Account
       </Button>
     </div>
   );

@@ -25,10 +25,10 @@ export const de: TranslationKeys = {
   },
   onboardingStrip: {
     title: 'Von der Anmeldung zum echten Betrieb',
-    step1: { title: 'Erkunden', subtitle: 'Demo-Modus', description: 'Sehen Sie echte Dashboards mit Beispielbuchungen, Personal, Bestellungen und Ausgaben.' },
+    step1: { title: 'Erkunden', subtitle: '', description: 'Durchstöbern Sie diese Seite, um zu sehen, welche Tools für Ihr Resort verfügbar sind.' },
     step2: { title: 'Grundlagen hinzufügen', subtitle: '', description: 'Einheiten, Personal, Menü und Inventar mit einfachen Formularen oder CSV-Upload.' },
-    step3: { title: 'Live gehen', subtitle: '', description: 'Cloudbeds verbinden und echte Buchungen, Gewinn und Lohnabrechnung verfolgen.' },
-    footer: 'Sie können beim Einrichten jederzeit zwischen Demo- und Live-Daten wechseln.',
+    step3: { title: 'Live gehen', subtitle: '', description: 'Registrieren Sie sich auf account.palawancollective.com und verwalten Sie Ihr Resort.' },
+    footer: 'Alles läuft über ein Konto — keine separaten Apps zu installieren.',
   },
   onboarding: {
     tag: 'Erste Schritte',

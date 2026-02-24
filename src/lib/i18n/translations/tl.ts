@@ -25,10 +25,10 @@ export const tl: TranslationKeys = {
   },
   onboardingStrip: {
     title: 'Mula sa signup hanggang sa tunay na operasyon',
-    step1: { title: 'Galugarin', subtitle: 'Demo Mode', description: 'Tingnan ang mga tunay na dashboard na may sample na booking, staff, order, at gastos.' },
+    step1: { title: 'Galugarin', subtitle: '', description: 'Tingnan ang page na ito para malaman kung anong mga tool ang available para sa iyong resort.' },
     step2: { title: 'Ilagay ang mga Basic', subtitle: '', description: 'Mga unit, staff, menu, at imbentaryo gamit ang simpleng form o CSV upload.' },
-    step3: { title: 'Magsimula na', subtitle: '', description: 'I-connect ang Cloudbeds at simulang i-track ang tunay na booking, kita, at payroll.' },
-    footer: 'Maaari kang magpalit ng demo at live data anumang oras habang nagse-setup.',
+    step3: { title: 'Magsimula na', subtitle: '', description: 'Mag-sign up sa account.palawancollective.com at simulan ang pamamahala ng iyong resort.' },
+    footer: 'Lahat ay mula sa isang account — walang hiwalay na app na kailangang i-install.',
   },
   onboarding: {
     tag: 'Pagsisimula',

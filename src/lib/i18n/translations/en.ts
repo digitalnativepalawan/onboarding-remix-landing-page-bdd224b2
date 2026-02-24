@@ -25,10 +25,10 @@ export const en: TranslationKeys = {
   },
   onboardingStrip: {
     title: 'From signup to real operations',
-    step1: { title: 'Explore', subtitle: 'Demo Mode', description: 'View real dashboards with sample bookings, staff, orders, and expenses.' },
+    step1: { title: 'Explore', subtitle: '', description: 'Browse this page to see what tools are available for your resort.' },
     step2: { title: 'Add Your Basics', subtitle: '', description: 'Units, staff, menu, and inventory using simple forms or CSV upload.' },
-    step3: { title: 'Go Live', subtitle: '', description: 'Connect Cloudbeds and start tracking real bookings, profit, and payroll.' },
-    footer: 'You can switch between demo and live data anytime while setting up.',
+    step3: { title: 'Go Live', subtitle: '', description: 'Sign up at account.palawancollective.com and start managing your resort.' },
+    footer: 'Everything runs from one account — no separate apps to install.',
   },
   onboarding: {
     tag: 'Getting Started',
