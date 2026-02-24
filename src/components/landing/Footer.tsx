@@ -1,36 +1,13 @@
-import { useState, useEffect } from "react";
-import { Phone, Mail, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { Phone, Mail } from "lucide-react";
 import LegalModal from "./LegalModal";
 import { useTranslation } from "@/contexts/LocaleContext";
-import { supabase } from "@/integrations/supabase/client";
-import { Skeleton } from "@/components/ui/skeleton";
 
 type LegalType = "terms" | "privacy" | "security" | null;
-
-interface AppLink {
-  id: string;
-  name: string;
-  url: string;
-  display_order: number;
-}
 
 const Footer = () => {
   const { t } = useTranslation();
   const [activeLegal, setActiveLegal] = useState<LegalType>(null);
-  const [productLinks, setProductLinks] = useState<AppLink[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchLinks = async () => {
-      const { data } = await supabase
-        .from("app_links")
-        .select("id, name, url, display_order")
-        .order("display_order");
-      if (data) setProductLinks(data);
-      setLoading(false);
-    };
-    fetchLinks();
-  }, []);
 
   const legalLinks = [
     { name: t("footer.terms"), key: "terms" as LegalType },
@@ -38,20 +15,7 @@ const Footer = () => {
     { name: t("footer.security"), key: "security" as LegalType },
   ];
 
-  const renderProductLinks = () => {
-    if (loading) {
-      return Array.from({ length: 3 }).map((_, i) => (
-        <li key={i}><Skeleton className="h-4 w-20" /></li>
-      ));
-    }
-    return productLinks.map((link) => (
-      <li key={link.id}>
-        <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs text-white/60 hover:text-white transition-colors inline-flex items-center gap-1">
-          {link.name}<ExternalLink className="w-2.5 h-2.5" />
-        </a>
-      </li>
-    ));
-  };
+  const channels = ["Booking.com", "Agoda", "Airbnb", "Expedia", "Trip.com", "Direct", "Website", "Booking Engine"];
 
   return (
     <footer className="bg-background border-t border-border/20 py-8 sm:py-10">
@@ -68,22 +32,18 @@ const Footer = () => {
             </div>
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <h4 className="text-xs font-medium text-white/90 mb-3">{t("footer.products")}</h4>
-                <ul className="space-y-2">{renderProductLinks()}</ul>
+                <h4 className="text-xs font-medium text-white/90 mb-3">{t("footer.integration")}</h4>
+                <p className="text-xs text-white/60 mb-2">{t("footer.poweredBy")} <a href="https://www.cloudbeds.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary transition-colors">Cloudbeds</a></p>
+                <ul className="space-y-1 text-xs text-white/50">{channels.map((ch) => <li key={ch}>{ch}</li>)}</ul>
               </div>
               <div>
                 <h4 className="text-xs font-medium text-white/90 mb-3">{t("footer.legal")}</h4>
                 <ul className="space-y-2">{legalLinks.map((link) => (<li key={link.key}><button onClick={() => setActiveLegal(link.key)} className="text-xs text-white/60 hover:text-white transition-colors text-left">{link.name}</button></li>))}</ul>
               </div>
             </div>
-            <div>
-              <h4 className="text-xs font-medium text-white/90 mb-3">{t("footer.integration")}</h4>
-              <p className="text-xs text-white/60 mb-2">{t("footer.poweredBy")} <a href="https://www.cloudbeds.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary transition-colors">Cloudbeds</a></p>
-              <p className="text-xs text-white/50">Booking.com · Agoda · Airbnb</p>
-            </div>
           </div>
 
-          <div className="hidden sm:grid sm:grid-cols-4 gap-8">
+          <div className="hidden sm:grid sm:grid-cols-3 gap-8">
             <div>
               <h3 className="text-sm font-medium text-white mb-2">{t("footer.brand")}</h3>
               <p className="text-xs text-white/70 leading-relaxed mb-3">{t("footer.tagline")}</p>
@@ -93,13 +53,9 @@ const Footer = () => {
               </div>
             </div>
             <div>
-              <h4 className="text-xs font-medium text-white/90 mb-3">{t("footer.products")}</h4>
-              <ul className="space-y-2">{renderProductLinks()}</ul>
-            </div>
-            <div>
               <h4 className="text-xs font-medium text-white/90 mb-3">{t("footer.integration")}</h4>
               <p className="text-xs text-white/60 mb-2">{t("footer.poweredBy")} <a href="https://www.cloudbeds.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary transition-colors">Cloudbeds</a></p>
-              <ul className="space-y-1 text-xs text-white/50"><li>Booking.com</li><li>Agoda</li><li>Airbnb</li></ul>
+              <ul className="space-y-1 text-xs text-white/50">{channels.map((ch) => <li key={ch}>{ch}</li>)}</ul>
             </div>
             <div>
               <h4 className="text-xs font-medium text-white/90 mb-3">{t("footer.legal")}</h4>
