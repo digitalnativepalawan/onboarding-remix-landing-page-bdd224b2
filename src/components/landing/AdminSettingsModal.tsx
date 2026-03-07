@@ -291,22 +291,111 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     setLoading(true);
 
     const maxOrder = faqs.length > 0 ? Math.max(...faqs.map((f) => f.display_order)) : 0;
+    const newOrder = maxOrder + 1;
 
+    // Insert original first
     const { error } = await supabase.from("faqs").insert({
       question: newFaqForm.question,
       answer: newFaqForm.answer,
       language: faqLanguageFilter,
-      display_order: maxOrder + 1,
+      display_order: newOrder,
     });
 
     if (error) {
       toast.error("Failed to add FAQ");
-    } else {
-      toast.success("FAQ added");
-      setNewFaqForm({ question: "", answer: "" });
-      setIsAddingFaq(false);
-      fetchFaqs(faqLanguageFilter);
+      setLoading(false);
+      return;
     }
+
+    // Auto-translate to other languages
+    try {
+      const { data: fnData, error: fnError } = await supabase.functions.invoke("translate-faq", {
+        body: {
+          question: newFaqForm.question,
+          answer: newFaqForm.answer,
+          source_language: faqLanguageFilter,
+        },
+      });
+
+      if (fnError) throw fnError;
+
+      const translations = fnData?.translations;
+      if (translations && typeof translations === "object") {
+        const inserts = Object.entries(translations).map(([lang, t]: [string, any]) => ({
+          question: t.question,
+          answer: t.answer,
+          language: lang,
+          display_order: newOrder,
+        }));
+
+        if (inserts.length > 0) {
+          const { error: insertErr } = await supabase.from("faqs").insert(inserts);
+          if (insertErr) {
+            console.error("Translation insert error:", insertErr);
+            toast.warning("FAQ added but some translations failed to save");
+          } else {
+            toast.success("FAQ added & translated to all languages ✨");
+          }
+        }
+      } else {
+        toast.success("FAQ added (translation returned empty)");
+      }
+    } catch (e) {
+      console.error("Translation error:", e);
+      toast.success("FAQ added, but auto-translation failed");
+    }
+
+    setNewFaqForm({ question: "", answer: "" });
+    setIsAddingFaq(false);
+    fetchFaqs(faqLanguageFilter);
+    setLoading(false);
+  };
+
+  const handleRetranslate = async (faq: FAQ) => {
+    setLoading(true);
+    try {
+      const { data: fnData, error: fnError } = await supabase.functions.invoke("translate-faq", {
+        body: {
+          question: faq.question,
+          answer: faq.answer,
+          source_language: faq.language,
+        },
+      });
+
+      if (fnError) throw fnError;
+
+      const translations = fnData?.translations;
+      if (translations && typeof translations === "object") {
+        for (const [lang, t] of Object.entries(translations) as [string, any][]) {
+          // Upsert: try to update existing FAQ with same display_order & language, else insert
+          const { data: existing } = await supabase
+            .from("faqs")
+            .select("id")
+            .eq("display_order", faq.display_order)
+            .eq("language", lang)
+            .maybeSingle();
+
+          if (existing) {
+            await supabase
+              .from("faqs")
+              .update({ question: t.question, answer: t.answer })
+              .eq("id", existing.id);
+          } else {
+            await supabase.from("faqs").insert({
+              question: t.question,
+              answer: t.answer,
+              language: lang,
+              display_order: faq.display_order,
+            });
+          }
+        }
+        toast.success("Translations updated ✨");
+      }
+    } catch (e) {
+      console.error("Re-translate error:", e);
+      toast.error("Re-translation failed");
+    }
+    fetchFaqs(faqLanguageFilter);
     setLoading(false);
   };
 
