@@ -66,7 +66,6 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   
   // FAQ state
   const [faqs, setFaqs] = useState<FAQ[]>([]);
-  const [faqLanguageFilter, setFaqLanguageFilter] = useState("en");
   const [editingFaqId, setEditingFaqId] = useState<string | null>(null);
   const [editFaqForm, setEditFaqForm] = useState({ question: "", answer: "" });
   const [isAddingFaq, setIsAddingFaq] = useState(false);
