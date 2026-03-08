@@ -93,38 +93,38 @@ const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/30">
-        <div className="px-3 sm:px-6">
-          <div className="flex items-center justify-between h-12 sm:h-14">
-            {/* All 4 timezones - responsive spacing */}
-            <div className="flex items-center gap-2 sm:gap-4">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/30 overflow-hidden">
+        <div className="px-2 sm:px-6">
+          <div className="flex items-center justify-between h-12 sm:h-14 min-w-0">
+            {/* All 4 timezones - tighter on mobile */}
+            <div className="flex items-center gap-1 sm:gap-4 shrink-0">
               {TIMEZONES.map(({ id, label }) => (
-                <div key={id} className="flex items-center gap-1">
-                  <span className="text-[10px] sm:text-xs text-white/70 font-medium">{label}</span>
-                  <span className="text-[10px] sm:text-xs text-white font-mono tabular-nums">{times[id] || "--:--"}</span>
+                <div key={id} className="flex items-center gap-0.5 sm:gap-1">
+                  <span className="text-[8px] sm:text-xs text-white/70 font-medium">{label}</span>
+                  <span className="text-[8px] sm:text-xs text-white font-mono tabular-nums">{times[id] || "--:--"}</span>
                 </div>
               ))}
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1 sm:gap-3 shrink-0">
               {headerLink && (
                 <a
                   href={headerLink.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-white/80 hover:text-white transition-colors px-2 py-1 rounded-md hover:bg-white/10"
+                  className="flex items-center text-white/80 hover:text-white transition-colors p-1 sm:px-2 sm:py-1 rounded-md hover:bg-white/10"
                   title={headerLink.title}
                 >
-                  <Download className="w-4 h-4" />
-                  <span className="text-[10px] sm:text-xs font-medium truncate max-w-[80px] sm:max-w-[120px]">{headerLink.title}</span>
+                  <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="hidden sm:inline text-xs font-medium truncate max-w-[120px] ml-1.5">{headerLink.title}</span>
                 </a>
               )}
               <LocaleSwitcher />
               <button
                 onClick={handleSettingsClick}
-                className="text-white/80 hover:text-white transition-colors p-1.5"
+                className="text-white/80 hover:text-white transition-colors p-1"
                 aria-label="Settings"
               >
-                <Settings className="w-5 h-5" />
+                <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>
