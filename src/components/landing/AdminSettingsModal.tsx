@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Pencil, Trash2, Plus, Check, X, Star, Link, HelpCircle, Download, Languages } from "lucide-react";
+import { Pencil, Trash2, Plus, Check, X, Star, Link, HelpCircle, Download } from "lucide-react";
 
 interface AppLink {
   id: string;
@@ -31,12 +31,7 @@ interface FAQ {
   language: string;
 }
 
-const LANGUAGE_OPTIONS = [
-  { value: "en", label: "English" },
-  { value: "tl", label: "Tagalog" },
-  { value: "it", label: "Italiano" },
-  { value: "de", label: "Deutsch" },
-];
+const ALL_LANGUAGES = ["en", "tl", "it", "de"];
 
 interface AdminSettingsModalProps {
   open: boolean;
@@ -71,7 +66,6 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   
   // FAQ state
   const [faqs, setFaqs] = useState<FAQ[]>([]);
-  const [faqLanguageFilter, setFaqLanguageFilter] = useState("en");
   const [editingFaqId, setEditingFaqId] = useState<string | null>(null);
   const [editFaqForm, setEditFaqForm] = useState({ question: "", answer: "" });
   const [isAddingFaq, setIsAddingFaq] = useState(false);
@@ -97,11 +91,11 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     setLinks(data || []);
   };
 
-  const fetchFaqs = async (lang: string) => {
+  const fetchFaqs = async () => {
     const { data, error } = await supabase
       .from("faqs")
       .select("*")
-      .eq("language", lang)
+      .eq("language", "en")
       .order("display_order", { ascending: true });
 
     if (error) {
@@ -166,10 +160,10 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   useEffect(() => {
     if (open) {
       fetchLinks();
-      fetchFaqs(faqLanguageFilter);
+      fetchFaqs();
       fetchHeaderLink();
     }
-  }, [open, faqLanguageFilter]);
+  }, [open]);
 
   // App Links handlers
   const handleEditLink = (link: AppLink) => {
@@ -252,33 +246,74 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     if (!editingFaqId) return;
     setLoading(true);
 
+    // Find the FAQ being edited to get its display_order
+    const editedFaq = faqs.find(f => f.id === editingFaqId);
+
     const { error } = await supabase
       .from("faqs")
-      .update({ 
-        question: editFaqForm.question, 
-        answer: editFaqForm.answer
-      })
+      .update({ question: editFaqForm.question, answer: editFaqForm.answer })
       .eq("id", editingFaqId);
 
     if (error) {
       toast.error("Failed to update FAQ");
-    } else {
-      toast.success("FAQ updated");
-      setEditingFaqId(null);
-      fetchFaqs(faqLanguageFilter);
+      setLoading(false);
+      return;
     }
+
+    setEditingFaqId(null);
+
+    // Auto-retranslate to all other languages
+    if (editedFaq) {
+      try {
+        const { data: fnData, error: fnError } = await supabase.functions.invoke("translate-faq", {
+          body: {
+            question: editFaqForm.question,
+            answer: editFaqForm.answer,
+            source_language: "en",
+          },
+        });
+
+        if (!fnError && fnData?.translations) {
+          for (const [lang, t] of Object.entries(fnData.translations) as [string, any][]) {
+            const { data: existing } = await supabase
+              .from("faqs")
+              .select("id")
+              .eq("display_order", editedFaq.display_order)
+              .eq("language", lang)
+              .maybeSingle();
+
+            if (existing) {
+              await supabase.from("faqs").update({ question: t.question, answer: t.answer }).eq("id", existing.id);
+            } else {
+              await supabase.from("faqs").insert({ question: t.question, answer: t.answer, language: lang, display_order: editedFaq.display_order });
+            }
+          }
+          toast.success("FAQ updated & translations synced ✨");
+        } else {
+          toast.success("FAQ updated, but translation sync failed");
+        }
+      } catch {
+        toast.success("FAQ updated, but translation sync failed");
+      }
+    }
+
+    fetchFaqs();
     setLoading(false);
   };
 
-  const handleDeleteFaq = async (id: string) => {
+  const handleDeleteFaq = async (faq: FAQ) => {
     setLoading(true);
-    const { error } = await supabase.from("faqs").delete().eq("id", id);
+    // Delete this FAQ and all its translations (same display_order, all languages)
+    const { error } = await supabase
+      .from("faqs")
+      .delete()
+      .eq("display_order", faq.display_order);
 
     if (error) {
       toast.error("Failed to delete FAQ");
     } else {
-      toast.success("FAQ deleted");
-      fetchFaqs(faqLanguageFilter);
+      toast.success("FAQ deleted in all languages");
+      fetchFaqs();
     }
     setLoading(false);
   };
@@ -293,11 +328,11 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     const maxOrder = faqs.length > 0 ? Math.max(...faqs.map((f) => f.display_order)) : 0;
     const newOrder = maxOrder + 1;
 
-    // Insert original first
+    // Insert English version first
     const { error } = await supabase.from("faqs").insert({
       question: newFaqForm.question,
       answer: newFaqForm.answer,
-      language: faqLanguageFilter,
+      language: "en",
       display_order: newOrder,
     });
 
@@ -313,7 +348,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
         body: {
           question: newFaqForm.question,
           answer: newFaqForm.answer,
-          source_language: faqLanguageFilter,
+          source_language: "en",
         },
       });
 
@@ -331,7 +366,6 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
         if (inserts.length > 0) {
           const { error: insertErr } = await supabase.from("faqs").insert(inserts);
           if (insertErr) {
-            console.error("Translation insert error:", insertErr);
             toast.warning("FAQ added but some translations failed to save");
           } else {
             toast.success("FAQ added & translated to all languages ✨");
@@ -347,55 +381,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
 
     setNewFaqForm({ question: "", answer: "" });
     setIsAddingFaq(false);
-    fetchFaqs(faqLanguageFilter);
-    setLoading(false);
-  };
-
-  const handleRetranslate = async (faq: FAQ) => {
-    setLoading(true);
-    try {
-      const { data: fnData, error: fnError } = await supabase.functions.invoke("translate-faq", {
-        body: {
-          question: faq.question,
-          answer: faq.answer,
-          source_language: faq.language,
-        },
-      });
-
-      if (fnError) throw fnError;
-
-      const translations = fnData?.translations;
-      if (translations && typeof translations === "object") {
-        for (const [lang, t] of Object.entries(translations) as [string, any][]) {
-          // Upsert: try to update existing FAQ with same display_order & language, else insert
-          const { data: existing } = await supabase
-            .from("faqs")
-            .select("id")
-            .eq("display_order", faq.display_order)
-            .eq("language", lang)
-            .maybeSingle();
-
-          if (existing) {
-            await supabase
-              .from("faqs")
-              .update({ question: t.question, answer: t.answer })
-              .eq("id", existing.id);
-          } else {
-            await supabase.from("faqs").insert({
-              question: t.question,
-              answer: t.answer,
-              language: lang,
-              display_order: faq.display_order,
-            });
-          }
-        }
-        toast.success("Translations updated ✨");
-      }
-    } catch (e) {
-      console.error("Re-translate error:", e);
-      toast.error("Re-translation failed");
-    }
-    fetchFaqs(faqLanguageFilter);
+    fetchFaqs();
     setLoading(false);
   };
 
@@ -549,23 +535,9 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
 
           {/* FAQs Tab */}
           <TabsContent value="faqs" className="space-y-3 mt-4">
-            {/* Language Filter */}
-            <div className="flex items-center gap-2 pb-2 border-b border-border/30">
-              <Label className="text-xs text-muted-foreground">Language:</Label>
-              <div className="flex gap-1">
-                {LANGUAGE_OPTIONS.map((lang) => (
-                  <Button
-                    key={lang.value}
-                    size="sm"
-                    variant={faqLanguageFilter === lang.value ? "default" : "outline"}
-                    className="h-7 px-2.5 text-xs"
-                    onClick={() => setFaqLanguageFilter(lang.value)}
-                  >
-                    {lang.value.toUpperCase()}
-                  </Button>
-                ))}
-              </div>
-            </div>
+            <p className="text-xs text-muted-foreground pb-2 border-b border-border/30">
+              Manage FAQs in English. Translations to all languages are handled automatically.
+            </p>
 
             {faqs.map((faq, index) => (
               <div
@@ -596,7 +568,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                     </div>
                     <div className="flex gap-2">
                       <Button size="sm" onClick={handleSaveEditFaq} disabled={loading}>
-                        <Check className="w-3 h-3 mr-1" /> Save
+                        <Check className="w-3 h-3 mr-1" /> Save & Translate
                       </Button>
                       <Button size="sm" variant="ghost" onClick={() => setEditingFaqId(null)}>
                         <X className="w-3 h-3 mr-1" /> Cancel
@@ -610,15 +582,6 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                       <p className="text-xs text-muted-foreground whitespace-pre-wrap leading-relaxed">{faq.answer}</p>
                     </div>
                     <div className="flex gap-1 shrink-0">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        title="Re-translate to all languages"
-                        onClick={() => handleRetranslate(faq)}
-                        disabled={loading}
-                      >
-                        <Languages className="w-3.5 h-3.5" />
-                      </Button>
                       <Button size="icon" variant="ghost" onClick={() => handleEditFaq(faq)}>
                         <Pencil className="w-3.5 h-3.5" />
                       </Button>
@@ -626,7 +589,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                         size="icon"
                         variant="ghost"
                         className="text-destructive hover:text-destructive"
-                        onClick={() => handleDeleteFaq(faq.id)}
+                        onClick={() => handleDeleteFaq(faq)}
                         disabled={loading}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
