@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Pencil, Trash2, Plus, Check, X, Star, Link, HelpCircle, Download, Languages } from "lucide-react";
+import { Pencil, Trash2, Plus, Check, X, Star, Link, HelpCircle, Download } from "lucide-react";
 
 interface AppLink {
   id: string;
