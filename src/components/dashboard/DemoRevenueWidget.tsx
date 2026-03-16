@@ -28,7 +28,7 @@ const DemoRevenueWidget = ({ mode, hasData = false }: DemoRevenueWidgetProps) =>
             size="sm" 
             variant="outline" 
             className="gap-1.5 text-xs"
-            onClick={() => window.open("https://account.palawancollective.com", "_blank")}
+            onClick={() => window.open("https://euro.palawancollective.com/admin", "_blank")}
           >
             <Link2 className="w-3 h-3" />
             Connect Booking Source

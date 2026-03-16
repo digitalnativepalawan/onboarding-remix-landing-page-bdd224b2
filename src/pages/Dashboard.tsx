@@ -26,7 +26,7 @@ const Dashboard = () => {
   const hasData = mode === "demo";
 
   const openBackoffice = () => {
-    window.open("https://account.palawancollective.com", "_blank");
+    window.open("https://euro.palawancollective.com/admin", "_blank");
   };
 
   return (

@@ -27,7 +27,7 @@ export const tl: TranslationKeys = {
     title: 'Mula sa signup hanggang sa tunay na operasyon',
     step1: { title: 'Galugarin', subtitle: '', description: 'Tingnan ang page na ito para malaman kung anong mga tool ang available para sa iyong resort.' },
     step2: { title: 'Ilagay ang mga Basic', subtitle: '', description: 'Mga unit, staff, menu, at imbentaryo gamit ang simpleng form o CSV upload.' },
-    step3: { title: 'Magsimula na', subtitle: '', description: 'Mag-sign up sa account.palawancollective.com at simulan ang pamamahala ng iyong resort.' },
+    step3: { title: 'Magsimula na', subtitle: '', description: 'Mag-sign up sa euro.palawancollective.com/admin at simulan ang pamamahala ng iyong resort.' },
     footer: 'Lahat ay mula sa isang account — walang hiwalay na app na kailangang i-install.',
   },
   onboarding: {

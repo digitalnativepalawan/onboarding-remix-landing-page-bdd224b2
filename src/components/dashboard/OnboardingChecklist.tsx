@@ -74,7 +74,7 @@ const OnboardingChecklist = ({ mode }: OnboardingChecklistProps) => {
         size="sm"
         variant="outline"
         className="w-full"
-        onClick={() => window.open("https://account.palawancollective.com", "_blank")}
+        onClick={() => window.open("https://euro.palawancollective.com/admin", "_blank")}
       >
         Go to My Account
       </Button>

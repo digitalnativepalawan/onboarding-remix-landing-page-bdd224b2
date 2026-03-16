@@ -38,14 +38,14 @@ export default function Setup() {
           <Button
             size="lg"
             className="w-full gap-2"
-            onClick={() => window.open("https://account.palawancollective.com", "_blank")}
+            onClick={() => window.open("https://euro.palawancollective.com/admin", "_blank")}
           >
             <ExternalLink className="w-4 h-4" />
             Go to My Account
           </Button>
 
           <p className="text-xs text-muted-foreground">
-            You'll be redirected to account.palawancollective.com
+            You'll be redirected to euro.palawancollective.com/admin
           </p>
         </div>
       </main>

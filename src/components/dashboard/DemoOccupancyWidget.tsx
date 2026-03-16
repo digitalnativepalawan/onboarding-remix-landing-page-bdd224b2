@@ -48,7 +48,7 @@ const DemoOccupancyWidget = ({ mode, hasData = false }: DemoOccupancyWidgetProps
               size="sm" 
               variant="outline" 
               className="gap-1.5 text-xs"
-              onClick={() => window.open("https://account.palawancollective.com", "_blank")}
+              onClick={() => window.open("https://euro.palawancollective.com/admin", "_blank")}
             >
               <Link2 className="w-3 h-3" />
               Connect Cloudbeds
@@ -57,7 +57,7 @@ const DemoOccupancyWidget = ({ mode, hasData = false }: DemoOccupancyWidgetProps
               size="sm" 
               variant="ghost" 
               className="gap-1.5 text-xs"
-              onClick={() => window.open("https://account.palawancollective.com", "_blank")}
+              onClick={() => window.open("https://euro.palawancollective.com/admin", "_blank")}
             >
               <Plus className="w-3 h-3" />
               Add Manual

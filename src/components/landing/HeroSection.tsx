@@ -39,7 +39,7 @@ const HeroSection = () => {
             <Button 
               size="lg"
               className="w-full sm:w-auto gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
-              onClick={() => window.open("https://account.palawancollective.com", "_blank")}
+              onClick={() => window.open("https://euro.palawancollective.com/admin", "_blank")}
             >
               <Link2 className="w-4 h-4" />
               {t("hero.connectResort")}

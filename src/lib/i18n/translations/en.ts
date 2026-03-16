@@ -27,7 +27,7 @@ export const en: TranslationKeys = {
     title: 'From signup to real operations',
     step1: { title: 'Explore', subtitle: '', description: 'Browse this page to see what tools are available for your resort.' },
     step2: { title: 'Add Your Basics', subtitle: '', description: 'Units, staff, menu, and inventory using simple forms or CSV upload.' },
-    step3: { title: 'Go Live', subtitle: '', description: 'Sign up at account.palawancollective.com and start managing your resort.' },
+    step3: { title: 'Go Live', subtitle: '', description: 'Sign up at euro.palawancollective.com/admin and start managing your resort.' },
     footer: 'Everything runs from one account — no separate apps to install.',
   },
   onboarding: {

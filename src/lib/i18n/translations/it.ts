@@ -27,7 +27,7 @@ export const it: TranslationKeys = {
     title: 'Dalla registrazione alle operazioni reali',
     step1: { title: 'Esplora', subtitle: '', description: 'Esplora questa pagina per vedere quali strumenti sono disponibili per il tuo resort.' },
     step2: { title: 'Aggiungi le Basi', subtitle: '', description: 'Unità, personale, menu e inventario usando moduli semplici o caricamento CSV.' },
-    step3: { title: 'Vai Live', subtitle: '', description: 'Registrati su account.palawancollective.com e inizia a gestire il tuo resort.' },
+    step3: { title: 'Vai Live', subtitle: '', description: 'Registrati su euro.palawancollective.com/admin e inizia a gestire il tuo resort.' },
     footer: 'Tutto funziona da un unico account — nessuna app separata da installare.',
   },
   onboarding: {
