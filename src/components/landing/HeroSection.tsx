@@ -52,6 +52,11 @@ const HeroSection = () => {
             {t("hero.trustNote")}
           </p>
         </div>
+
+        {/* App Preview */}
+        <div className="mt-10">
+          <AppPreview />
+        </div>
       </div>
 
       {/* Scroll Indicator */}
