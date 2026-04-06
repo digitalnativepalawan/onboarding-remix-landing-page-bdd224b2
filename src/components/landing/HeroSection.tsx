@@ -2,6 +2,7 @@ import heroBg from "@/assets/hero-palawan.jpg";
 import { ChevronDown, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/contexts/LocaleContext";
+import AppPreview from "./AppPreview";
 
 const HeroSection = () => {
   const { t } = useTranslation();
