@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { ExternalLink } from "lucide-react";
-import { iconMap } from "@/lib/iconMap";
+import { getIcon } from "@/lib/iconMap";
 
 interface AppLink {
   id: string;
