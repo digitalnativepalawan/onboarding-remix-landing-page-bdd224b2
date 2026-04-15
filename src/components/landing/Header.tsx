@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Settings, Download } from "lucide-react";
+import { Settings, Download, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -118,6 +118,28 @@ const Header = () => {
                   <span className="hidden sm:inline text-xs font-medium truncate max-w-[120px] ml-1.5">{headerLink.title}</span>
                 </a>
               )}
+              <a
+                href="https://github.com/digitalnativepalawan"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/80 hover:text-white transition-colors p-1"
+                aria-label="GitHub"
+              >
+                <Github className="w-4 h-4 sm:w-5 sm:h-5" />
+              </a>
+              <a
+                href="https://ollama.com/palawancollective"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/80 hover:text-white transition-colors p-1"
+                aria-label="Ollama"
+              >
+                <img
+                  src="https://ollama.com/public/ollama.png"
+                  alt="Ollama"
+                  className="w-4 h-4 sm:w-5 sm:h-5 rounded-sm"
+                />
+              </a>
               <LocaleSwitcher />
               <button
                 onClick={handleSettingsClick}
