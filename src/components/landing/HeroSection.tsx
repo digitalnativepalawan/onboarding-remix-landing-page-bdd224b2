@@ -3,6 +3,7 @@ import { ChevronDown, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/contexts/LocaleContext";
 import AppPreview from "./AppPreview";
+import FeaturedAppsSection from "./FeaturedAppsSection";
 
 const HeroSection = () => {
   const { t } = useTranslation();
@@ -19,6 +20,9 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 w-full px-5 sm:px-6 pt-24 pb-20">
+        <div className="max-w-2xl mx-auto mb-8 animate-fade-up opacity-0" style={{ animationDelay: '0.05s', animationFillMode: 'forwards' }}>
+          <FeaturedAppsSection variant="inline" />
+        </div>
         <div className="max-w-2xl mx-auto text-center space-y-6">
           {/* Primary headline */}
           <h1 className="animate-fade-up opacity-0 text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight leading-[1.15]" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
