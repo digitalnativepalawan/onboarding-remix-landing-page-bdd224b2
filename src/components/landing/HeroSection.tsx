@@ -16,7 +16,7 @@ const HeroSection = () => {
           <img
             src={logo}
             alt="Palawan Collective"
-            className="h-20 sm:h-24 w-auto select-none"
+            className="h-60 sm:h-72 w-auto select-none"
             draggable={false}
           />
         </div>
