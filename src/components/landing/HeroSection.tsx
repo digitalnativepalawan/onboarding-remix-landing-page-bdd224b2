@@ -1,25 +1,25 @@
-import heroBg from "@/assets/hero-palawan.jpg";
 import { ChevronDown, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/contexts/LocaleContext";
 import AppPreview from "./AppPreview";
 import FeaturedAppsSection from "./FeaturedAppsSection";
+import logo from "@/assets/palawan-collective-logo.png";
 
 const HeroSection = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroBg})` }}
-      >
-        <div className="absolute inset-0 bg-background/90 backdrop-blur-[2px]" />
-      </div>
-
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-black">
       {/* Content */}
       <div className="relative z-10 w-full px-5 sm:px-6 pt-24 pb-20">
+        <div className="max-w-2xl mx-auto mb-6 flex justify-center animate-fade-up opacity-0" style={{ animationDelay: '0.02s', animationFillMode: 'forwards' }}>
+          <img
+            src={logo}
+            alt="Palawan Collective"
+            className="h-20 sm:h-24 w-auto select-none"
+            draggable={false}
+          />
+        </div>
         <div className="max-w-2xl mx-auto mb-8 animate-fade-up opacity-0" style={{ animationDelay: '0.05s', animationFillMode: 'forwards' }}>
           <FeaturedAppsSection variant="inline" />
         </div>
