@@ -7,6 +7,7 @@ import { LocaleProvider } from "@/contexts/LocaleContext";
 import Index from "./pages/Index";
 import Setup from "./pages/Setup";
 import Dashboard from "./pages/Dashboard";
+import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,7 +23,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/setup" element={<Setup />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/admin" element={<AdminPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
