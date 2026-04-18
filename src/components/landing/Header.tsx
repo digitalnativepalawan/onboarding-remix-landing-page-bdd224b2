@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AdminSettingsModal from "./AdminSettingsModal";
-import LocaleSwitcher from "./LocaleSwitcher";
 import { useTranslation } from "@/contexts/LocaleContext";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -24,9 +23,8 @@ const ADMIN_PASSKEY = "5309";
 
 const TIMEZONES = [
   { id: "manila", label: "MNL", zone: "Asia/Manila" },
-  { id: "italy", label: "ITA", zone: "Europe/Rome" },
-  { id: "germany", label: "GER", zone: "Europe/Berlin" },
-  { id: "texas", label: "TEX", zone: "America/Chicago" },
+  { id: "london", label: "LON", zone: "Europe/London" },
+  { id: "texas",  label: "TEX", zone: "America/Chicago" },
 ];
 
 const Header = () => {
@@ -55,7 +53,6 @@ const Header = () => {
     const updateTimes = () => {
       const now = new Date();
       const newTimes: Record<string, string> = {};
-      
       TIMEZONES.forEach(({ id, zone }) => {
         newTimes[id] = now.toLocaleString("en-US", {
           timeZone: zone,
@@ -64,10 +61,8 @@ const Header = () => {
           hour12: false,
         });
       });
-      
       setTimes(newTimes);
     };
-
     updateTimes();
     const interval = setInterval(updateTimes, 1000);
     return () => clearInterval(interval);
@@ -96,15 +91,22 @@ const Header = () => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/30 overflow-hidden">
         <div className="px-2 sm:px-6">
           <div className="flex items-center justify-between h-12 sm:h-14 min-w-0">
-            {/* All 4 timezones - tighter on mobile */}
-            <div className="flex items-center gap-1 sm:gap-4 shrink-0">
+
+            {/* 3 world clocks */}
+            <div className="flex items-center gap-2 sm:gap-5 shrink-0">
               {TIMEZONES.map(({ id, label }) => (
-                <div key={id} className="flex items-center gap-0.5 sm:gap-1">
-                  <span className="text-[8px] sm:text-xs text-white/70 font-medium">{label}</span>
-                  <span className="text-[8px] sm:text-xs text-white font-mono tabular-nums">{times[id] || "--:--"}</span>
+                <div key={id} className="flex items-center gap-1">
+                  <span className="text-[9px] sm:text-[11px] text-white/50 font-medium tracking-wide">
+                    {label}
+                  </span>
+                  <span className="text-[9px] sm:text-[11px] text-white font-mono tabular-nums">
+                    {times[id] || "--:--"}
+                  </span>
                 </div>
               ))}
             </div>
+
+            {/* Right side actions — no locale switcher */}
             <div className="flex items-center gap-1 sm:gap-3 shrink-0">
               {headerLink && (
                 <a
@@ -115,7 +117,9 @@ const Header = () => {
                   title={headerLink.title}
                 >
                   <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                  <span className="hidden sm:inline text-xs font-medium truncate max-w-[120px] ml-1.5">{headerLink.title}</span>
+                  <span className="hidden sm:inline text-xs font-medium truncate max-w-[120px] ml-1.5">
+                    {headerLink.title}
+                  </span>
                 </a>
               )}
               <a
@@ -140,7 +144,6 @@ const Header = () => {
                   className="w-4 h-4 sm:w-5 sm:h-5 rounded-sm"
                 />
               </a>
-              <LocaleSwitcher />
               <button
                 onClick={handleSettingsClick}
                 className="text-white/80 hover:text-white transition-colors p-1"
@@ -149,6 +152,7 @@ const Header = () => {
                 <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
+
           </div>
         </div>
       </header>
