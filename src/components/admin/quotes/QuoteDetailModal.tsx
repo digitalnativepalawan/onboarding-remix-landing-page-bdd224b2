@@ -68,7 +68,7 @@ export function QuoteDetailModal({ quoteId, onOpenChange, onEdit }: Props) {
           <div className="flex gap-2">
             <Button variant="outline" className="flex-1" onClick={onEdit}><Edit className="h-4 w-4 mr-2" /> Edit</Button>
             <Button className="flex-1" onClick={() => generateQuotePDF({
-              id: data.id, client_id: data.client_id, title: data.title, status: data.status, notes: data.notes,
+              id: data.id, client_id: data.client_id, title: data.title, status: data.status as any, notes: data.notes,
               terms: data.terms, total_php: Number(data.total_php), valid_until: data.valid_until, sent_via: data.sent_via,
               follow_up_count: data.follow_up_count,
               items: data.items.map((it: any) => ({ ...it, qty: Number(it.qty), unit_price_php: Number(it.unit_price_php), line_total_php: Number(it.line_total_php) })),
