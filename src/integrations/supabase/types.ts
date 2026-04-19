@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_log: {
+        Row: {
+          action: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          id: string
+          summary: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          summary?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          summary?: string | null
+        }
+        Relationships: []
+      }
       admin_catalog: {
         Row: {
           created_at: string | null
@@ -329,6 +356,149 @@ export type Database = {
         }
         Relationships: []
       }
+      catalog_items: {
+        Row: {
+          base_price_php: number | null
+          category: string | null
+          created_at: string
+          demo_url: string | null
+          description: string | null
+          display_order: number | null
+          features: string[] | null
+          id: string
+          is_active: boolean
+          name: string
+          screenshots: string[] | null
+          setup_days: number | null
+          tech_stack: string[] | null
+        }
+        Insert: {
+          base_price_php?: number | null
+          category?: string | null
+          created_at?: string
+          demo_url?: string | null
+          description?: string | null
+          display_order?: number | null
+          features?: string[] | null
+          id?: string
+          is_active?: boolean
+          name: string
+          screenshots?: string[] | null
+          setup_days?: number | null
+          tech_stack?: string[] | null
+        }
+        Update: {
+          base_price_php?: number | null
+          category?: string | null
+          created_at?: string
+          demo_url?: string | null
+          description?: string | null
+          display_order?: number | null
+          features?: string[] | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          screenshots?: string[] | null
+          setup_days?: number | null
+          tech_stack?: string[] | null
+        }
+        Relationships: []
+      }
+      client_notes: {
+        Row: {
+          client_id: string
+          content: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          client_id: string
+          content: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          client_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_notes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          business_name: string
+          business_type: string | null
+          contact_name: string | null
+          created_at: string
+          email: string | null
+          estimated_value_php: number | null
+          facebook_url: string | null
+          follow_up_date: string | null
+          id: string
+          last_contact_date: string | null
+          location: string | null
+          monthly_recurring_php: number | null
+          notes: string | null
+          pipeline_stage: string
+          pitch_sent_date: string | null
+          service_interests: string[] | null
+          source: string | null
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          business_name: string
+          business_type?: string | null
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          estimated_value_php?: number | null
+          facebook_url?: string | null
+          follow_up_date?: string | null
+          id?: string
+          last_contact_date?: string | null
+          location?: string | null
+          monthly_recurring_php?: number | null
+          notes?: string | null
+          pipeline_stage?: string
+          pitch_sent_date?: string | null
+          service_interests?: string[] | null
+          source?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          business_name?: string
+          business_type?: string | null
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          estimated_value_php?: number | null
+          facebook_url?: string | null
+          follow_up_date?: string | null
+          id?: string
+          last_contact_date?: string | null
+          location?: string | null
+          monthly_recurring_php?: number | null
+          notes?: string | null
+          pipeline_stage?: string
+          pitch_sent_date?: string | null
+          service_interests?: string[] | null
+          source?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
       faqs: {
         Row: {
           answer: string
@@ -404,6 +574,353 @@ export type Database = {
         }
         Relationships: []
       }
+      media: {
+        Row: {
+          alt_text: string | null
+          created_at: string
+          device_type: string | null
+          file_path: string
+          file_url: string
+          id: string
+          media_type: string | null
+          project_id: string | null
+          size_bytes: number | null
+          tags: string[] | null
+          tool_id: string | null
+        }
+        Insert: {
+          alt_text?: string | null
+          created_at?: string
+          device_type?: string | null
+          file_path: string
+          file_url: string
+          id?: string
+          media_type?: string | null
+          project_id?: string | null
+          size_bytes?: number | null
+          tags?: string[] | null
+          tool_id?: string | null
+        }
+        Update: {
+          alt_text?: string | null
+          created_at?: string
+          device_type?: string | null
+          file_path?: string
+          file_url?: string
+          id?: string
+          media_type?: string | null
+          project_id?: string | null
+          size_bytes?: number | null
+          tags?: string[] | null
+          tool_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "media_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notes: {
+        Row: {
+          client_id: string | null
+          completed: boolean
+          content: string | null
+          created_at: string
+          due_date: string | null
+          id: string
+          priority: string
+          project_id: string | null
+          tags: string[] | null
+          title: string
+          tool_id: string | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          client_id?: string | null
+          completed?: boolean
+          content?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          priority?: string
+          project_id?: string | null
+          tags?: string[] | null
+          title: string
+          tool_id?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string | null
+          completed?: boolean
+          content?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          priority?: string
+          project_id?: string | null
+          tags?: string[] | null
+          title?: string
+          tool_id?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notes_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          actual_cost_php: number | null
+          actual_launch: string | null
+          budget_php: number | null
+          category: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          github_url: string | null
+          id: string
+          live_url: string | null
+          lovable_url: string | null
+          name: string
+          notes: string | null
+          screenshots: string[] | null
+          stage: string
+          start_date: string | null
+          target_launch: string | null
+          team_members: string[] | null
+          tech_stack: string[] | null
+          updated_at: string
+          vercel_url: string | null
+        }
+        Insert: {
+          actual_cost_php?: number | null
+          actual_launch?: string | null
+          budget_php?: number | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          github_url?: string | null
+          id?: string
+          live_url?: string | null
+          lovable_url?: string | null
+          name: string
+          notes?: string | null
+          screenshots?: string[] | null
+          stage?: string
+          start_date?: string | null
+          target_launch?: string | null
+          team_members?: string[] | null
+          tech_stack?: string[] | null
+          updated_at?: string
+          vercel_url?: string | null
+        }
+        Update: {
+          actual_cost_php?: number | null
+          actual_launch?: string | null
+          budget_php?: number | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          github_url?: string | null
+          id?: string
+          live_url?: string | null
+          lovable_url?: string | null
+          name?: string
+          notes?: string | null
+          screenshots?: string[] | null
+          stage?: string
+          start_date?: string | null
+          target_launch?: string | null
+          team_members?: string[] | null
+          tech_stack?: string[] | null
+          updated_at?: string
+          vercel_url?: string | null
+        }
+        Relationships: []
+      }
+      quote_items: {
+        Row: {
+          catalog_item_id: string | null
+          description: string | null
+          id: string
+          line_total_php: number
+          name: string
+          qty: number
+          quote_id: string
+          sort_order: number | null
+          unit_price_php: number
+        }
+        Insert: {
+          catalog_item_id?: string | null
+          description?: string | null
+          id?: string
+          line_total_php?: number
+          name: string
+          qty?: number
+          quote_id: string
+          sort_order?: number | null
+          unit_price_php?: number
+        }
+        Update: {
+          catalog_item_id?: string | null
+          description?: string | null
+          id?: string
+          line_total_php?: number
+          name?: string
+          qty?: number
+          quote_id?: string
+          sort_order?: number | null
+          unit_price_php?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_items_catalog_item_id_fkey"
+            columns: ["catalog_item_id"]
+            isOneToOne: false
+            referencedRelation: "catalog_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_items_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quotes: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          follow_up_count: number
+          id: string
+          last_reminder_at: string | null
+          notes: string | null
+          sent_via: string | null
+          status: string
+          terms: string | null
+          title: string
+          total_php: number | null
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          follow_up_count?: number
+          id?: string
+          last_reminder_at?: string | null
+          notes?: string | null
+          sent_via?: string | null
+          status?: string
+          terms?: string | null
+          title: string
+          total_php?: number | null
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          follow_up_count?: number
+          id?: string
+          last_reminder_at?: string | null
+          notes?: string | null
+          sent_via?: string | null
+          status?: string
+          terms?: string | null
+          title?: string
+          total_php?: number | null
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      revenue: {
+        Row: {
+          amount_php: number
+          client_id: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          payment_date: string | null
+          status: string
+          type: string
+        }
+        Insert: {
+          amount_php?: number
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_date?: string | null
+          status?: string
+          type?: string
+        }
+        Update: {
+          amount_php?: number
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_date?: string | null
+          status?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revenue_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       site_settings: {
         Row: {
           created_at: string
@@ -425,6 +942,96 @@ export type Database = {
           logo_dark_url?: string | null
           logo_light_url?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      tools: {
+        Row: {
+          created_at: string
+          description: string | null
+          github_url: string | null
+          id: string
+          install_instructions: string | null
+          installed: boolean
+          installed_at: string | null
+          license: string | null
+          monthly_cost_usd: number | null
+          name: string
+          notes: string | null
+          priority_rank: number | null
+          revenue_potential_php: number | null
+          token_burn: string | null
+          use_cases: string[] | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          github_url?: string | null
+          id?: string
+          install_instructions?: string | null
+          installed?: boolean
+          installed_at?: string | null
+          license?: string | null
+          monthly_cost_usd?: number | null
+          name: string
+          notes?: string | null
+          priority_rank?: number | null
+          revenue_potential_php?: number | null
+          token_burn?: string | null
+          use_cases?: string[] | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          github_url?: string | null
+          id?: string
+          install_instructions?: string | null
+          installed?: boolean
+          installed_at?: string | null
+          license?: string | null
+          monthly_cost_usd?: number | null
+          name?: string
+          notes?: string | null
+          priority_rank?: number | null
+          revenue_potential_php?: number | null
+          token_burn?: string | null
+          use_cases?: string[] | null
+        }
+        Relationships: []
+      }
+      weekly_goals: {
+        Row: {
+          completed: boolean
+          created_at: string
+          current_value: number
+          id: string
+          sort_order: number | null
+          target_value: number
+          title: string
+          updated_at: string
+          week_start_date: string
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          current_value?: number
+          id?: string
+          sort_order?: number | null
+          target_value?: number
+          title: string
+          updated_at?: string
+          week_start_date?: string
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          current_value?: number
+          id?: string
+          sort_order?: number | null
+          target_value?: number
+          title?: string
+          updated_at?: string
+          week_start_date?: string
         }
         Relationships: []
       }
