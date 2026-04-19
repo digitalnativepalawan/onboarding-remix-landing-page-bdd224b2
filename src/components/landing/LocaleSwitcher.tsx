@@ -22,7 +22,7 @@ const LocaleSwitcher = () => {
           ([code, lang]) => (
             <DropdownMenuItem
               key={code}
-              onClick={() => setLanguage(code)}
+              onClick={() => {}}
               className={language === code ? "bg-accent" : ""}
             >
               <span className="mr-2">{lang.flag}</span>
