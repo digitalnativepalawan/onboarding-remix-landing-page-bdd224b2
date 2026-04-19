@@ -14,6 +14,246 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_catalog: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          features: string | null
+          id: string
+          name: string
+          price_from_php: number | null
+          status: string | null
+          turnaround_days: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          features?: string | null
+          id?: string
+          name: string
+          price_from_php?: number | null
+          status?: string | null
+          turnaround_days?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          features?: string | null
+          id?: string
+          name?: string
+          price_from_php?: number | null
+          status?: string | null
+          turnaround_days?: number | null
+        }
+        Relationships: []
+      }
+      admin_clients: {
+        Row: {
+          business_name: string | null
+          business_type: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          location: string | null
+          name: string
+          notes: string | null
+          status: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          business_name?: string | null
+          business_type?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          location?: string | null
+          name: string
+          notes?: string | null
+          status?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          business_name?: string | null
+          business_type?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          location?: string | null
+          name?: string
+          notes?: string | null
+          status?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      admin_project_notes: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          note_type: string | null
+          project_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          note_type?: string | null
+          project_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          note_type?: string | null
+          project_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_project_notes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "admin_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_project_urls: {
+        Row: {
+          created_at: string | null
+          id: string
+          label: string
+          project_id: string | null
+          url: string
+          url_type: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          label: string
+          project_id?: string | null
+          url: string
+          url_type?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          label?: string
+          project_id?: string | null
+          url?: string
+          url_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_project_urls_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "admin_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_projects: {
+        Row: {
+          client_name: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          github_url: string | null
+          id: string
+          live_url: string | null
+          lovable_url: string | null
+          name: string
+          status: string | null
+          supabase_project_id: string | null
+          updated_at: string | null
+          vercel_url: string | null
+          webapp_type: string | null
+        }
+        Insert: {
+          client_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          github_url?: string | null
+          id?: string
+          live_url?: string | null
+          lovable_url?: string | null
+          name: string
+          status?: string | null
+          supabase_project_id?: string | null
+          updated_at?: string | null
+          vercel_url?: string | null
+          webapp_type?: string | null
+        }
+        Update: {
+          client_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          github_url?: string | null
+          id?: string
+          live_url?: string | null
+          lovable_url?: string | null
+          name?: string
+          status?: string | null
+          supabase_project_id?: string | null
+          updated_at?: string | null
+          vercel_url?: string | null
+          webapp_type?: string | null
+        }
+        Relationships: []
+      }
+      admin_quotes: {
+        Row: {
+          client_id: string | null
+          client_name: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          notes: string | null
+          price_php: number | null
+          status: string | null
+          valid_until: string | null
+          webapp_type: string
+        }
+        Insert: {
+          client_id?: string | null
+          client_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          notes?: string | null
+          price_php?: number | null
+          status?: string | null
+          valid_until?: string | null
+          webapp_type: string
+        }
+        Update: {
+          client_id?: string | null
+          client_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          notes?: string | null
+          price_php?: number | null
+          status?: string | null
+          valid_until?: string | null
+          webapp_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_quotes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "admin_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       app_links: {
         Row: {
           created_at: string
@@ -21,7 +261,6 @@ export type Database = {
           icon: string
           id: string
           is_primary: boolean
-          is_visible: boolean
           name: string
           updated_at: string
           url: string
@@ -32,7 +271,6 @@ export type Database = {
           icon?: string
           id?: string
           is_primary?: boolean
-          is_visible?: boolean
           name: string
           updated_at?: string
           url: string
@@ -43,10 +281,48 @@ export type Database = {
           icon?: string
           id?: string
           is_primary?: boolean
-          is_visible?: boolean
           name?: string
           updated_at?: string
           url?: string
+        }
+        Relationships: []
+      }
+      blog_posts: {
+        Row: {
+          content: string
+          created_at: string | null
+          display_order: number | null
+          excerpt: string
+          id: string
+          published: boolean | null
+          tag: string
+          tag_bg: string
+          tag_color: string
+          title: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          display_order?: number | null
+          excerpt: string
+          id?: string
+          published?: boolean | null
+          tag: string
+          tag_bg?: string
+          tag_color?: string
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          display_order?: number | null
+          excerpt?: string
+          id?: string
+          published?: boolean | null
+          tag?: string
+          tag_bg?: string
+          tag_color?: string
+          title?: string
         }
         Relationships: []
       }
@@ -127,21 +403,24 @@ export type Database = {
       }
       site_settings: {
         Row: {
+          created_at: string
           id: string
-          logo_light_url: string | null
           logo_dark_url: string | null
+          logo_light_url: string | null
           updated_at: string
         }
         Insert: {
+          created_at?: string
           id?: string
-          logo_light_url?: string | null
           logo_dark_url?: string | null
+          logo_light_url?: string | null
           updated_at?: string
         }
         Update: {
+          created_at?: string
           id?: string
-          logo_light_url?: string | null
           logo_dark_url?: string | null
+          logo_light_url?: string | null
           updated_at?: string
         }
         Relationships: []
