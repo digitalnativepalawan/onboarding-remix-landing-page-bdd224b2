@@ -154,10 +154,10 @@ export default function ExpensesPage() {
             return (
               <div key={r.id} className="rounded-xl border border-border/40 bg-card p-4 flex flex-col gap-2 hover:border-border/70 transition">
                 <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold truncate">{r.expense_name}</p>
+                  <button onClick={() => onView(r)} className="min-w-0 flex-1 text-left group">
+                    <p className="text-sm font-semibold truncate group-hover:text-primary transition">{r.expense_name}</p>
                     {r.vendor_name && <p className="text-[11px] text-muted-foreground truncate">{r.vendor_name}</p>}
-                  </div>
+                  </button>
                   <div className="text-right shrink-0">
                     <p className="text-sm font-semibold tabular-nums">{formatCurrency(Number(r.amount_php) || 0, "PHP")}</p>
                     {r.currency !== "PHP" && (
