@@ -7,13 +7,14 @@ import {
   Wrench, ArrowLeft, Plus, Pencil, Trash2, Check, X,
   ExternalLink, Github, Globe, Database, Code2, Link2,
   MessageCircle, Calendar, Tag, ChevronDown, ChevronUp,
-  StickyNote, Bug, Flag, CheckSquare, Eye, EyeOff, Lock, LayoutGrid,
+  StickyNote, Bug, Flag, CheckSquare, Eye, EyeOff, Lock, LayoutGrid, Globe2,
   type LucideIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import AdminSettingsModal from "@/components/landing/AdminSettingsModal";
 
 const ADMIN_PASSKEY = "5309";
 
@@ -862,6 +863,22 @@ const ToolsSection = () => (
   </div>
 );
 
+/* ── SITE SETTINGS ─────────────────────────────────────────── */
+const SiteSection = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="space-y-4">
+      <p className="text-xs" style={{ color: "#6b7280" }}>
+        Manage public-facing site content: blog posts, FAQs, and the header download link.
+      </p>
+      <Button onClick={() => setOpen(true)} className="w-full sm:w-auto">
+        Open Site Settings
+      </Button>
+      <AdminSettingsModal open={open} onOpenChange={setOpen} />
+    </div>
+  );
+};
+
 /* ══════════════════════════════════════════════════════════════
    MAIN PAGE
 ══════════════════════════════════════════════════════════════ */
@@ -873,6 +890,7 @@ const NAV = [
   { id: "catalog",   label: "Catalog",   icon: Package },
   { id: "webapps",   label: "WebApps",   icon: LayoutGrid },
   { id: "tools",     label: "Tools",     icon: Wrench },
+  { id: "site",      label: "Site",      icon: Globe2 },
 ];
 
 const AdminPage = () => {
@@ -971,6 +989,7 @@ const AdminPage = () => {
             {tab === "catalog"   && <CatalogSection />}
             {tab === "webapps"   && <WebAppsSection />}
             {tab === "tools"     && <ToolsSection />}
+            {tab === "site"      && <SiteSection />}
           </div>
         </div>
       </div>

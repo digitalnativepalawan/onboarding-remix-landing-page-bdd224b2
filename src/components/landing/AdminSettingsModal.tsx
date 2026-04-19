@@ -13,18 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
-  Pencil, Trash2, Plus, Check, X, Star,
-  Link, HelpCircle, Download, FileText, Eye, EyeOff,
+  Pencil, Trash2, Plus, Check, X,
+  HelpCircle, Download, FileText, Eye, EyeOff,
 } from "lucide-react";
-
-interface AppLink {
-  id: string;
-  name: string;
-  url: string;
-  icon: string;
-  display_order: number;
-  is_primary: boolean;
-}
 
 interface FAQ {
   id: string;
@@ -52,12 +43,6 @@ interface AdminSettingsModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const ICON_OPTIONS = [
-  "LayoutDashboard", "MapPin", "ShoppingCart", "ScanLine", "Clock",
-  "Package", "Settings", "Home", "Users", "Calendar", "FileText",
-  "Database", "Globe", "Mail", "Bell",
-];
-
 const TAG_PRESETS = [
   { label: "Business tips", color: "#2dd4bf", bg: "#0f3b33" },
   { label: "Resort ops",    color: "#c9a84c", bg: "#1a1200" },
@@ -68,13 +53,6 @@ const TAG_PRESETS = [
 ];
 
 const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => {
-  /* ── App Links ── */
-  const [links, setLinks] = useState<AppLink[]>([]);
-  const [editingLinkId, setEditingLinkId] = useState<string | null>(null);
-  const [editLinkForm, setEditLinkForm] = useState({ name: "", url: "", icon: "", is_primary: false });
-  const [isAddingLink, setIsAddingLink] = useState(false);
-  const [newLinkForm, setNewLinkForm] = useState({ name: "", url: "", icon: "LayoutDashboard", is_primary: false });
-
   /* ── FAQs ── */
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [editingFaqId, setEditingFaqId] = useState<string | null>(null);
@@ -104,11 +82,6 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   const [loading, setLoading] = useState(false);
 
   /* ── Fetch helpers ── */
-  const fetchLinks = async () => {
-    const { data } = await supabase.from("app_links").select("*").order("display_order", { ascending: true });
-    setLinks(data || []);
-  };
-
   const fetchFaqs = async () => {
     const { data } = await supabase.from("faqs").select("*").eq("language", "en").order("display_order", { ascending: true });
     setFaqs(data || []);
@@ -126,35 +99,8 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   };
 
   useEffect(() => {
-    if (open) { fetchLinks(); fetchFaqs(); fetchHeaderLink(); fetchBlogPosts(); }
+    if (open) { fetchFaqs(); fetchHeaderLink(); fetchBlogPosts(); }
   }, [open]);
-
-  /* ── App Link handlers ── */
-  const handleEditLink = (link: AppLink) => {
-    setEditingLinkId(link.id);
-    setEditLinkForm({ name: link.name, url: link.url, icon: link.icon, is_primary: link.is_primary });
-  };
-  const handleSaveEditLink = async () => {
-    if (!editingLinkId) return;
-    setLoading(true);
-    const { error } = await supabase.from("app_links").update({ name: editLinkForm.name, url: editLinkForm.url, icon: editLinkForm.icon, is_primary: editLinkForm.is_primary }).eq("id", editingLinkId);
-    if (error) toast.error("Failed to update link"); else { toast.success("Link updated"); setEditingLinkId(null); fetchLinks(); }
-    setLoading(false);
-  };
-  const handleDeleteLink = async (id: string) => {
-    setLoading(true);
-    const { error } = await supabase.from("app_links").delete().eq("id", id);
-    if (error) toast.error("Failed to delete link"); else { toast.success("Link deleted"); fetchLinks(); }
-    setLoading(false);
-  };
-  const handleAddLink = async () => {
-    if (!newLinkForm.name || !newLinkForm.url) { toast.error("Name and URL are required"); return; }
-    setLoading(true);
-    const maxOrder = links.length > 0 ? Math.max(...links.map((l) => l.display_order)) : 0;
-    const { error } = await supabase.from("app_links").insert({ ...newLinkForm, display_order: maxOrder + 1 });
-    if (error) toast.error("Failed to add link"); else { toast.success("Link added"); setNewLinkForm({ name: "", url: "", icon: "LayoutDashboard", is_primary: false }); setIsAddingLink(false); fetchLinks(); }
-    setLoading(false);
-  };
 
   /* ── FAQ handlers ── */
   const handleEditFaq = (faq: FAQ) => { setEditingFaqId(faq.id); setEditFaqForm({ question: faq.question, answer: faq.answer }); };
@@ -324,12 +270,9 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
         </DialogHeader>
 
         <Tabs defaultValue="blog" className="mt-4">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="blog" className="flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5" />Blog
-            </TabsTrigger>
-            <TabsTrigger value="links" className="flex items-center gap-1.5">
-              <Link className="w-3.5 h-3.5" />Links
             </TabsTrigger>
             <TabsTrigger value="faqs" className="flex items-center gap-1.5">
               <HelpCircle className="w-3.5 h-3.5" />FAQs
@@ -400,65 +343,6 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
             ) : (
               <Button variant="outline" className="w-full" onClick={() => { setIsAddingBlog(true); setEditingBlogId(null); setBlogForm(emptyBlog); }}>
                 <Plus className="w-4 h-4 mr-2" /> Write New Post
-              </Button>
-            )}
-          </TabsContent>
-
-          {/* ── APP LINKS TAB ── */}
-          <TabsContent value="links" className="space-y-3 mt-4">
-            {links.map((link) => (
-              <div key={link.id} className="flex items-center gap-2 p-3 rounded-lg border border-border/50 bg-card/50">
-                {editingLinkId === link.id ? (
-                  <div className="flex-1 space-y-2">
-                    <Input placeholder="Name" value={editLinkForm.name} onChange={(e) => setEditLinkForm({ ...editLinkForm, name: e.target.value })} />
-                    <Input placeholder="URL" value={editLinkForm.url} onChange={(e) => setEditLinkForm({ ...editLinkForm, url: e.target.value })} />
-                    <select className="w-full p-2 rounded-md border border-border bg-background text-sm" value={editLinkForm.icon} onChange={(e) => setEditLinkForm({ ...editLinkForm, icon: e.target.value })}>
-                      {ICON_OPTIONS.map((icon) => <option key={icon} value={icon}>{icon}</option>)}
-                    </select>
-                    <label className="flex items-center gap-2 text-sm">
-                      <input type="checkbox" checked={editLinkForm.is_primary} onChange={(e) => setEditLinkForm({ ...editLinkForm, is_primary: e.target.checked })} />
-                      Primary (highlighted)
-                    </label>
-                    <div className="flex gap-2">
-                      <Button size="sm" onClick={handleSaveEditLink} disabled={loading}><Check className="w-3 h-3 mr-1" /> Save</Button>
-                      <Button size="sm" variant="ghost" onClick={() => setEditingLinkId(null)}><X className="w-3 h-3 mr-1" /> Cancel</Button>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium truncate">{link.name}</span>
-                        {link.is_primary && <Star className="w-3 h-3 text-primary fill-primary" />}
-                      </div>
-                      <span className="text-xs text-muted-foreground truncate block">{link.url}</span>
-                    </div>
-                    <Button size="icon" variant="ghost" onClick={() => handleEditLink(link)}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button size="icon" variant="ghost" className="text-destructive hover:text-destructive" onClick={() => handleDeleteLink(link.id)} disabled={loading}><Trash2 className="w-3.5 h-3.5" /></Button>
-                  </>
-                )}
-              </div>
-            ))}
-            {isAddingLink ? (
-              <div className="p-3 rounded-lg border border-primary/30 bg-primary/5 space-y-2">
-                <Label className="text-xs">Add New Link</Label>
-                <Input placeholder="Name" value={newLinkForm.name} onChange={(e) => setNewLinkForm({ ...newLinkForm, name: e.target.value })} />
-                <Input placeholder="URL" value={newLinkForm.url} onChange={(e) => setNewLinkForm({ ...newLinkForm, url: e.target.value })} />
-                <select className="w-full p-2 rounded-md border border-border bg-background text-sm" value={newLinkForm.icon} onChange={(e) => setNewLinkForm({ ...newLinkForm, icon: e.target.value })}>
-                  {ICON_OPTIONS.map((icon) => <option key={icon} value={icon}>{icon}</option>)}
-                </select>
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" checked={newLinkForm.is_primary} onChange={(e) => setNewLinkForm({ ...newLinkForm, is_primary: e.target.checked })} />
-                  Primary (highlighted)
-                </label>
-                <div className="flex gap-2">
-                  <Button size="sm" onClick={handleAddLink} disabled={loading}><Plus className="w-3 h-3 mr-1" /> Add</Button>
-                  <Button size="sm" variant="ghost" onClick={() => setIsAddingLink(false)}>Cancel</Button>
-                </div>
-              </div>
-            ) : (
-              <Button variant="outline" className="w-full" onClick={() => setIsAddingLink(true)}>
-                <Plus className="w-4 h-4 mr-2" /> Add New Link
               </Button>
             )}
           </TabsContent>
