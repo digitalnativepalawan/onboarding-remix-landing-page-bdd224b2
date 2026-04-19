@@ -448,16 +448,21 @@ const AgencyAppsSection = () => {
     fetchAppLinks();
   }, []);
 
-  const visibleCards = CARD_URL_MAP.filter(({ url }) => {
-    const match = appLinks.find(
-      (link) => link.url.replace(/\/$/, "") === url.replace(/\/$/, "")
-    );
-    // If the app exists in the database, respect its is_visible flag.
-    // If the app is not in the database, show it by default.
-    return match ? match.is_visible : true;
-  });
+  // Use a Map keyed by normalized URL for O(n) lookup
+  const visibilityMap = new Map(
+    appLinks.map((link) => [link.url.replace(/\/$/, ""), link.is_visible])
+  );
 
-  const cardCount = loaded ? visibleCards.length : CARD_URL_MAP.length;
+  const visibleCards = loaded
+    ? CARD_URL_MAP.filter(({ url }) => {
+        const normalizedUrl = url.replace(/\/$/, "");
+        // If the app exists in the database, respect its is_visible flag.
+        // If the app is not in the database, show it by default.
+        return visibilityMap.has(normalizedUrl)
+          ? visibilityMap.get(normalizedUrl)
+          : true;
+      })
+    : CARD_URL_MAP;
 
   return (
     <section id="our-apps" className="py-12 sm:py-16 md:py-20 bg-background">
@@ -465,13 +470,13 @@ const AgencyAppsSection = () => {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
             <span className="section-tag mb-3">Our webapps</span>
-            <h2 className="section-title mb-2">{cardCount} live products. Real businesses.</h2>
+            <h2 className="section-title mb-2">{visibleCards.length} live products. Real businesses.</h2>
             <p className="section-subtitle mx-auto">
               Each one built for a specific Palawan business need — and available for your business too.
             </p>
           </div>
           <div className="flex flex-col gap-4">
-            {(loaded ? visibleCards : CARD_URL_MAP).map(({ component: Card, url }) => (
+            {visibleCards.map(({ component: Card, url }) => (
               <Card key={url} />
             ))}
           </div>

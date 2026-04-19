@@ -39,8 +39,7 @@ const LogoUploadCard = ({
         canvas.width = Math.min(img.width, 100);
         canvas.height = Math.min(img.height, 100);
         const ctx = canvas.getContext("2d");
-        if (!ctx) { resolve(true); return; }
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        if (!ctx) { resolve(true); return; }        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         let hasTransparency = false;
         for (let i = 3; i < imageData.data.length; i += 4) {
@@ -158,7 +157,7 @@ const LogoUploadCard = ({
         >
           <Upload className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
           <p className="text-xs text-muted-foreground">
-            {uploading ? "Uploading..." : "Click to upload PNG (transparency preferred)"}
+            {uploading ? "Uploading..." : "Click to upload PNG, SVG, or WebP (transparency preferred)"}
           </p>
         </button>
       )}
@@ -190,11 +189,11 @@ const LogoSettings = ({ logoLightUrl, logoDarkUrl, onUpdate }: LogoSettingsProps
     setSaving(true);
     const { error } = await supabase
       .from("site_settings")
-      .upsert({
-        id: "default",
+      .update({
         [field]: url,
         updated_at: new Date().toISOString(),
-      });
+      })
+      .eq("id", "default");
     if (error) {
       toast.error("Failed to save logo setting");
     } else {

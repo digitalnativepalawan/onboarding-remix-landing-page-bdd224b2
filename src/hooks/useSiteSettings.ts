@@ -16,18 +16,21 @@ export function useSiteSettings() {
   const [loading, setLoading] = useState(true);
 
   const fetchSettings = async () => {
-    const { data } = await supabase
-      .from("site_settings")
-      .select("*")
-      .eq("id", "default")
-      .maybeSingle();
-    if (data) {
-      setSettings({
-        logo_light_url: data.logo_light_url,
-        logo_dark_url: data.logo_dark_url,
-      });
+    try {
+      const { data } = await supabase
+        .from("site_settings")
+        .select("*")
+        .eq("id", "default")
+        .maybeSingle();
+      if (data) {
+        setSettings({
+          logo_light_url: data.logo_light_url,
+          logo_dark_url: data.logo_dark_url,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
