@@ -6,9 +6,11 @@ import {
   Globe, Hammer, Users, FileText, Wallet, Wrench,
   Plus, UserPlus, StickyNote, Upload, FileEdit, DollarSign,
   AlertCircle, Clock, Calendar, RefreshCw, Trash2, Check,
+  TrendingDown, TrendingUp, Repeat,
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+  ComposedChart, Line, Legend,
 } from "recharts";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
