@@ -221,12 +221,6 @@ export default function SiteSettingsPage() {
         <AdminSettingsModal open={legacyOpen} onOpenChange={setLegacyOpen} />
       </SectionCard>
 
-      {/* Sticky save reminder on long pages */}
-      <div className="flex justify-end pt-2">
-        <Button onClick={save} disabled={saving} size="sm">
-          <Save className="w-3.5 h-3.5 mr-1.5" /> {saving ? "Saving…" : "Save changes"}
-        </Button>
-      </div>
     </div>
   );
 }
