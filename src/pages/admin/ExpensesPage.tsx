@@ -198,7 +198,8 @@ export default function ExpensesPage() {
         </div>
       )}
 
-      <ExpenseFormModal open={modalOpen} onOpenChange={setModalOpen} expense={editing} onSaved={load} />
+      <ExpenseFormModal open={modalOpen} onOpenChange={setModalOpen} expense={editing} onSaved={() => load()} />
+      <ExpenseDetailSheet open={detailOpen} onOpenChange={setDetailOpen} expense={detail} onChanged={load} onEdit={onEdit} onDuplicate={onDuplicate} />
     </div>
   );
 }
