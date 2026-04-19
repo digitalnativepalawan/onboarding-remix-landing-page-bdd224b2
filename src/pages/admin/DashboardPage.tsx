@@ -111,6 +111,55 @@ export default function DashboardPage() {
     },
   });
 
+  /* ── expenses summary + monthly buckets ────── */
+  const expensesData = useQuery({
+    queryKey: ["dashboard-expenses"],
+    queryFn: async () => {
+      const since = startOfMonth(subMonths(new Date(), 5)).toISOString().slice(0, 10);
+      const { data, error } = await supabase
+        .from("expenses")
+        .select("amount_php, expense_date")
+        .gte("expense_date", since);
+      if (error) throw error;
+
+      const buckets: Record<string, number> = {};
+      for (let i = 5; i >= 0; i--) buckets[format(subMonths(new Date(), i), "MMM")] = 0;
+      let monthTotal = 0;
+      let lastMonthTotal = 0;
+      const now = new Date();
+      const lastM = subMonths(now, 1);
+      (data || []).forEach((e) => {
+        if (!e.expense_date) return;
+        const d = parseISO(e.expense_date);
+        const key = format(d, "MMM");
+        const amt = Number(e.amount_php || 0);
+        if (key in buckets) buckets[key] += amt;
+        if (d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) monthTotal += amt;
+        if (d.getMonth() === lastM.getMonth() && d.getFullYear() === lastM.getFullYear()) lastMonthTotal += amt;
+      });
+      return { buckets, monthTotal, lastMonthTotal };
+    },
+  });
+
+  /* ── upcoming recurring expense renewals (next 7 days) ── */
+  const upcoming = useQuery({
+    queryKey: ["dashboard-upcoming-renewals"],
+    queryFn: async () => {
+      const today = format(new Date(), "yyyy-MM-dd");
+      const in7 = format(new Date(Date.now() + 7 * 86400000), "yyyy-MM-dd");
+      const { data, error } = await supabase
+        .from("expenses")
+        .select("id, expense_name, category, amount_php, currency, next_recurring_date")
+        .eq("is_recurring", true)
+        .not("next_recurring_date", "is", null)
+        .gte("next_recurring_date", today)
+        .lte("next_recurring_date", in7)
+        .order("next_recurring_date", { ascending: true });
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
   /* ── pipeline summary ──────────────────────── */
   const pipeline = useQuery({
     queryKey: ["dashboard-pipeline"],
@@ -179,6 +228,8 @@ export default function DashboardPage() {
   const refreshAll = () => {
     qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
     qc.invalidateQueries({ queryKey: ["dashboard-revenue"] });
+    qc.invalidateQueries({ queryKey: ["dashboard-expenses"] });
+    qc.invalidateQueries({ queryKey: ["dashboard-upcoming-renewals"] });
     qc.invalidateQueries({ queryKey: ["dashboard-pipeline"] });
     qc.invalidateQueries({ queryKey: ["dashboard-todays"] });
     qc.invalidateQueries({ queryKey: ["dashboard-activity"] });
