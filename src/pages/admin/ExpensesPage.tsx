@@ -9,6 +9,7 @@ import { formatCurrency } from "@/lib/currency";
 import ExpenseFormModal from "@/components/admin/expenses/ExpenseFormModal";
 import ExpenseDetailSheet from "@/components/admin/expenses/ExpenseDetailSheet";
 import RecurringTab from "@/components/admin/expenses/RecurringTab";
+import BudgetsTab from "@/components/admin/expenses/BudgetsTab";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CATEGORY_COLORS, CATEGORY_OPTIONS, type ExpenseRow } from "@/components/admin/expenses/types";
 
@@ -134,6 +135,7 @@ export default function ExpensesPage() {
         <TabsList>
           <TabsTrigger value="all">All Expenses</TabsTrigger>
           <TabsTrigger value="recurring">Recurring</TabsTrigger>
+          <TabsTrigger value="budgets">Budgets</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="space-y-4 mt-0">
@@ -222,6 +224,10 @@ export default function ExpensesPage() {
             onDelete={onDelete}
             onChanged={load}
           />
+        </TabsContent>
+
+        <TabsContent value="budgets" className="mt-0">
+          <BudgetsTab rows={rows} />
         </TabsContent>
       </Tabs>
 

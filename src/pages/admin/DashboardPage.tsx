@@ -6,9 +6,11 @@ import {
   Globe, Hammer, Users, FileText, Wallet, Wrench,
   Plus, UserPlus, StickyNote, Upload, FileEdit, DollarSign,
   AlertCircle, Clock, Calendar, RefreshCw, Trash2, Check,
+  TrendingDown, TrendingUp, Repeat,
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+  ComposedChart, Line, Legend,
 } from "recharts";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -109,6 +111,55 @@ export default function DashboardPage() {
     },
   });
 
+  /* ── expenses summary + monthly buckets ────── */
+  const expensesData = useQuery({
+    queryKey: ["dashboard-expenses"],
+    queryFn: async () => {
+      const since = startOfMonth(subMonths(new Date(), 5)).toISOString().slice(0, 10);
+      const { data, error } = await supabase
+        .from("expenses")
+        .select("amount_php, expense_date")
+        .gte("expense_date", since);
+      if (error) throw error;
+
+      const buckets: Record<string, number> = {};
+      for (let i = 5; i >= 0; i--) buckets[format(subMonths(new Date(), i), "MMM")] = 0;
+      let monthTotal = 0;
+      let lastMonthTotal = 0;
+      const now = new Date();
+      const lastM = subMonths(now, 1);
+      (data || []).forEach((e) => {
+        if (!e.expense_date) return;
+        const d = parseISO(e.expense_date);
+        const key = format(d, "MMM");
+        const amt = Number(e.amount_php || 0);
+        if (key in buckets) buckets[key] += amt;
+        if (d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) monthTotal += amt;
+        if (d.getMonth() === lastM.getMonth() && d.getFullYear() === lastM.getFullYear()) lastMonthTotal += amt;
+      });
+      return { buckets, monthTotal, lastMonthTotal };
+    },
+  });
+
+  /* ── upcoming recurring expense renewals (next 7 days) ── */
+  const upcoming = useQuery({
+    queryKey: ["dashboard-upcoming-renewals"],
+    queryFn: async () => {
+      const today = format(new Date(), "yyyy-MM-dd");
+      const in7 = format(new Date(Date.now() + 7 * 86400000), "yyyy-MM-dd");
+      const { data, error } = await supabase
+        .from("expenses")
+        .select("id, expense_name, category, amount_php, currency, next_recurring_date")
+        .eq("is_recurring", true)
+        .not("next_recurring_date", "is", null)
+        .gte("next_recurring_date", today)
+        .lte("next_recurring_date", in7)
+        .order("next_recurring_date", { ascending: true });
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
   /* ── pipeline summary ──────────────────────── */
   const pipeline = useQuery({
     queryKey: ["dashboard-pipeline"],
@@ -177,6 +228,8 @@ export default function DashboardPage() {
   const refreshAll = () => {
     qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
     qc.invalidateQueries({ queryKey: ["dashboard-revenue"] });
+    qc.invalidateQueries({ queryKey: ["dashboard-expenses"] });
+    qc.invalidateQueries({ queryKey: ["dashboard-upcoming-renewals"] });
     qc.invalidateQueries({ queryKey: ["dashboard-pipeline"] });
     qc.invalidateQueries({ queryKey: ["dashboard-todays"] });
     qc.invalidateQueries({ queryKey: ["dashboard-activity"] });
@@ -221,7 +274,7 @@ export default function DashboardPage() {
       </div>
 
       {/* stat cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-3">
         <StatCard title="Live webapps" value={stats.data?.live ?? 0} icon={Globe}
           accent="text-emerald-400" loading={stats.isLoading}
           onClick={() => navigate("/admin/projects?stage=live")} />
@@ -240,14 +293,21 @@ export default function DashboardPage() {
         <StatCard title="Tools installed" value={stats.data?.tools ?? 0} icon={Wrench}
           accent="text-purple-400" loading={stats.isLoading}
           onClick={() => navigate("/admin/tools")} />
+        <ExpensesStatCard expensesData={expensesData.data} loading={expensesData.isLoading} fmtPhp={fmtPhp} navigate={navigate} />
+        <NetProfitStatCard
+          revenueData={revenue.data}
+          expensesData={expensesData.data}
+          loading={revenue.isLoading || expensesData.isLoading}
+          fmtPhp={fmtPhp}
+        />
       </div>
 
-      {/* row: revenue + pipeline */}
+      {/* row: revenue vs expenses + pipeline */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* revenue chart */}
+        {/* revenue vs expenses chart */}
         <Card className="p-4 lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold">Revenue — last 6 months</h3>
+            <h3 className="text-sm font-semibold">Revenue vs Expenses — last 6 months</h3>
             <div className="flex gap-1">
               {(["PHP", "USD"] as const).map((c) => (
                 <Button
@@ -262,11 +322,11 @@ export default function DashboardPage() {
               ))}
             </div>
           </div>
-          {revenue.isLoading ? (
-            <Skeleton className="h-[220px] w-full" />
+          {revenue.isLoading || expensesData.isLoading ? (
+            <Skeleton className="h-[260px] w-full" />
           ) : (
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={revenue.data}>
+            <ResponsiveContainer width="100%" height={260}>
+              <ComposedChart data={mergeRevExp(revenue.data, expensesData.data?.buckets, currency)}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={11} />
                 <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
@@ -279,35 +339,37 @@ export default function DashboardPage() {
                   }}
                   formatter={(v: number) => currency === "PHP" ? fmtPhp(v) : `$${v}`}
                 />
-                <Bar
-                  dataKey={currency === "PHP" ? "php" : "usd"}
-                  fill="hsl(var(--primary))"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
+                <Legend wrapperStyle={{ fontSize: "11px" }} />
+                <Bar dataKey="revenue" name="Revenue" fill="hsl(142 76% 45%)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="expenses" name="Expenses" fill="hsl(0 72% 55%)" radius={[4, 4, 0, 0]} />
+                <Line type="monotone" dataKey="profit" name="Net Profit" stroke="hsl(217 91% 60%)" strokeWidth={2} dot={{ r: 3 }} />
+              </ComposedChart>
             </ResponsiveContainer>
           )}
         </Card>
 
-        {/* pipeline */}
-        <Card className="p-4">
-          <h3 className="text-sm font-semibold mb-3">Client pipeline</h3>
-          <div className="space-y-2">
-            {(pipeline.data || []).map((p) => (
-              <button
-                key={p.stage}
-                onClick={() => navigate(`/admin/clients?stage=${p.stage}`)}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-md hover:bg-muted/50 transition-colors"
-              >
-                <span className={`text-xs px-2 py-0.5 rounded ${stageColors[p.stage]}`}>
-                  {stageLabels[p.stage]}
-                </span>
-                <span className="text-sm font-mono tabular-nums">{p.count}</span>
-              </button>
-            ))}
-          </div>
-        </Card>
+        {/* upcoming renewals */}
+        <UpcomingRenewals data={upcoming.data} loading={upcoming.isLoading} navigate={navigate} fmtPhp={fmtPhp} />
       </div>
+
+      {/* pipeline row */}
+      <Card className="p-4">
+        <h3 className="text-sm font-semibold mb-3">Client pipeline</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+          {(pipeline.data || []).map((p) => (
+            <button
+              key={p.stage}
+              onClick={() => navigate(`/admin/clients?stage=${p.stage}`)}
+              className="flex items-center justify-between px-3 py-2 rounded-md hover:bg-muted/50 transition-colors border border-border/40"
+            >
+              <span className={`text-xs px-2 py-0.5 rounded ${stageColors[p.stage]}`}>
+                {stageLabels[p.stage]}
+              </span>
+              <span className="text-sm font-mono tabular-nums ml-2">{p.count}</span>
+            </button>
+          ))}
+        </div>
+      </Card>
 
       {/* row: today's actions + activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -332,6 +394,136 @@ export default function DashboardPage() {
       <WeeklyGoals goals={goals.data || []} loading={goals.isLoading}
         onChange={() => qc.invalidateQueries({ queryKey: ["dashboard-goals"] })} />
     </div>
+  );
+}
+
+/* ── Expenses stat card (this month, vs last month) ───── */
+function ExpensesStatCard({ expensesData, loading, fmtPhp, navigate }: any) {
+  const cur = expensesData?.monthTotal ?? 0;
+  const prev = expensesData?.lastMonthTotal ?? 0;
+  const delta = prev > 0 ? ((cur - prev) / prev) * 100 : (cur > 0 ? 100 : 0);
+  const up = delta > 0;
+  return (
+    <Card onClick={() => navigate("/admin/expenses")} className="p-4 cursor-pointer hover:border-primary/50 transition-colors">
+      <div className="flex items-start justify-between">
+        <div className="space-y-1 min-w-0">
+          <p className="text-xs text-muted-foreground">Monthly expenses</p>
+          {loading ? <Skeleton className="h-7 w-16" /> : (
+            <>
+              <p className="text-2xl font-bold tabular-nums">{fmtPhp(cur)}</p>
+              {prev > 0 && (
+                <p className={`text-[10px] ${up ? "text-rose-400" : "text-emerald-400"} flex items-center gap-0.5`}>
+                  {up ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                  {Math.abs(delta).toFixed(0)}% vs last
+                </p>
+              )}
+            </>
+          )}
+        </div>
+        <Wallet className="w-5 h-5 text-rose-400 shrink-0" />
+      </div>
+    </Card>
+  );
+}
+
+/* ── Net profit stat card ─────────────────────── */
+function NetProfitStatCard({ revenueData, expensesData, loading, fmtPhp }: any) {
+  const now = new Date();
+  const monthKey = format(now, "MMM");
+  const revThisMonth = (revenueData || []).find((r: any) => r.month === monthKey)?.php ?? 0;
+  const expThisMonth = expensesData?.monthTotal ?? 0;
+  const profit = revThisMonth - expThisMonth;
+  const margin = revThisMonth > 0 ? (profit / revThisMonth) * 100 : 0;
+  const positive = profit >= 0;
+  return (
+    <Card className="p-4">
+      <div className="flex items-start justify-between">
+        <div className="space-y-1 min-w-0">
+          <p className="text-xs text-muted-foreground">Net profit</p>
+          {loading ? <Skeleton className="h-7 w-16" /> : (
+            <>
+              <p className={`text-2xl font-bold tabular-nums ${positive ? "text-emerald-400" : "text-rose-400"}`}>
+                {fmtPhp(profit)}
+              </p>
+              {revThisMonth > 0 && (
+                <p className="text-[10px] text-muted-foreground">{margin.toFixed(0)}% margin</p>
+              )}
+            </>
+          )}
+        </div>
+        {positive
+          ? <TrendingUp className="w-5 h-5 text-emerald-400 shrink-0" />
+          : <TrendingDown className="w-5 h-5 text-rose-400 shrink-0" />}
+      </div>
+    </Card>
+  );
+}
+
+/* ── Merge revenue & expenses buckets for the combined chart ───── */
+function mergeRevExp(
+  revenue: { month: string; php: number; usd: number }[] | undefined,
+  expenseBuckets: Record<string, number> | undefined,
+  currency: "PHP" | "USD",
+) {
+  if (!revenue) return [];
+  return revenue.map((r) => {
+    const expPhp = expenseBuckets?.[r.month] ?? 0;
+    const revVal = currency === "PHP" ? r.php : r.usd;
+    const expVal = currency === "PHP" ? expPhp : Math.round(expPhp / PHP_PER_USD);
+    return {
+      month: r.month,
+      revenue: revVal,
+      expenses: expVal,
+      profit: revVal - expVal,
+    };
+  });
+}
+
+/* ── Upcoming recurring renewals (next 7 days) ───────── */
+function UpcomingRenewals({ data, loading, navigate, fmtPhp }: any) {
+  const labelFor = (dateStr: string) => {
+    const d = parseISO(dateStr);
+    const days = differenceInDays(d, new Date());
+    if (days <= 0) return "Today";
+    if (days === 1) return "Tomorrow";
+    return `In ${days} days`;
+  };
+  return (
+    <Card className="p-4">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-semibold flex items-center gap-2">
+          <Repeat className="w-4 h-4 text-blue-400" /> Upcoming renewals
+        </h3>
+        <button
+          onClick={() => navigate("/admin/expenses")}
+          className="text-[11px] text-primary hover:underline"
+        >
+          View all
+        </button>
+      </div>
+      {loading ? (
+        <Skeleton className="h-32 w-full" />
+      ) : !data?.length ? (
+        <p className="text-xs text-muted-foreground py-6 text-center">No renewals in the next 7 days</p>
+      ) : (
+        <div className="space-y-1">
+          {data.map((e: any) => (
+            <button
+              key={e.id}
+              onClick={() => navigate("/admin/expenses")}
+              className="w-full text-left px-2 py-1.5 rounded text-xs hover:bg-muted/50 flex items-center gap-2"
+            >
+              <Repeat className="w-3 h-3 text-blue-400 shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="font-medium truncate">{e.expense_name}</p>
+                <p className="text-[10px] text-muted-foreground">{labelFor(e.next_recurring_date)} · {e.category}</p>
+              </div>
+              <span className="text-[11px] font-mono tabular-nums shrink-0">{fmtPhp(Number(e.amount_php) || 0)}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </Card>
   );
 }
 
