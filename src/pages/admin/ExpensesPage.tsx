@@ -8,6 +8,8 @@ import { Plus, Receipt, Search, Pencil, Trash2, FileText, RefreshCw, Filter, Tre
 import { formatCurrency } from "@/lib/currency";
 import ExpenseFormModal from "@/components/admin/expenses/ExpenseFormModal";
 import ExpenseDetailSheet from "@/components/admin/expenses/ExpenseDetailSheet";
+import RecurringTab from "@/components/admin/expenses/RecurringTab";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CATEGORY_COLORS, CATEGORY_OPTIONS, type ExpenseRow } from "@/components/admin/expenses/types";
 
 const StatCard = ({ icon: Icon, label, value, tone = "primary" }: any) => (
@@ -73,6 +75,10 @@ export default function ExpensesPage() {
 
   const onEdit = (e: ExpenseRow) => { setEditing(e); setDetailOpen(false); setModalOpen(true); };
   const onAdd = () => { setEditing(null); setModalOpen(true); };
+  const onAddPrefilled = (seed: Partial<ExpenseRow>) => {
+    setEditing({ id: undefined as any, ...seed } as ExpenseRow);
+    setModalOpen(true);
+  };
   const onView = (e: ExpenseRow) => { setDetail(e); setDetailOpen(true); };
   const onDuplicate = (e: ExpenseRow) => {
     const dup: ExpenseRow = {
