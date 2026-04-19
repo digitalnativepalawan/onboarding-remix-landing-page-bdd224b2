@@ -11,7 +11,7 @@ interface Props {
 export function KanbanColumn({ stage, projects, onCardClick }: Props) {
   const { isOver, setNodeRef } = useDroppable({ id: stage.value });
   return (
-    <div className="flex flex-col min-w-[260px] flex-1">
+    <div className="flex flex-col w-full lg:min-w-[260px] lg:flex-1">
       <div className="flex items-center justify-between mb-2 px-1">
         <Badge className={stage.color}>{stage.label}</Badge>
         <span className="text-xs text-muted-foreground">{projects.length}</span>
