@@ -9,8 +9,7 @@ import {
   TrendingDown, TrendingUp, Repeat,
 } from "lucide-react";
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
-  ComposedChart, Line, Legend,
+  PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
 } from "recharts";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -301,12 +300,11 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* row: revenue vs expenses + pipeline */}
+      {/* row: revenue + expenses donuts + upcoming renewals */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* revenue vs expenses chart */}
         <Card className="p-4 lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold">Revenue vs Expenses — last 6 months</h3>
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h3 className="text-sm font-semibold">Revenue & Expenses — last 6 months</h3>
             <div className="flex gap-1">
               {(["PHP", "USD"] as const).map((c) => (
                 <Button
@@ -324,45 +322,26 @@ export default function DashboardPage() {
           {revenue.isLoading || expensesData.isLoading ? (
             <Skeleton className="h-[280px] w-full" />
           ) : (
-            <ResponsiveContainer width="100%" height={280}>
-              <ComposedChart data={mergeRevExp(revenue.data, expensesData.data?.buckets, currency)} margin={{ top: 10, right: 8, left: -12, bottom: 0 }} barCategoryGap="28%" barGap={4}>
-                <defs>
-                  <linearGradient id="grad-rev" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(152 70% 55%)" stopOpacity={0.95} />
-                    <stop offset="100%" stopColor="hsl(152 70% 45%)" stopOpacity={0.55} />
-                  </linearGradient>
-                  <linearGradient id="grad-exp" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(346 80% 62%)" stopOpacity={0.95} />
-                    <stop offset="100%" stopColor="hsl(346 80% 50%)" stopOpacity={0.55} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeOpacity={0.4} strokeDasharray="2 4" />
-                <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} dy={6} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} tickLine={false} axisLine={false} width={48}
-                  tickFormatter={(v: number) => currency === "PHP"
-                    ? (Math.abs(v) >= 1000 ? `₱${(v / 1000).toFixed(0)}k` : `₱${v}`)
-                    : (Math.abs(v) >= 1000 ? `$${(v / 1000).toFixed(1)}k` : `$${v}`)} />
-                <Tooltip
-                  cursor={{ fill: "hsl(var(--muted))", fillOpacity: 0.35 }}
-                  contentStyle={{
-                    background: "hsl(var(--popover))",
-                    border: "1px solid hsl(var(--border))",
-                    borderRadius: 10,
-                    fontSize: 12,
-                    boxShadow: "0 8px 24px -8px hsl(var(--background) / 0.5)",
-                    padding: "8px 10px",
-                  }}
-                  labelStyle={{ fontWeight: 600, marginBottom: 4, color: "hsl(var(--foreground))" }}
-                  formatter={(v: number) => currency === "PHP" ? fmtPhp(v) : `$${v.toLocaleString()}`}
-                />
-                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-                <Bar dataKey="revenue" name="Revenue" fill="url(#grad-rev)" radius={[6, 6, 0, 0]} maxBarSize={28} />
-                <Bar dataKey="expenses" name="Expenses" fill="url(#grad-exp)" radius={[6, 6, 0, 0]} maxBarSize={28} />
-                <Line type="monotone" dataKey="profit" name="Net Profit" stroke="hsl(217 91% 65%)" strokeWidth={2.5}
-                  dot={{ r: 3, strokeWidth: 0, fill: "hsl(217 91% 65%)" }}
-                  activeDot={{ r: 5, strokeWidth: 2, stroke: "hsl(var(--background))" }} />
-              </ComposedChart>
-            </ResponsiveContainer>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <DonutBlock
+                title="Revenue by Month"
+                data={buildDonut(revenue.data, currency, "revenue")}
+                currency={currency}
+                fmtPhp={fmtPhp}
+              />
+              <DonutBlock
+                title="Expenses by Month"
+                data={buildDonut(
+                  Object.entries(expensesData.data?.buckets || {}).map(([month, php]) => ({
+                    month, php: php as number, usd: Math.round((php as number) / PHP_PER_USD),
+                  })),
+                  currency,
+                  "expenses"
+                )}
+                currency={currency}
+                fmtPhp={fmtPhp}
+              />
+            </div>
           )}
         </Card>
 
@@ -478,24 +457,106 @@ function NetProfitStatCard({ revenueData, expensesData, loading, fmtPhp }: any) 
 }
 
 /* ── Merge revenue & expenses buckets for the combined chart ───── */
-function mergeRevExp(
-  revenue: { month: string; php: number; usd: number }[] | undefined,
-  expenseBuckets: Record<string, number> | undefined,
+/* ── Donut chart helpers ─────────────────────── */
+const REVENUE_COLORS = [
+  "hsl(152 70% 50%)", "hsl(173 65% 48%)", "hsl(195 75% 55%)",
+  "hsl(217 80% 60%)", "hsl(258 70% 62%)", "hsl(280 65% 60%)",
+];
+const EXPENSE_COLORS = [
+  "hsl(346 80% 58%)", "hsl(20 85% 58%)", "hsl(38 90% 55%)",
+  "hsl(280 65% 60%)", "hsl(217 80% 60%)", "hsl(173 65% 48%)",
+];
+
+function buildDonut(
+  source: { month: string; php: number; usd: number }[] | undefined,
   currency: "PHP" | "USD",
+  kind: "revenue" | "expenses",
 ) {
-  if (!revenue) return [];
-  return revenue.map((r) => {
-    const expPhp = expenseBuckets?.[r.month] ?? 0;
-    const revVal = currency === "PHP" ? r.php : r.usd;
-    const expVal = currency === "PHP" ? expPhp : Math.round(expPhp / PHP_PER_USD);
-    return {
-      month: r.month,
-      revenue: revVal,
-      expenses: expVal,
-      profit: revVal - expVal,
-    };
-  });
+  if (!source) return [];
+  const palette = kind === "revenue" ? REVENUE_COLORS : EXPENSE_COLORS;
+  return source.map((r, i) => ({
+    name: r.month,
+    value: currency === "PHP" ? r.php : r.usd,
+    color: palette[i % palette.length],
+  }));
 }
+
+function DonutBlock({
+  title, data, currency, fmtPhp,
+}: {
+  title: string;
+  data: { name: string; value: number; color: string }[];
+  currency: "PHP" | "USD";
+  fmtPhp: (n: number) => string;
+}) {
+  const total = data.reduce((s, d) => s + d.value, 0);
+  const isEmpty = total === 0;
+  const fmt = (v: number) => currency === "PHP" ? fmtPhp(v) : `$${v.toLocaleString()}`;
+
+  return (
+    <div className="rounded-lg border border-border/40 bg-card/40 p-3">
+      <h4 className="text-xs font-semibold mb-2 text-foreground">{title}</h4>
+
+      {/* legend chips */}
+      <div className="flex flex-wrap gap-x-3 gap-y-1 mb-2 text-[11px]">
+        {data.map((d) => {
+          const pct = total > 0 ? Math.round((d.value / total) * 100) : 0;
+          return (
+            <span key={d.name} className="inline-flex items-center gap-1.5 text-muted-foreground">
+              <span className="w-2 h-2 rounded-full" style={{ background: d.color }} />
+              <span className="text-foreground">{d.name}</span>
+              <span className="font-semibold tabular-nums">{pct}%</span>
+            </span>
+          );
+        })}
+      </div>
+
+      <div className="relative h-[200px]">
+        {isEmpty ? (
+          <div className="absolute inset-0 flex items-center justify-center text-xs text-muted-foreground">
+            No data
+          </div>
+        ) : (
+          <>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius="62%"
+                  outerRadius="92%"
+                  paddingAngle={2}
+                  stroke="hsl(var(--card))"
+                  strokeWidth={2}
+                >
+                  {data.map((d) => <Cell key={d.name} fill={d.color} />)}
+                </Pie>
+                <Tooltip
+                  contentStyle={{
+                    background: "hsl(var(--popover))",
+                    border: "1px solid hsl(var(--border))",
+                    borderRadius: 8,
+                    fontSize: 12,
+                    padding: "6px 10px",
+                  }}
+                  labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 600 }}
+                  formatter={(v: number) => fmt(v)}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+            {/* center total */}
+            <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Total</span>
+              <span className="text-sm font-bold tabular-nums text-foreground">{fmt(total)}</span>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 
 /* ── Upcoming recurring renewals (next 7 days) ───────── */
 function UpcomingRenewals({ data, loading, navigate, fmtPhp }: any) {
