@@ -507,13 +507,13 @@ export default function ExpenseFormModal({ open, onOpenChange, expense, onSaved 
 
         <DialogFooter className="gap-2 sm:gap-2">
           <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-          {!expense && (
+          {!expense?.id && (
             <Button variant="outline" onClick={() => handleSave(true)} disabled={saving}>
               Save & Add Another
             </Button>
           )}
           <Button onClick={() => handleSave(false)} disabled={saving}>
-            {saving ? "Saving…" : expense ? "Save Changes" : "Save Expense"}
+            {saving ? "Saving…" : expense?.id ? "Save Changes" : "Save Expense"}
           </Button>
         </DialogFooter>
       </DialogContent>
