@@ -828,14 +828,38 @@ export type Database = {
         Row: {
           client_id: string | null
           created_at: string
+          currency: string | null
+          discount_amount: number | null
+          due_date: string | null
           follow_up_count: number
           id: string
+          invoice_date: string | null
+          invoice_number: string | null
           last_reminder_at: string | null
+          last_sent_date: string | null
           notes: string | null
+          notes_customer: string | null
+          notes_internal: string | null
+          payment_bank_account_name: string | null
+          payment_bank_account_number: string | null
+          payment_bank_enabled: boolean | null
+          payment_bank_name: string | null
+          payment_cash_enabled: boolean | null
+          payment_gcash_enabled: boolean | null
+          payment_gcash_number: string | null
+          payment_qr_enabled: boolean | null
+          payment_qr_url: string | null
+          payment_terms: string | null
+          pdf_url: string | null
+          sent_count: number | null
           sent_via: string | null
           status: string
+          subtotal_php: number | null
+          tax_amount: number | null
+          tax_rate: number | null
           terms: string | null
           title: string
+          total_amount: number | null
           total_php: number | null
           updated_at: string
           valid_until: string | null
@@ -843,14 +867,38 @@ export type Database = {
         Insert: {
           client_id?: string | null
           created_at?: string
+          currency?: string | null
+          discount_amount?: number | null
+          due_date?: string | null
           follow_up_count?: number
           id?: string
+          invoice_date?: string | null
+          invoice_number?: string | null
           last_reminder_at?: string | null
+          last_sent_date?: string | null
           notes?: string | null
+          notes_customer?: string | null
+          notes_internal?: string | null
+          payment_bank_account_name?: string | null
+          payment_bank_account_number?: string | null
+          payment_bank_enabled?: boolean | null
+          payment_bank_name?: string | null
+          payment_cash_enabled?: boolean | null
+          payment_gcash_enabled?: boolean | null
+          payment_gcash_number?: string | null
+          payment_qr_enabled?: boolean | null
+          payment_qr_url?: string | null
+          payment_terms?: string | null
+          pdf_url?: string | null
+          sent_count?: number | null
           sent_via?: string | null
           status?: string
+          subtotal_php?: number | null
+          tax_amount?: number | null
+          tax_rate?: number | null
           terms?: string | null
           title: string
+          total_amount?: number | null
           total_php?: number | null
           updated_at?: string
           valid_until?: string | null
@@ -858,14 +906,38 @@ export type Database = {
         Update: {
           client_id?: string | null
           created_at?: string
+          currency?: string | null
+          discount_amount?: number | null
+          due_date?: string | null
           follow_up_count?: number
           id?: string
+          invoice_date?: string | null
+          invoice_number?: string | null
           last_reminder_at?: string | null
+          last_sent_date?: string | null
           notes?: string | null
+          notes_customer?: string | null
+          notes_internal?: string | null
+          payment_bank_account_name?: string | null
+          payment_bank_account_number?: string | null
+          payment_bank_enabled?: boolean | null
+          payment_bank_name?: string | null
+          payment_cash_enabled?: boolean | null
+          payment_gcash_enabled?: boolean | null
+          payment_gcash_number?: string | null
+          payment_qr_enabled?: boolean | null
+          payment_qr_url?: string | null
+          payment_terms?: string | null
+          pdf_url?: string | null
+          sent_count?: number | null
           sent_via?: string | null
           status?: string
+          subtotal_php?: number | null
+          tax_amount?: number | null
+          tax_rate?: number | null
           terms?: string | null
           title?: string
+          total_amount?: number | null
           total_php?: number | null
           updated_at?: string
           valid_until?: string | null
