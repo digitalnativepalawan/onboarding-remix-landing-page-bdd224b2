@@ -274,7 +274,7 @@ export default function DashboardPage() {
       </div>
 
       {/* stat cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-3">
         <StatCard title="Live webapps" value={stats.data?.live ?? 0} icon={Globe}
           accent="text-emerald-400" loading={stats.isLoading}
           onClick={() => navigate("/admin/projects?stage=live")} />
@@ -293,14 +293,21 @@ export default function DashboardPage() {
         <StatCard title="Tools installed" value={stats.data?.tools ?? 0} icon={Wrench}
           accent="text-purple-400" loading={stats.isLoading}
           onClick={() => navigate("/admin/tools")} />
+        <ExpensesStatCard expensesData={expensesData.data} loading={expensesData.isLoading} fmtPhp={fmtPhp} navigate={navigate} />
+        <NetProfitStatCard
+          revenueData={revenue.data}
+          expensesData={expensesData.data}
+          loading={revenue.isLoading || expensesData.isLoading}
+          fmtPhp={fmtPhp}
+        />
       </div>
 
-      {/* row: revenue + pipeline */}
+      {/* row: revenue vs expenses + pipeline */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* revenue chart */}
+        {/* revenue vs expenses chart */}
         <Card className="p-4 lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold">Revenue — last 6 months</h3>
+            <h3 className="text-sm font-semibold">Revenue vs Expenses — last 6 months</h3>
             <div className="flex gap-1">
               {(["PHP", "USD"] as const).map((c) => (
                 <Button
@@ -315,11 +322,11 @@ export default function DashboardPage() {
               ))}
             </div>
           </div>
-          {revenue.isLoading ? (
-            <Skeleton className="h-[220px] w-full" />
+          {revenue.isLoading || expensesData.isLoading ? (
+            <Skeleton className="h-[260px] w-full" />
           ) : (
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={revenue.data}>
+            <ResponsiveContainer width="100%" height={260}>
+              <ComposedChart data={mergeRevExp(revenue.data, expensesData.data?.buckets, currency)}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={11} />
                 <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
@@ -332,35 +339,37 @@ export default function DashboardPage() {
                   }}
                   formatter={(v: number) => currency === "PHP" ? fmtPhp(v) : `$${v}`}
                 />
-                <Bar
-                  dataKey={currency === "PHP" ? "php" : "usd"}
-                  fill="hsl(var(--primary))"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
+                <Legend wrapperStyle={{ fontSize: "11px" }} />
+                <Bar dataKey="revenue" name="Revenue" fill="hsl(142 76% 45%)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="expenses" name="Expenses" fill="hsl(0 72% 55%)" radius={[4, 4, 0, 0]} />
+                <Line type="monotone" dataKey="profit" name="Net Profit" stroke="hsl(217 91% 60%)" strokeWidth={2} dot={{ r: 3 }} />
+              </ComposedChart>
             </ResponsiveContainer>
           )}
         </Card>
 
-        {/* pipeline */}
-        <Card className="p-4">
-          <h3 className="text-sm font-semibold mb-3">Client pipeline</h3>
-          <div className="space-y-2">
-            {(pipeline.data || []).map((p) => (
-              <button
-                key={p.stage}
-                onClick={() => navigate(`/admin/clients?stage=${p.stage}`)}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-md hover:bg-muted/50 transition-colors"
-              >
-                <span className={`text-xs px-2 py-0.5 rounded ${stageColors[p.stage]}`}>
-                  {stageLabels[p.stage]}
-                </span>
-                <span className="text-sm font-mono tabular-nums">{p.count}</span>
-              </button>
-            ))}
-          </div>
-        </Card>
+        {/* upcoming renewals */}
+        <UpcomingRenewals data={upcoming.data} loading={upcoming.isLoading} navigate={navigate} fmtPhp={fmtPhp} />
       </div>
+
+      {/* pipeline row */}
+      <Card className="p-4">
+        <h3 className="text-sm font-semibold mb-3">Client pipeline</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+          {(pipeline.data || []).map((p) => (
+            <button
+              key={p.stage}
+              onClick={() => navigate(`/admin/clients?stage=${p.stage}`)}
+              className="flex items-center justify-between px-3 py-2 rounded-md hover:bg-muted/50 transition-colors border border-border/40"
+            >
+              <span className={`text-xs px-2 py-0.5 rounded ${stageColors[p.stage]}`}>
+                {stageLabels[p.stage]}
+              </span>
+              <span className="text-sm font-mono tabular-nums ml-2">{p.count}</span>
+            </button>
+          ))}
+        </div>
+      </Card>
 
       {/* row: today's actions + activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
