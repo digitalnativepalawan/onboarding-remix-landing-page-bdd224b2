@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 /* ─────────────────────────────────────────────────────────────
    VISUAL PREVIEWS — each card is fully self-contained dark
@@ -415,15 +417,47 @@ const LandVisual = () => (
 /* ─────────────────────────────────────────────────────────────
    SECTION
 ───────────────────────────────────────────────────────────── */
+
+/* Map each visual card to its live URL for matching against app_links in the database */
+const CARD_URL_MAP: { component: React.FC; url: string }[] = [
+  { component: BackofficeVisual, url: "https://euro.palawancollective.com" },
+  { component: TransitVisual, url: "https://palawan-transit.vercel.app" },
+  { component: WildfallVisual, url: "https://wildfallpalawan.vercel.app" },
+  { component: SiteBuilderVisual, url: "https://site-builder-palawan.vercel.app" },
+  { component: OrderVisual, url: "https://jaycee.palawancollective.com" },
+  { component: LandVisual, url: "https://land.palawancollective.com" },
+];
+
+interface AppLink {
+  url: string;
+  is_visible: boolean;
+}
+
 const AgencyAppsSection = () => {
-  const cards = [
-    BackofficeVisual,
-    TransitVisual,
-    WildfallVisual,
-    SiteBuilderVisual,
-    OrderVisual,
-    LandVisual,
-  ];
+  const [appLinks, setAppLinks] = useState<AppLink[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const fetchAppLinks = async () => {
+      const { data } = await supabase
+        .from("app_links")
+        .select("url, is_visible");
+      setAppLinks(data || []);
+      setLoaded(true);
+    };
+    fetchAppLinks();
+  }, []);
+
+  const visibleCards = CARD_URL_MAP.filter(({ url }) => {
+    const match = appLinks.find(
+      (link) => link.url.replace(/\/$/, "") === url.replace(/\/$/, "")
+    );
+    // If the app exists in the database, respect its is_visible flag.
+    // If the app is not in the database, show it by default.
+    return match ? match.is_visible : true;
+  });
+
+  const cardCount = loaded ? visibleCards.length : CARD_URL_MAP.length;
 
   return (
     <section id="our-apps" className="py-12 sm:py-16 md:py-20 bg-background">
@@ -431,14 +465,14 @@ const AgencyAppsSection = () => {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
             <span className="section-tag mb-3">Our webapps</span>
-            <h2 className="section-title mb-2">6 live products. Real businesses.</h2>
+            <h2 className="section-title mb-2">{cardCount} live products. Real businesses.</h2>
             <p className="section-subtitle mx-auto">
               Each one built for a specific Palawan business need — and available for your business too.
             </p>
           </div>
           <div className="flex flex-col gap-4">
-            {cards.map((Card, i) => (
-              <Card key={i} />
+            {(loaded ? visibleCards : CARD_URL_MAP).map(({ component: Card, url }) => (
+              <Card key={url} />
             ))}
           </div>
         </div>

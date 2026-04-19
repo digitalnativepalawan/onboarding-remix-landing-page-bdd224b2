@@ -1,8 +1,17 @@
 import { ChevronDown, MessageCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/palawan-collective-logo.png";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
+import defaultLogo from "@/assets/palawan-collective-logo.png";
 
 const HeroSection = () => {
+  const { theme } = useTheme();
+  const { settings } = useSiteSettings();
+
+  const logo = theme === "dark"
+    ? (settings.logo_dark_url || settings.logo_light_url || defaultLogo)
+    : (settings.logo_light_url || settings.logo_dark_url || defaultLogo);
+
   return (
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-background">
       <div className="relative z-10 w-full px-5 sm:px-6 pt-24 pb-20">

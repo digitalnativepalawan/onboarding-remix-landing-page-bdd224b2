@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Settings, Download, Github } from "lucide-react";
 import { useTranslation } from "@/contexts/LocaleContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import ThemeToggle from "./ThemeToggle";
 
 interface HeaderLink {
@@ -19,9 +21,15 @@ const TIMEZONES = [
 
 const Header = () => {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const navigate = useNavigate();
   const [times, setTimes] = useState<Record<string, string>>({});
   const [headerLink, setHeaderLink] = useState<HeaderLink | null>(null);
+  const { settings } = useSiteSettings();
+
+  const currentLogo = theme === "dark"
+    ? (settings.logo_dark_url || settings.logo_light_url)
+    : (settings.logo_light_url || settings.logo_dark_url);
 
   const fetchHeaderLink = async () => {
     const { data } = await supabase
@@ -65,8 +73,15 @@ const Header = () => {
         <div className="px-2 sm:px-6">
           <div className="flex items-center justify-between h-12 sm:h-14 min-w-0">
 
-            {/* 3 world clocks */}
+            {/* Left: Logo + clocks */}
             <div className="flex items-center gap-2 sm:gap-5 shrink-0">
+              {currentLogo && (
+                <img
+                  src={currentLogo}
+                  alt="Logo"
+                  className="h-6 sm:h-7 w-auto object-contain"
+                />
+              )}
               {TIMEZONES.map(({ id, label }) => (
                 <div key={id} className="flex items-center gap-1">
                   <span className="text-[9px] sm:text-[11px] text-foreground/50 font-medium tracking-wide">

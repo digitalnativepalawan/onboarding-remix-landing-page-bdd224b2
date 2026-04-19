@@ -14,8 +14,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
   Pencil, Trash2, Plus, Check, X,
-  HelpCircle, Download, FileText, Eye, EyeOff,
+  HelpCircle, Download, FileText, Eye, EyeOff, ImageIcon,
 } from "lucide-react";
+import LogoSettings from "./LogoSettings";
 
 interface FAQ {
   id: string;
@@ -79,6 +80,10 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   };
   const [blogForm, setBlogForm] = useState(emptyBlog);
 
+  /* ── Logo ── */
+  const [logoLightUrl, setLogoLightUrl] = useState<string | null>(null);
+  const [logoDarkUrl, setLogoDarkUrl] = useState<string | null>(null);
+
   const [loading, setLoading] = useState(false);
 
   /* ── Fetch helpers ── */
@@ -98,8 +103,20 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     setBlogPosts(data || []);
   };
 
+  const fetchLogoSettings = async () => {
+    const { data } = await supabase
+      .from("site_settings")
+      .select("*")
+      .eq("id", "default")
+      .maybeSingle();
+    if (data) {
+      setLogoLightUrl(data.logo_light_url);
+      setLogoDarkUrl(data.logo_dark_url);
+    }
+  };
+
   useEffect(() => {
-    if (open) { fetchFaqs(); fetchHeaderLink(); fetchBlogPosts(); }
+    if (open) { fetchFaqs(); fetchHeaderLink(); fetchBlogPosts(); fetchLogoSettings(); }
   }, [open]);
 
   /* ── FAQ handlers ── */
@@ -270,7 +287,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
         </DialogHeader>
 
         <Tabs defaultValue="blog" className="mt-4">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="blog" className="flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5" />Blog
             </TabsTrigger>
@@ -279,6 +296,9 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
             </TabsTrigger>
             <TabsTrigger value="header" className="flex items-center gap-1.5">
               <Download className="w-3.5 h-3.5" />Header
+            </TabsTrigger>
+            <TabsTrigger value="logo" className="flex items-center gap-1.5">
+              <ImageIcon className="w-3.5 h-3.5" />Logo
             </TabsTrigger>
           </TabsList>
 
@@ -411,6 +431,15 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                 <p className="text-xs text-muted-foreground">✅ Active — "<span className="text-foreground font-medium">{headerLinkTitle}</span>" is visible in the header.</p>
               </div>
             )}
+          </TabsContent>
+
+          {/* ── LOGO TAB ── */}
+          <TabsContent value="logo" className="mt-4">
+            <LogoSettings
+              logoLightUrl={logoLightUrl}
+              logoDarkUrl={logoDarkUrl}
+              onUpdate={fetchLogoSettings}
+            />
           </TabsContent>
         </Tabs>
       </DialogContent>
