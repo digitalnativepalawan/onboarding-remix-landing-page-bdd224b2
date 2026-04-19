@@ -214,15 +214,15 @@ export default function ExpenseFormModal({ open, onOpenChange, expense, onSaved 
       receipt_url: form.no_receipt ? null : form.receipt_url || null,
     };
 
-    const res = expense
+    const res = expense?.id
       ? await supabase.from("expenses").update(payload).eq("id", expense.id)
       : await supabase.from("expenses").insert(payload);
 
     setSaving(false);
     if (res.error) return toast.error("Save failed: " + res.error.message);
-    toast.success(expense ? "Expense updated" : "Expense added");
+    toast.success(expense?.id ? "Expense updated" : "Expense added");
 
-    if (addAnother && !expense) {
+    if (addAnother && !expense?.id) {
       onSaved(true);
       setForm({ ...emptyForm });
       setReceiptFileMeta(null);
