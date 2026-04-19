@@ -45,7 +45,33 @@ export function QuoteWizardModal({ open, onOpenChange, initial }: Props) {
   useEffect(() => {
     if (open) {
       setStep(0);
-      setDraft(initial ? { ...initial, items: [...initial.items] } : emptyDraft);
+      let base: QuoteDraft = initial ? { ...initial, items: [...initial.items] } : { ...emptyDraft, items: [] };
+      // Pull a prefill item from sessionStorage (e.g. "Add to Quote" from Catalog)
+      try {
+        const raw = sessionStorage.getItem("quote-prefill-item");
+        if (raw && !initial) {
+          const p = JSON.parse(raw);
+          base = {
+            ...base,
+            items: [
+              ...base.items,
+              {
+                catalog_item_id: p.catalog_item_id ?? null,
+                name: p.name ?? "",
+                description: p.description ?? "",
+                qty: 1,
+                unit_price_php: Number(p.unit_price_php) || 0,
+                line_total_php: Number(p.unit_price_php) || 0,
+                sort_order: base.items.length,
+              },
+            ],
+          };
+          sessionStorage.removeItem("quote-prefill-item");
+        }
+      } catch {
+        // ignore
+      }
+      setDraft(base);
     }
   }, [open, initial]);
 
