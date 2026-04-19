@@ -123,14 +123,14 @@ export default function ProjectsPage() {
         <p className="text-sm text-muted-foreground text-center py-8">Loading...</p>
       ) : view === "kanban" ? (
         <DndContext sensors={sensors} onDragEnd={onDragEnd}>
-          <div className="flex gap-3 overflow-x-auto pb-4">
+          <div className="flex flex-col lg:flex-row gap-3 lg:overflow-x-auto pb-4">
             {PROJECT_STAGES.map((stage) => (
               <KanbanColumn key={stage.value} stage={stage} projects={grouped[stage.value]} onCardClick={setDetailId} />
             ))}
           </div>
         </DndContext>
       ) : (
-        <Card>
+        <Card className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
