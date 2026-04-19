@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Settings, Download, Github } from "lucide-react";
 import { useTranslation } from "@/contexts/LocaleContext";
 import { supabase } from "@/integrations/supabase/client";
+import ThemeToggle from "./ThemeToggle";
 
 interface HeaderLink {
   id: string;
@@ -68,24 +69,24 @@ const Header = () => {
             <div className="flex items-center gap-2 sm:gap-5 shrink-0">
               {TIMEZONES.map(({ id, label }) => (
                 <div key={id} className="flex items-center gap-1">
-                  <span className="text-[9px] sm:text-[11px] text-white/50 font-medium tracking-wide">
+                  <span className="text-[9px] sm:text-[11px] text-foreground/50 font-medium tracking-wide">
                     {label}
                   </span>
-                  <span className="text-[9px] sm:text-[11px] text-white font-mono tabular-nums">
+                  <span className="text-[9px] sm:text-[11px] text-foreground font-mono tabular-nums">
                     {times[id] || "--:--"}
                   </span>
                 </div>
               ))}
             </div>
 
-            {/* Right side actions — no locale switcher */}
+            {/* Right side actions */}
             <div className="flex items-center gap-1 sm:gap-3 shrink-0">
               {headerLink && (
                 <a
                   href={headerLink.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center text-white/80 hover:text-white transition-colors p-1 sm:px-2 sm:py-1 rounded-md hover:bg-white/10"
+                  className="flex items-center text-foreground/80 hover:text-foreground transition-colors p-1 sm:px-2 sm:py-1 rounded-md hover:bg-foreground/10"
                   title={headerLink.title}
                 >
                   <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
@@ -98,7 +99,7 @@ const Header = () => {
                 href="https://github.com/digitalnativepalawan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/80 hover:text-white transition-colors p-1"
+                className="text-foreground/80 hover:text-foreground transition-colors p-1"
                 aria-label="GitHub"
               >
                 <Github className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -107,7 +108,7 @@ const Header = () => {
                 href="https://ollama.com/palawancollective"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/80 hover:text-white transition-colors p-1"
+                className="text-foreground/80 hover:text-foreground transition-colors p-1"
                 aria-label="Ollama"
               >
                 <img
@@ -116,9 +117,10 @@ const Header = () => {
                   className="w-4 h-4 sm:w-5 sm:h-5 rounded-sm"
                 />
               </a>
+              <ThemeToggle />
               <button
                 onClick={handleSettingsClick}
-                className="text-white/80 hover:text-white transition-colors p-1"
+                className="text-foreground/80 hover:text-foreground transition-colors p-1"
                 aria-label="Settings"
               >
                 <Settings className="w-4 h-4 sm:w-5 sm:h-5" />

@@ -128,16 +128,16 @@ const DashboardSection = ({ projects, clients, quotes }: { projects: Project[]; 
           { label: "Active clients", val: activeClients, color: "#60a5fa" },
           { label: "Pending quotes", val: pendingQuotes, color: "#f97316" },
         ].map(s => (
-          <div key={s.label} className="rounded-xl p-4" style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <p className="text-xs mb-1" style={{ color: "#6b7280" }}>{s.label}</p>
+          <div key={s.label} className="rounded-xl p-4 bg-card border border-border/20">
+            <p className="text-xs mb-1 text-muted-foreground">{s.label}</p>
             <p className="text-3xl font-bold font-mono" style={{ color: s.color }}>{s.val}</p>
           </div>
         ))}
       </div>
 
       {/* Revenue */}
-      <div className="rounded-xl p-4" style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)" }}>
-        <p className="text-xs mb-1" style={{ color: "#6b7280" }}>Total accepted quote value</p>
+      <div className="rounded-xl p-4 bg-card border border-border/20">
+        <p className="text-xs mb-1 text-muted-foreground">Total accepted quote value</p>
         <p className="text-2xl font-bold font-mono" style={{ color: "#c9a84c" }}>
           ₱{revenue.toLocaleString()}
         </p>
@@ -145,19 +145,18 @@ const DashboardSection = ({ projects, clients, quotes }: { projects: Project[]; 
 
       {/* Active projects quick view */}
       <div>
-        <p className="text-xs font-medium mb-3" style={{ color: "#6b7280" }}>ACTIVE PROJECTS</p>
+        <p className="text-xs font-medium mb-3 text-muted-foreground">ACTIVE PROJECTS</p>
         <div className="space-y-2">
           {projects.filter(p => p.status === "live" || p.status === "building").map(p => (
-            <div key={p.id} className="flex items-center justify-between rounded-lg px-3 py-2.5"
-              style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div key={p.id} className="flex items-center justify-between rounded-lg px-3 py-2.5 bg-card border border-border/20">
               <div className="flex items-center gap-2.5">
                 <StatusBadge status={p.status} />
-                <span className="text-sm text-white font-medium">{p.name}</span>
-                <span className="text-xs" style={{ color: "#6b7280" }}>{p.webapp_type}</span>
+                <span className="text-sm text-foreground font-medium">{p.name}</span>
+                <span className="text-xs text-muted-foreground">{p.webapp_type}</span>
               </div>
               {p.live_url && (
                 <a href={p.live_url} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="w-3.5 h-3.5" style={{ color: "#4b5563" }} />
+                  <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
                 </a>
               )}
             </div>
@@ -167,14 +166,13 @@ const DashboardSection = ({ projects, clients, quotes }: { projects: Project[]; 
 
       {/* Quick tool links */}
       <div>
-        <p className="text-xs font-medium mb-3" style={{ color: "#6b7280" }}>QUICK ACCESS</p>
+        <p className="text-xs font-medium mb-3 text-muted-foreground">QUICK ACCESS</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {TOOLS.slice(0, 6).map(t => (
             <a key={t.name} href={t.url} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-lg px-3 py-2 hover:opacity-80 transition-opacity"
-              style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)" }}>
+              className="flex items-center gap-2 rounded-lg px-3 py-2 hover:opacity-80 transition-opacity bg-card border border-border/20">
               <span className="text-sm">{t.icon}</span>
-              <span className="text-xs text-white truncate">{t.name}</span>
+              <span className="text-xs text-foreground truncate">{t.name}</span>
             </a>
           ))}
         </div>
@@ -276,29 +274,29 @@ const ProjectsSection = () => {
   };
 
   const ProjectForm = () => (
-    <div className="space-y-3 p-4 rounded-xl" style={{ background: "#111827", border: "1px solid rgba(99,102,241,0.3)" }}>
+    <div className="space-y-3 p-4 rounded-xl bg-card border border-primary/30">
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Name *</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Project name" /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">Status</Label>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Name *</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Project name" /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Status</Label>
           <select className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm" value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}>
             {["building", "live", "planned", "paused"].map(s => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Webapp type</Label><Input value={form.webapp_type} onChange={e => setForm({ ...form, webapp_type: e.target.value })} placeholder="Resort ops, Transport..." /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">Client name</Label><Input value={form.client_name} onChange={e => setForm({ ...form, client_name: e.target.value })} placeholder="Client or business" /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Webapp type</Label><Input value={form.webapp_type} onChange={e => setForm({ ...form, webapp_type: e.target.value })} placeholder="Resort ops, Transport..." /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Client name</Label><Input value={form.client_name} onChange={e => setForm({ ...form, client_name: e.target.value })} placeholder="Client or business" /></div>
       </div>
-      <div><Label className="text-xs text-gray-400 mb-1 block">Description</Label><Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={2} placeholder="What this project does" /></div>
+      <div><Label className="text-xs text-muted-foreground mb-1 block">Description</Label><Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={2} placeholder="What this project does" /></div>
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Live URL</Label><Input value={form.live_url} onChange={e => setForm({ ...form, live_url: e.target.value })} placeholder="https://..." /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">GitHub URL</Label><Input value={form.github_url} onChange={e => setForm({ ...form, github_url: e.target.value })} placeholder="https://github.com/..." /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Live URL</Label><Input value={form.live_url} onChange={e => setForm({ ...form, live_url: e.target.value })} placeholder="https://..." /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">GitHub URL</Label><Input value={form.github_url} onChange={e => setForm({ ...form, github_url: e.target.value })} placeholder="https://github.com/..." /></div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Vercel URL</Label><Input value={form.vercel_url} onChange={e => setForm({ ...form, vercel_url: e.target.value })} placeholder="https://vercel.com/..." /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">Supabase Project ID</Label><Input value={form.supabase_project_id} onChange={e => setForm({ ...form, supabase_project_id: e.target.value })} placeholder="project-id" /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Vercel URL</Label><Input value={form.vercel_url} onChange={e => setForm({ ...form, vercel_url: e.target.value })} placeholder="https://vercel.com/..." /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Supabase Project ID</Label><Input value={form.supabase_project_id} onChange={e => setForm({ ...form, supabase_project_id: e.target.value })} placeholder="project-id" /></div>
       </div>
-      <div><Label className="text-xs text-gray-400 mb-1 block">Lovable URL</Label><Input value={form.lovable_url} onChange={e => setForm({ ...form, lovable_url: e.target.value })} placeholder="https://lovable.dev/..." /></div>
+      <div><Label className="text-xs text-muted-foreground mb-1 block">Lovable URL</Label><Input value={form.lovable_url} onChange={e => setForm({ ...form, lovable_url: e.target.value })} placeholder="https://lovable.dev/..." /></div>
       <div className="flex gap-2">
         <Button size="sm" onClick={handleSave} disabled={loading}><Check className="w-3 h-3 mr-1" />{editing ? "Save" : "Add Project"}</Button>
         <Button size="sm" variant="ghost" onClick={() => { setAdding(false); setEditing(null); setForm(emptyProject); }}><X className="w-3 h-3 mr-1" />Cancel</Button>
@@ -309,7 +307,7 @@ const ProjectsSection = () => {
   return (
     <div className="space-y-3">
       {projects.map(p => (
-        <div key={p.id} className="rounded-xl overflow-hidden" style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)" }}>
+        <div key={p.id} className="rounded-xl overflow-hidden bg-card border border-border/20">
           {editing === p.id ? (
             <div className="p-4"><ProjectForm /></div>
           ) : (
@@ -319,22 +317,22 @@ const ProjectsSection = () => {
                 <div className="flex items-center gap-3 min-w-0">
                   <StatusBadge status={p.status} />
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-white truncate">{p.name}</p>
-                    <p className="text-xs" style={{ color: "#6b7280" }}>{p.webapp_type}{p.client_name ? ` · ${p.client_name}` : ""}</p>
+                    <p className="text-sm font-medium text-foreground truncate">{p.name}</p>
+                    <p className="text-xs text-muted-foreground">{p.webapp_type}{p.client_name ? ` · ${p.client_name}` : ""}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
-                  {p.live_url && <a href={p.live_url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="p-1.5 rounded hover:bg-white/5"><ExternalLink className="w-3.5 h-3.5" style={{ color: "#4b5563" }} /></a>}
-                  <button onClick={e => { e.stopPropagation(); setEditing(p.id); setForm({ name: p.name, description: p.description || "", status: p.status, client_name: p.client_name || "", webapp_type: p.webapp_type || "", github_url: p.github_url || "", vercel_url: p.vercel_url || "", lovable_url: p.lovable_url || "", supabase_project_id: p.supabase_project_id || "", live_url: p.live_url || "" }); }} className="p-1.5 rounded hover:bg-white/5"><Pencil className="w-3.5 h-3.5" style={{ color: "#4b5563" }} /></button>
-                  <button onClick={e => { e.stopPropagation(); handleDelete(p.id); }} className="p-1.5 rounded hover:bg-white/5"><Trash2 className="w-3.5 h-3.5 text-red-500/60" /></button>
-                  {expanded === p.id ? <ChevronUp className="w-4 h-4 ml-1" style={{ color: "#4b5563" }} /> : <ChevronDown className="w-4 h-4 ml-1" style={{ color: "#4b5563" }} />}
+                  {p.live_url && <a href={p.live_url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="p-1.5 rounded hover:bg-foreground/5"><ExternalLink className="w-3.5 h-3.5 text-muted-foreground" /></a>}
+                  <button onClick={e => { e.stopPropagation(); setEditing(p.id); setForm({ name: p.name, description: p.description || "", status: p.status, client_name: p.client_name || "", webapp_type: p.webapp_type || "", github_url: p.github_url || "", vercel_url: p.vercel_url || "", lovable_url: p.lovable_url || "", supabase_project_id: p.supabase_project_id || "", live_url: p.live_url || "" }); }} className="p-1.5 rounded hover:bg-foreground/5"><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                  <button onClick={e => { e.stopPropagation(); handleDelete(p.id); }} className="p-1.5 rounded hover:bg-foreground/5"><Trash2 className="w-3.5 h-3.5 text-red-500/60" /></button>
+                  {expanded === p.id ? <ChevronUp className="w-4 h-4 ml-1 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 ml-1 text-muted-foreground" />}
                 </div>
               </div>
 
               {/* Expanded detail */}
               {expanded === p.id && (
-                <div className="border-t px-4 py-4 space-y-5" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                  {p.description && <p className="text-sm" style={{ color: "#9ca3af" }}>{p.description}</p>}
+                <div className="border-t border-border px-4 py-4 space-y-5">
+                  {p.description && <p className="text-sm text-muted-foreground">{p.description}</p>}
 
                   {/* Quick links row */}
                   <div className="flex flex-wrap gap-2">
@@ -346,8 +344,8 @@ const ProjectsSection = () => {
                       { label: "Live site", url: p.live_url, icon: ExternalLink, color: "#4ade80" },
                     ].filter(l => l.url).map(l => (
                       <a key={l.label} href={l.url} target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs hover:opacity-80 transition-opacity"
-                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", color: l.color }}>
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs hover:opacity-80 transition-opacity bg-muted border border-border/50"
+                        style={{ color: l.color }}>
                         <l.icon className="w-3 h-3" />{l.label}
                       </a>
                     ))}
@@ -356,8 +354,8 @@ const ProjectsSection = () => {
                   {/* Extra URLs */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs font-medium" style={{ color: "#6b7280" }}>ADDITIONAL URLS</p>
-                      <button onClick={() => setAddingUrl(addingUrl === p.id ? null : p.id)} className="text-xs flex items-center gap-1" style={{ color: "#60a5fa" }}>
+                      <p className="text-xs font-medium text-muted-foreground">ADDITIONAL URLS</p>
+                      <button onClick={() => setAddingUrl(addingUrl === p.id ? null : p.id)} className="text-xs flex items-center gap-1 text-primary">
                         <Plus className="w-3 h-3" />Add URL
                       </button>
                     </div>
@@ -376,8 +374,8 @@ const ProjectsSection = () => {
                       const Icon = URL_ICONS[u.url_type] || Link2;
                       return (
                         <div key={u.id} className="flex items-center gap-2 py-1">
-                          <Icon className="w-3 h-3 shrink-0" style={{ color: "#6b7280" }} />
-                          <a href={u.url} target="_blank" rel="noopener noreferrer" className="text-xs flex-1 truncate hover:underline" style={{ color: "#60a5fa" }}>{u.label} — {u.url}</a>
+                          <Icon className="w-3 h-3 shrink-0" />
+                          <a href={u.url} target="_blank" rel="noopener noreferrer" className="text-xs flex-1 truncate hover:underline text-primary">{u.label} — {u.url}</a>
                           <button onClick={() => handleDeleteUrl(u.id, p.id)}><Trash2 className="w-3 h-3 text-red-500/40 hover:text-red-500" /></button>
                         </div>
                       );
@@ -387,13 +385,13 @@ const ProjectsSection = () => {
                   {/* Notes */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs font-medium" style={{ color: "#6b7280" }}>NOTES & COMMENTS</p>
-                      <button onClick={() => setAddingNote(addingNote === p.id ? null : p.id)} className="text-xs flex items-center gap-1" style={{ color: "#60a5fa" }}>
+                      <p className="text-xs font-medium text-muted-foreground">NOTES & COMMENTS</p>
+                      <button onClick={() => setAddingNote(addingNote === p.id ? null : p.id)} className="text-xs flex items-center gap-1 text-primary">
                         <Plus className="w-3 h-3" />Add note
                       </button>
                     </div>
                     {addingNote === p.id && (
-                      <div className="space-y-2 mb-3 p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                      <div className="space-y-2 mb-3 p-3 rounded-lg bg-muted/30 border border-border/30">
                         <div className="flex gap-2">
                           <select className="h-9 rounded-md border border-input bg-background px-2 text-sm" value={newNote.note_type} onChange={e => setNewNote({ ...newNote, note_type: e.target.value })}>
                             {["note", "comment", "todo", "bug", "milestone"].map(t => <option key={t} value={t}>{t}</option>)}
@@ -409,11 +407,11 @@ const ProjectsSection = () => {
                         const Icon = NOTE_ICONS[n.note_type] || StickyNote;
                         const color = NOTE_COLORS[n.note_type] || "#a3a3a3";
                         return (
-                          <div key={n.id} className="flex gap-2.5 p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                          <div key={n.id} className="flex gap-2.5 p-3 rounded-lg bg-muted/30 border border-border/20">
                             <Icon className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color }} />
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs whitespace-pre-wrap" style={{ color: "#d1d5db" }}>{n.content}</p>
-                              <p className="text-[10px] mt-1" style={{ color: "#4b5563" }}>
+                              <p className="text-xs whitespace-pre-wrap text-foreground/80">{n.content}</p>
+                              <p className="text-[10px] mt-1 text-muted-foreground">
                                 {n.note_type} · {new Date(n.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                               </p>
                             </div>
@@ -421,7 +419,7 @@ const ProjectsSection = () => {
                           </div>
                         );
                       })}
-                      {(notes[p.id] || []).length === 0 && <p className="text-xs" style={{ color: "#4b5563" }}>No notes yet.</p>}
+                      {(notes[p.id] || []).length === 0 && <p className="text-xs text-muted-foreground">No notes yet.</p>}
                     </div>
                   </div>
                 </div>
@@ -463,25 +461,25 @@ const ClientsSection = () => {
   };
 
   const ClientForm = () => (
-    <div className="space-y-3 p-4 rounded-xl" style={{ background: "#111827", border: "1px solid rgba(99,102,241,0.3)" }}>
+    <div className="space-y-3 p-4 rounded-xl bg-card border border-primary/30">
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Name *</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Contact name" /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">Business name</Label><Input value={form.business_name} onChange={e => setForm({ ...form, business_name: e.target.value })} placeholder="Business or resort name" /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Name *</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Contact name" /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Business name</Label><Input value={form.business_name} onChange={e => setForm({ ...form, business_name: e.target.value })} placeholder="Business or resort name" /></div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Business type</Label><Input value={form.business_type} onChange={e => setForm({ ...form, business_type: e.target.value })} placeholder="Resort, Restaurant..." /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">Status</Label>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Business type</Label><Input value={form.business_type} onChange={e => setForm({ ...form, business_type: e.target.value })} placeholder="Resort, Restaurant..." /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Status</Label>
           <select className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm" value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}>
             {["prospect", "active", "done", "paused"].map(s => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">WhatsApp</Label><Input value={form.whatsapp} onChange={e => setForm({ ...form, whatsapp: e.target.value })} placeholder="+63 9xx xxx xxxx" /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">Email</Label><Input value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="email@..." /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">WhatsApp</Label><Input value={form.whatsapp} onChange={e => setForm({ ...form, whatsapp: e.target.value })} placeholder="+63 9xx xxx xxxx" /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Email</Label><Input value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="email@..." /></div>
       </div>
-      <div><Label className="text-xs text-gray-400 mb-1 block">Location</Label><Input value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} placeholder="El Nido, Port Barton..." /></div>
-      <div><Label className="text-xs text-gray-400 mb-1 block">Notes</Label><Textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={3} placeholder="Any notes about this client" /></div>
+      <div><Label className="text-xs text-muted-foreground mb-1 block">Location</Label><Input value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} placeholder="El Nido, Port Barton..." /></div>
+      <div><Label className="text-xs text-muted-foreground mb-1 block">Notes</Label><Textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={3} placeholder="Any notes about this client" /></div>
       <div className="flex gap-2">
         <Button size="sm" onClick={handleSave} disabled={loading}><Check className="w-3 h-3 mr-1" />{editing ? "Save" : "Add Client"}</Button>
         <Button size="sm" variant="ghost" onClick={() => { setAdding(false); setEditing(null); setForm(empty); }}><X className="w-3 h-3 mr-1" />Cancel</Button>
@@ -492,27 +490,27 @@ const ClientsSection = () => {
   return (
     <div className="space-y-3">
       {clients.map(c => (
-        <div key={c.id} className="rounded-xl overflow-hidden" style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)" }}>
+        <div key={c.id} className="rounded-xl overflow-hidden bg-card border border-border/20">
           {editing === c.id ? <div className="p-4"><ClientForm /></div> : (
             <div className="flex items-start justify-between px-4 py-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <StatusBadge status={c.status} />
-                  <p className="text-sm font-medium text-white">{c.name}</p>
+                  <p className="text-sm font-medium text-foreground">{c.name}</p>
                 </div>
-                {c.business_name && <p className="text-xs font-medium" style={{ color: "#9ca3af" }}>{c.business_name} · {c.business_type}</p>}
-                {c.location && <p className="text-xs mt-0.5" style={{ color: "#6b7280" }}>{c.location}</p>}
+                {c.business_name && <p className="text-xs font-medium text-muted-foreground">{c.business_name} · {c.business_type}</p>}
+                {c.location && <p className="text-xs mt-0.5 text-muted-foreground">{c.location}</p>}
                 {c.whatsapp && (
                   <a href={`https://wa.me/${c.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-xs mt-1 hover:opacity-80" style={{ color: "#4ade80" }}>
                     <MessageCircle className="w-3 h-3" />{c.whatsapp}
                   </a>
                 )}
-                {c.notes && <p className="text-xs mt-1.5 italic" style={{ color: "#6b7280" }}>{c.notes}</p>}
+                {c.notes && <p className="text-xs mt-1.5 italic text-muted-foreground">{c.notes}</p>}
               </div>
               <div className="flex gap-1 shrink-0">
-                <button onClick={() => { setEditing(c.id); setForm({ name: c.name, business_name: c.business_name || "", business_type: c.business_type || "", whatsapp: c.whatsapp || "", email: c.email || "", location: c.location || "", status: c.status, notes: c.notes || "" }); }} className="p-1.5 rounded hover:bg-white/5"><Pencil className="w-3.5 h-3.5" style={{ color: "#4b5563" }} /></button>
-                <button onClick={async () => { await supabase.from("admin_clients").delete().eq("id", c.id); fetch(); }} className="p-1.5 rounded hover:bg-white/5"><Trash2 className="w-3.5 h-3.5 text-red-500/60" /></button>
+                <button onClick={() => { setEditing(c.id); setForm({ name: c.name, business_name: c.business_name || "", business_type: c.business_type || "", whatsapp: c.whatsapp || "", email: c.email || "", location: c.location || "", status: c.status, notes: c.notes || "" }); }} className="p-1.5 rounded hover:bg-foreground/5"><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                <button onClick={async () => { await supabase.from("admin_clients").delete().eq("id", c.id); fetch(); }} className="p-1.5 rounded hover:bg-foreground/5"><Trash2 className="w-3.5 h-3.5 text-red-500/60" /></button>
               </div>
             </div>
           )}
@@ -548,24 +546,24 @@ const QuotesSection = () => {
   };
 
   const QuoteForm = () => (
-    <div className="space-y-3 p-4 rounded-xl" style={{ background: "#111827", border: "1px solid rgba(99,102,241,0.3)" }}>
+    <div className="space-y-3 p-4 rounded-xl bg-card border border-primary/30">
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Client name *</Label><Input value={form.client_name} onChange={e => setForm({ ...form, client_name: e.target.value })} placeholder="Client or business" /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">WebApp type *</Label><Input value={form.webapp_type} onChange={e => setForm({ ...form, webapp_type: e.target.value })} placeholder="Resort ops, Ordering..." /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Client name *</Label><Input value={form.client_name} onChange={e => setForm({ ...form, client_name: e.target.value })} placeholder="Client or business" /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">WebApp type *</Label><Input value={form.webapp_type} onChange={e => setForm({ ...form, webapp_type: e.target.value })} placeholder="Resort ops, Ordering..." /></div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Price (PHP)</Label><Input type="number" value={form.price_php} onChange={e => setForm({ ...form, price_php: Number(e.target.value) })} placeholder="0" /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">Status</Label>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Price (PHP)</Label><Input type="number" value={form.price_php} onChange={e => setForm({ ...form, price_php: Number(e.target.value) })} placeholder="0" /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Status</Label>
           <select className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm" value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}>
             {["draft", "sent", "accepted", "declined", "invoiced"].map(s => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Valid until</Label><Input type="date" value={form.valid_until} onChange={e => setForm({ ...form, valid_until: e.target.value })} /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Valid until</Label><Input type="date" value={form.valid_until} onChange={e => setForm({ ...form, valid_until: e.target.value })} /></div>
       </div>
-      <div><Label className="text-xs text-gray-400 mb-1 block">Description</Label><Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={2} placeholder="What's included in this quote" /></div>
-      <div><Label className="text-xs text-gray-400 mb-1 block">Notes</Label><Textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={2} placeholder="Internal notes" /></div>
+      <div><Label className="text-xs text-muted-foreground mb-1 block">Description</Label><Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={2} placeholder="What's included in this quote" /></div>
+      <div><Label className="text-xs text-muted-foreground mb-1 block">Notes</Label><Textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={2} placeholder="Internal notes" /></div>
       <div className="flex gap-2">
         <Button size="sm" onClick={handleSave} disabled={loading}><Check className="w-3 h-3 mr-1" />{editing ? "Save" : "Add Quote"}</Button>
         <Button size="sm" variant="ghost" onClick={() => { setAdding(false); setEditing(null); setForm(empty); }}><X className="w-3 h-3 mr-1" />Cancel</Button>
@@ -578,29 +576,29 @@ const QuotesSection = () => {
   return (
     <div className="space-y-3">
       {total > 0 && (
-        <div className="rounded-xl px-4 py-3 flex items-center justify-between" style={{ background: "#111827", border: "1px solid rgba(201,168,76,0.2)" }}>
-          <span className="text-xs" style={{ color: "#6b7280" }}>Total accepted</span>
+        <div className="rounded-xl px-4 py-3 flex items-center justify-between bg-card border border-yellow-500/20">
+          <span className="text-xs text-muted-foreground">Total accepted</span>
           <span className="text-lg font-bold font-mono" style={{ color: "#c9a84c" }}>₱{total.toLocaleString()}</span>
         </div>
       )}
       {quotes.map(q => (
-        <div key={q.id} className="rounded-xl overflow-hidden" style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)" }}>
+        <div key={q.id} className="rounded-xl overflow-hidden bg-card border border-border/20">
           {editing === q.id ? <div className="p-4"><QuoteForm /></div> : (
             <div className="flex items-start justify-between px-4 py-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <StatusBadge status={q.status} />
-                  <p className="text-sm font-medium text-white">{q.client_name}</p>
-                  <p className="text-xs" style={{ color: "#6b7280" }}>{q.webapp_type}</p>
+                  <p className="text-sm font-medium text-foreground">{q.client_name}</p>
+                  <p className="text-xs text-muted-foreground">{q.webapp_type}</p>
                 </div>
                 <p className="text-base font-bold font-mono" style={{ color: "#c9a84c" }}>₱{(q.price_php || 0).toLocaleString()}</p>
-                {q.description && <p className="text-xs mt-1" style={{ color: "#9ca3af" }}>{q.description}</p>}
-                {q.valid_until && <p className="text-xs mt-1 flex items-center gap-1" style={{ color: "#6b7280" }}><Calendar className="w-3 h-3" />Valid until {q.valid_until}</p>}
-                {q.notes && <p className="text-xs mt-1 italic" style={{ color: "#6b7280" }}>{q.notes}</p>}
+                {q.description && <p className="text-xs mt-1 text-muted-foreground">{q.description}</p>}
+                {q.valid_until && <p className="text-xs mt-1 flex items-center gap-1 text-muted-foreground"><Calendar className="w-3 h-3" />Valid until {q.valid_until}</p>}
+                {q.notes && <p className="text-xs mt-1 italic text-muted-foreground">{q.notes}</p>}
               </div>
               <div className="flex gap-1 shrink-0">
-                <button onClick={() => { setEditing(q.id); setForm({ client_name: q.client_name, webapp_type: q.webapp_type, description: q.description || "", price_php: q.price_php, status: q.status, valid_until: q.valid_until || "", notes: q.notes || "" }); }} className="p-1.5 rounded hover:bg-white/5"><Pencil className="w-3.5 h-3.5" style={{ color: "#4b5563" }} /></button>
-                <button onClick={async () => { await supabase.from("admin_quotes").delete().eq("id", q.id); fetch(); }} className="p-1.5 rounded hover:bg-white/5"><Trash2 className="w-3.5 h-3.5 text-red-500/60" /></button>
+                <button onClick={() => { setEditing(q.id); setForm({ client_name: q.client_name, webapp_type: q.webapp_type, description: q.description || "", price_php: q.price_php, status: q.status, valid_until: q.valid_until || "", notes: q.notes || "" }); }} className="p-1.5 rounded hover:bg-foreground/5"><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                <button onClick={async () => { await supabase.from("admin_quotes").delete().eq("id", q.id); fetch(); }} className="p-1.5 rounded hover:bg-foreground/5"><Trash2 className="w-3.5 h-3.5 text-red-500/60" /></button>
               </div>
             </div>
           )}
@@ -636,20 +634,20 @@ const CatalogSection = () => {
   };
 
   const CatalogForm = () => (
-    <div className="space-y-3 p-4 rounded-xl" style={{ background: "#111827", border: "1px solid rgba(99,102,241,0.3)" }}>
+    <div className="space-y-3 p-4 rounded-xl bg-card border border-primary/30">
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Name *</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Product name" /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">Status</Label>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Name *</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Product name" /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Status</Label>
           <select className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm" value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}>
             {["available", "coming_soon", "retired"].map(s => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
       </div>
-      <div><Label className="text-xs text-gray-400 mb-1 block">Description</Label><Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={2} /></div>
-      <div><Label className="text-xs text-gray-400 mb-1 block">Features (comma separated)</Label><Textarea value={form.features} onChange={e => setForm({ ...form, features: e.target.value })} rows={2} /></div>
+      <div><Label className="text-xs text-muted-foreground mb-1 block">Description</Label><Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={2} /></div>
+      <div><Label className="text-xs text-muted-foreground mb-1 block">Features (comma separated)</Label><Textarea value={form.features} onChange={e => setForm({ ...form, features: e.target.value })} rows={2} /></div>
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Price from (PHP)</Label><Input type="number" value={form.price_from_php} onChange={e => setForm({ ...form, price_from_php: Number(e.target.value) })} /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">Turnaround (days)</Label><Input type="number" value={form.turnaround_days} onChange={e => setForm({ ...form, turnaround_days: Number(e.target.value) })} /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Price from (PHP)</Label><Input type="number" value={form.price_from_php} onChange={e => setForm({ ...form, price_from_php: Number(e.target.value) })} /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Turnaround (days)</Label><Input type="number" value={form.turnaround_days} onChange={e => setForm({ ...form, turnaround_days: Number(e.target.value) })} /></div>
       </div>
       <div className="flex gap-2">
         <Button size="sm" onClick={handleSave} disabled={loading}><Check className="w-3 h-3 mr-1" />{editing ? "Save" : "Add Item"}</Button>
@@ -661,30 +659,30 @@ const CatalogSection = () => {
   return (
     <div className="space-y-3">
       {items.map(item => (
-        <div key={item.id} className="rounded-xl overflow-hidden" style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)" }}>
+        <div key={item.id} className="rounded-xl overflow-hidden bg-card border border-border/20">
           {editing === item.id ? <div className="p-4"><CatalogForm /></div> : (
             <div className="flex items-start justify-between px-4 py-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <StatusBadge status={item.status} />
-                  <p className="text-sm font-medium text-white">{item.name}</p>
+                  <p className="text-sm font-medium text-foreground">{item.name}</p>
                 </div>
-                {item.description && <p className="text-xs mb-1" style={{ color: "#9ca3af" }}>{item.description}</p>}
+                {item.description && <p className="text-xs mb-1 text-muted-foreground">{item.description}</p>}
                 {item.features && (
                   <div className="flex flex-wrap gap-1 mb-1">
                     {item.features.split(",").map(f => (
-                      <span key={f} className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: "rgba(255,255,255,0.05)", color: "#6b7280" }}>{f.trim()}</span>
+                      <span key={f} className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{f.trim()}</span>
                     ))}
                   </div>
                 )}
                 <div className="flex items-center gap-3 mt-1">
                   <span className="text-sm font-bold font-mono" style={{ color: "#c9a84c" }}>from ₱{(item.price_from_php || 0).toLocaleString()}</span>
-                  <span className="text-xs" style={{ color: "#6b7280" }}>{item.turnaround_days} days</span>
+                  <span className="text-xs text-muted-foreground">{item.turnaround_days} days</span>
                 </div>
               </div>
               <div className="flex gap-1 shrink-0">
-                <button onClick={() => { setEditing(item.id); setForm({ name: item.name, description: item.description || "", features: item.features || "", price_from_php: item.price_from_php, turnaround_days: item.turnaround_days, status: item.status }); }} className="p-1.5 rounded hover:bg-white/5"><Pencil className="w-3.5 h-3.5" style={{ color: "#4b5563" }} /></button>
-                <button onClick={async () => { await supabase.from("admin_catalog").delete().eq("id", item.id); fetch(); }} className="p-1.5 rounded hover:bg-white/5"><Trash2 className="w-3.5 h-3.5 text-red-500/60" /></button>
+                <button onClick={() => { setEditing(item.id); setForm({ name: item.name, description: item.description || "", features: item.features || "", price_from_php: item.price_from_php, turnaround_days: item.turnaround_days, status: item.status }); }} className="p-1.5 rounded hover:bg-foreground/5"><Pencil className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                <button onClick={async () => { await supabase.from("admin_catalog").delete().eq("id", item.id); fetch(); }} className="p-1.5 rounded hover:bg-foreground/5"><Trash2 className="w-3.5 h-3.5 text-red-500/60" /></button>
               </div>
             </div>
           )}
@@ -726,8 +724,15 @@ const WebAppsSection = () => {
   useEffect(() => { fetchApps(); }, []);
 
   const handleToggleVisible = async (app: AppLink) => {
+    // Optimistic UI update
+    setApps(prev => prev.map(a => a.id === app.id ? { ...a, is_visible: !a.is_visible } : a));
     const { error } = await supabase.from("app_links").update({ is_visible: !app.is_visible, updated_at: new Date().toISOString() }).eq("id", app.id);
-    if (error) { toast.error("Failed to update visibility"); return; }
+    if (error) {
+      toast.error("Failed to update visibility");
+      // Revert optimistic update
+      setApps(prev => prev.map(a => a.id === app.id ? { ...a, is_visible: app.is_visible } : a));
+      return;
+    }
     toast.success(app.is_visible ? "Hidden from site" : "Visible on site");
     fetchApps();
   };
@@ -762,20 +767,20 @@ const WebAppsSection = () => {
   };
 
   const AppForm = () => (
-    <div className="space-y-3 p-4 rounded-xl" style={{ background: "#111827", border: "1px solid rgba(99,102,241,0.3)" }}>
+    <div className="space-y-3 p-4 rounded-xl bg-card border border-primary/30">
       <div className="grid grid-cols-2 gap-3">
-        <div><Label className="text-xs text-gray-400 mb-1 block">Name *</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="App name" /></div>
-        <div><Label className="text-xs text-gray-400 mb-1 block">Display order</Label><Input type="number" value={form.display_order} onChange={e => setForm({ ...form, display_order: Number(e.target.value) })} /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Name *</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="App name" /></div>
+        <div><Label className="text-xs text-muted-foreground mb-1 block">Display order</Label><Input type="number" value={form.display_order} onChange={e => setForm({ ...form, display_order: Number(e.target.value) })} /></div>
       </div>
-      <div><Label className="text-xs text-gray-400 mb-1 block">URL *</Label><Input value={form.url} onChange={e => setForm({ ...form, url: e.target.value })} placeholder="https://..." /></div>
+      <div><Label className="text-xs text-muted-foreground mb-1 block">URL *</Label><Input value={form.url} onChange={e => setForm({ ...form, url: e.target.value })} placeholder="https://..." /></div>
       <div className="flex items-center gap-4">
         <label className="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" checked={form.is_visible} onChange={e => setForm({ ...form, is_visible: e.target.checked })} className="w-4 h-4 rounded" />
-          <span className="text-xs text-gray-400">Visible on site</span>
+          <span className="text-xs text-muted-foreground">Visible on site</span>
         </label>
         <label className="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" checked={form.is_primary} onChange={e => setForm({ ...form, is_primary: e.target.checked })} className="w-4 h-4 rounded" />
-          <span className="text-xs text-gray-400">Primary / featured</span>
+          <span className="text-xs text-muted-foreground">Primary / featured</span>
         </label>
       </div>
       <div className="flex gap-2">
@@ -787,11 +792,11 @@ const WebAppsSection = () => {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs" style={{ color: "#6b7280" }}>
+      <p className="text-xs text-muted-foreground">
         Toggle apps on or off to control what appears in the Featured WebApps section on the homepage.
       </p>
       {apps.map(app => (
-        <div key={app.id} className="rounded-xl overflow-hidden" style={{ background: "#111827", border: `1px solid ${app.is_visible ? "rgba(45,212,191,0.15)" : "rgba(255,255,255,0.06)"}` }}>
+        <div key={app.id} className={`rounded-xl overflow-hidden bg-card border ${app.is_visible ? "border-primary/15" : "border-border/30"}`}>
           {editing === app.id ? (
             <div className="p-4"><AppForm /></div>
           ) : (
@@ -799,31 +804,31 @@ const WebAppsSection = () => {
               <div className="flex items-center gap-3 min-w-0">
                 <div className={`w-2 h-2 rounded-full shrink-0 ${app.is_visible ? "bg-emerald-400" : "bg-gray-600"}`} />
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{app.name}</p>
-                  <p className="text-xs truncate" style={{ color: "#6b7280" }}>{app.url.replace(/^https?:\/\//, "")}</p>
+                  <p className="text-sm font-medium text-foreground truncate">{app.name}</p>
+                  <p className="text-xs truncate text-muted-foreground">{app.url.replace(/^https?:\/\//, "")}</p>
                 </div>
                 {app.is_primary && (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full shrink-0" style={{ background: "rgba(245,158,11,0.1)", color: "#f59e0b" }}>featured</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full shrink-0 bg-amber-500/10 text-amber-500">featured</span>
                 )}
               </div>
               <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => handleToggleVisible(app)}
-                  className="p-1.5 rounded hover:bg-white/5 transition-colors"
+                  className="p-1.5 rounded hover:bg-foreground/5 transition-colors"
                   title={app.is_visible ? "Hide from site" : "Show on site"}
                 >
                   {app.is_visible
-                    ? <Eye className="w-4 h-4" style={{ color: "#2dd4bf" }} />
-                    : <EyeOff className="w-4 h-4" style={{ color: "#4b5563" }} />
+                    ? <Eye className="w-4 h-4 text-primary" />
+                    : <EyeOff className="w-4 h-4 text-muted-foreground" />
                   }
                 </button>
-                <a href={app.url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded hover:bg-white/5">
-                  <ExternalLink className="w-3.5 h-3.5" style={{ color: "#4b5563" }} />
+                <a href={app.url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded hover:bg-foreground/5">
+                  <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
                 </a>
-                <button onClick={() => { setEditing(app.id); setForm({ name: app.name, url: app.url, icon: app.icon, display_order: app.display_order, is_primary: app.is_primary, is_visible: app.is_visible }); }} className="p-1.5 rounded hover:bg-white/5">
-                  <Pencil className="w-3.5 h-3.5" style={{ color: "#4b5563" }} />
+                <button onClick={() => { setEditing(app.id); setForm({ name: app.name, url: app.url, icon: app.icon, display_order: app.display_order, is_primary: app.is_primary, is_visible: app.is_visible }); }} className="p-1.5 rounded hover:bg-foreground/5">
+                  <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
                 </button>
-                <button onClick={() => handleDelete(app.id)} className="p-1.5 rounded hover:bg-white/5">
+                <button onClick={() => handleDelete(app.id)} className="p-1.5 rounded hover:bg-foreground/5">
                   <Trash2 className="w-3.5 h-3.5 text-red-500/60" />
                 </button>
               </div>
@@ -845,18 +850,17 @@ const WebAppsSection = () => {
 /* ── TOOLS ─────────────────────────────────────────────────── */
 const ToolsSection = () => (
   <div className="space-y-3">
-    <p className="text-xs" style={{ color: "#6b7280" }}>Your most-used platforms and workspaces — one click away.</p>
+    <p className="text-xs text-muted-foreground">Your most-used platforms and workspaces — one click away.</p>
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {TOOLS.map(t => (
         <a key={t.name} href={t.url} target="_blank" rel="noopener noreferrer"
-          className="flex items-center gap-3 rounded-xl px-4 py-3 hover:opacity-80 transition-opacity"
-          style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.06)" }}>
+          className="flex items-center gap-3 rounded-xl px-4 py-3 hover:opacity-80 transition-opacity bg-card border border-border/20">
           <span className="text-xl">{t.icon}</span>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-white">{t.name}</p>
-            <p className="text-xs truncate" style={{ color: "#6b7280" }}>{t.desc}</p>
+            <p className="text-sm font-medium text-foreground">{t.name}</p>
+            <p className="text-xs truncate text-muted-foreground">{t.desc}</p>
           </div>
-          <ExternalLink className="w-3.5 h-3.5 ml-auto shrink-0" style={{ color: "#4b5563" }} />
+          <ExternalLink className="w-3.5 h-3.5 ml-auto shrink-0 text-muted-foreground" />
         </a>
       ))}
     </div>
@@ -868,7 +872,7 @@ const SiteSection = () => {
   const [open, setOpen] = useState(false);
   return (
     <div className="space-y-4">
-      <p className="text-xs" style={{ color: "#6b7280" }}>
+      <p className="text-xs text-muted-foreground">
         Manage public-facing site content: blog posts, FAQs, and the header download link.
       </p>
       <Button onClick={() => setOpen(true)} className="w-full sm:w-auto">
@@ -922,18 +926,18 @@ const AdminPage = () => {
       <div className="min-h-screen bg-[#090e1a] flex items-center justify-center px-4">
         <div className="w-full max-w-sm">
           <div className="flex flex-col items-center mb-8">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: "rgba(45,212,191,0.1)", border: "1px solid rgba(45,212,191,0.2)" }}>
-              <Lock className="w-5 h-5" style={{ color: "#2dd4bf" }} />
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-primary/10 border border-primary/20">
+              <Lock className="w-5 h-5 text-primary" />
             </div>
-            <h1 className="text-xl font-medium text-white">Admin Access</h1>
-            <p className="text-sm mt-1" style={{ color: "#6b7280" }}>Palawan Collective Command Center</p>
+            <h1 className="text-xl font-medium text-foreground">Admin Access</h1>
+            <p className="text-sm mt-1 text-muted-foreground">Palawan Collective Command Center</p>
           </div>
           <form onSubmit={handleAuth} className="space-y-3">
             <Input type="password" placeholder="Enter passkey" value={passkey} onChange={e => setPasskey(e.target.value)} autoFocus className="text-center text-lg tracking-widest" />
             {error && <p className="text-xs text-center text-red-400">{error}</p>}
             <Button type="submit" className="w-full">Enter</Button>
           </form>
-          <button onClick={() => navigate("/")} className="w-full text-center text-xs mt-4" style={{ color: "#4b5563" }}>
+          <button onClick={() => navigate("/")} className="w-full text-center text-xs mt-4 text-muted-foreground">
             ← Back to site
           </button>
         </div>
@@ -943,32 +947,32 @@ const AdminPage = () => {
 
   /* ── MAIN ADMIN ── */
   return (
-    <div className="min-h-screen" style={{ background: "#090e1a" }}>
+    <div className="min-h-screen bg-background">
       {/* Top bar */}
-      <div className="sticky top-0 z-40 flex items-center justify-between px-4 sm:px-6 h-14" style={{ background: "#0d1422", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="sticky top-0 z-40 flex items-center justify-between px-4 sm:px-6 h-14 bg-card border-b border-border/30">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="p-1.5 rounded-lg hover:bg-white/5 transition-colors">
-            <ArrowLeft className="w-4 h-4" style={{ color: "#6b7280" }} />
+          <button onClick={() => navigate("/")} className="p-1.5 rounded-lg hover:bg-foreground/5 transition-colors">
+            <ArrowLeft className="w-4 h-4 text-muted-foreground" />
           </button>
-          <span className="text-sm font-medium text-white">Command Center</span>
-          <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(45,212,191,0.1)", color: "#2dd4bf" }}>
+          <span className="text-sm font-medium text-foreground">Command Center</span>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary">
             Palawan Collective
           </span>
         </div>
-        <button onClick={() => setAuthed(false)} className="text-xs" style={{ color: "#4b5563" }}>Lock</button>
+        <button onClick={() => setAuthed(false)} className="text-xs text-muted-foreground">Lock</button>
       </div>
 
       <div className="flex flex-col sm:flex-row min-h-[calc(100vh-56px)]">
         {/* Sidebar nav */}
-        <div className="sm:w-52 shrink-0 sm:sticky sm:top-14 sm:h-[calc(100vh-56px)] sm:overflow-y-auto" style={{ background: "#0d1422", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="sm:w-52 shrink-0 sm:sticky sm:top-14 sm:h-[calc(100vh-56px)] sm:overflow-y-auto bg-card border-r border-border/30">
           <div className="flex sm:flex-col gap-1 p-2 overflow-x-auto sm:overflow-x-visible">
             {NAV.map(n => (
               <button key={n.id} onClick={() => setTab(n.id)}
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm whitespace-nowrap transition-colors w-full text-left"
-                style={tab === n.id
-                  ? { background: "rgba(45,212,191,0.1)", color: "#2dd4bf", border: "1px solid rgba(45,212,191,0.15)" }
-                  : { color: "#6b7280", border: "1px solid transparent" }
-                }>
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm whitespace-nowrap transition-colors w-full text-left border ${
+                  tab === n.id
+                    ? "bg-primary/10 text-primary border-primary/15"
+                    : "text-muted-foreground border-transparent"
+                }`}>
                 <n.icon className="w-4 h-4 shrink-0" />
                 {n.label}
               </button>
@@ -979,7 +983,7 @@ const AdminPage = () => {
         {/* Main content */}
         <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-lg font-medium text-white mb-5">
+            <h2 className="text-lg font-medium text-foreground mb-5">
               {NAV.find(n => n.id === tab)?.label}
             </h2>
             {tab === "dashboard" && <DashboardSection projects={projects} clients={clients} quotes={quotes} />}

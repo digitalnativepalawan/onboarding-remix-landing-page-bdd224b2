@@ -66,12 +66,12 @@ const FeedbackSection = () => {
           <form onSubmit={handleSubmit} className="glass-card p-4 sm:p-5 mb-6">
             <div className="space-y-3">
               <div>
-                <label htmlFor="author" className="block text-xs text-white/80 mb-1.5">{t("feedback.nameLabel")}</label>
-                <input id="author" type="text" value={authorName} onChange={(e) => setAuthorName(e.target.value)} placeholder={t("feedback.namePlaceholder")} className="w-full px-3 py-2 rounded-lg bg-muted/50 border border-border/30 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all" />
+                <label htmlFor="author" className="block text-xs text-foreground/80 mb-1.5">{t("feedback.nameLabel")}</label>
+                <input id="author" type="text" value={authorName} onChange={(e) => setAuthorName(e.target.value)} placeholder={t("feedback.namePlaceholder")} className="w-full px-3 py-2 rounded-lg bg-muted/50 border border-border/30 text-sm text-foreground placeholder:text-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all" />
               </div>
               <div>
-                <label htmlFor="feedback" className="block text-xs text-white/80 mb-1.5">{t("feedback.feedbackLabel")}</label>
-                <textarea id="feedback" value={feedback} onChange={(e) => setFeedback(e.target.value)} placeholder={t("feedback.messagePlaceholder")} className="w-full h-24 px-3 py-2 rounded-lg bg-muted/50 border border-border/30 text-sm text-white placeholder:text-white/50 resize-none focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all" />
+                <label htmlFor="feedback" className="block text-xs text-foreground/80 mb-1.5">{t("feedback.feedbackLabel")}</label>
+                <textarea id="feedback" value={feedback} onChange={(e) => setFeedback(e.target.value)} placeholder={t("feedback.messagePlaceholder")} className="w-full h-24 px-3 py-2 rounded-lg bg-muted/50 border border-border/30 text-sm text-foreground placeholder:text-foreground/50 resize-none focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all" />
               </div>
             </div>
             <button type="submit" disabled={isSubmitting} className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm transition-all hover:opacity-90 disabled:opacity-50">
@@ -80,11 +80,11 @@ const FeedbackSection = () => {
           </form>
 
           <div>
-            <h3 className="text-xs text-white/70 mb-3 flex items-center gap-2"><MessageSquare className="w-3.5 h-3.5" />{t("feedback.recentTitle")} ({feedbackList.length})</h3>
+            <h3 className="text-xs text-foreground/70 mb-3 flex items-center gap-2"><MessageSquare className="w-3.5 h-3.5" />{t("feedback.recentTitle")} ({feedbackList.length})</h3>
             {isLoading ? (
               <div className="glass-card p-6 text-center"><div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" /></div>
             ) : feedbackList.length === 0 ? (
-              <div className="glass-card p-6 text-center"><p className="text-xs text-white/60">{t("feedback.noFeedback")}</p></div>
+              <div className="glass-card p-6 text-center"><p className="text-xs text-foreground/60">{t("feedback.noFeedback")}</p></div>
             ) : (
               <div className="space-y-2">
                 {feedbackList.slice(0, 5).map((item) => (
@@ -93,10 +93,10 @@ const FeedbackSection = () => {
                       <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0"><User className="w-3.5 h-3.5" /></div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-2 mb-1">
-                            <span className="text-xs text-white">{item.author_name || t("feedback.anonymous")}</span>
-                            <span className="text-[0.65rem] text-white/60 flex items-center gap-1"><Clock className="w-3 h-3" />{format(new Date(item.created_at), 'MMM d')}</span>
+                            <span className="text-xs text-foreground">{item.author_name || t("feedback.anonymous")}</span>
+                            <span className="text-[0.65rem] text-foreground/60 flex items-center gap-1"><Clock className="w-3 h-3" />{format(new Date(item.created_at), 'MMM d')}</span>
                           </div>
-                          <p className="text-xs text-white/70 leading-relaxed">{item.message}</p>
+                          <p className="text-xs text-foreground/70 leading-relaxed">{item.message}</p>
                       </div>
                     </div>
                   </div>

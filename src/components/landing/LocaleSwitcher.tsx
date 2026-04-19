@@ -13,7 +13,7 @@ const LocaleSwitcher = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-1 text-white/80 hover:text-white transition-colors text-xs sm:text-sm px-1.5 py-1">
+      <DropdownMenuTrigger className="flex items-center gap-1 text-foreground/80 hover:text-foreground transition-colors text-xs sm:text-sm px-1.5 py-1">
         <span className="font-medium">{language.toUpperCase()}</span>
         <ChevronDown className="w-3 h-3" />
       </DropdownMenuTrigger>
