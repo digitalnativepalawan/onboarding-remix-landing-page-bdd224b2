@@ -76,11 +76,13 @@ const Header = () => {
             {/* Left: Logo + clocks */}
             <div className="flex items-center gap-2 sm:gap-5 shrink-0">
               {currentLogo && (
-                <img
-                  src={currentLogo}
-                  alt="Logo"
-                  className="h-6 sm:h-7 w-auto object-contain"
-                />
+                <a href="/" aria-label="Home" className="hover:opacity-80 transition-opacity">
+                  <img
+                    src={currentLogo}
+                    alt="Logo"
+                    className="h-6 sm:h-7 w-auto object-contain"
+                  />
+                </a>
               )}
               {TIMEZONES.map(({ id, label }) => (
                 <div key={id} className="flex items-center gap-1">
