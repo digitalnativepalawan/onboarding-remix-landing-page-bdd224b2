@@ -239,7 +239,7 @@ export default function ExpenseFormModal({ open, onOpenChange, expense, onSaved 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{expense ? "Edit Expense" : "Add Expense"}</DialogTitle>
+          <DialogTitle>{expense?.id ? "Edit Expense" : "Add Expense"}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-5">
