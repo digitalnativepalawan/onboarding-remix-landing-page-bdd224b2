@@ -21,6 +21,7 @@ export type Database = {
           icon: string
           id: string
           is_primary: boolean
+          is_visible: boolean
           name: string
           updated_at: string
           url: string
@@ -31,6 +32,7 @@ export type Database = {
           icon?: string
           id?: string
           is_primary?: boolean
+          is_visible?: boolean
           name: string
           updated_at?: string
           url: string
@@ -41,6 +43,7 @@ export type Database = {
           icon?: string
           id?: string
           is_primary?: boolean
+          is_visible?: boolean
           name?: string
           updated_at?: string
           url?: string

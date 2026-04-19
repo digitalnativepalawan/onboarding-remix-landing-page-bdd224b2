@@ -9,6 +9,7 @@ interface AppLink {
   icon: string;
   display_order: number;
   is_primary: boolean;
+  is_visible: boolean;
 }
 
 interface FeaturedAppsSectionProps {
@@ -23,6 +24,7 @@ const FeaturedAppsSection = ({ variant = "section" }: FeaturedAppsSectionProps) 
       const { data } = await supabase
         .from("app_links")
         .select("*")
+        .eq("is_visible", true)
         .order("display_order", { ascending: true })
         .limit(6);
       if (data) setLinks(data);

@@ -7,7 +7,7 @@ import {
   Wrench, ArrowLeft, Plus, Pencil, Trash2, Check, X,
   ExternalLink, Github, Globe, Database, Code2, Link2,
   MessageCircle, Calendar, Tag, ChevronDown, ChevronUp,
-  StickyNote, Bug, Flag, CheckSquare, Eye, EyeOff, Lock,
+  StickyNote, Bug, Flag, CheckSquare, Eye, EyeOff, Lock, LayoutGrid,
   type LucideIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -698,6 +698,149 @@ const CatalogSection = () => {
   );
 };
 
+/* ── WEBAPPS ────────────────────────────────────────────────── */
+interface AppLink {
+  id: string;
+  name: string;
+  url: string;
+  icon: string;
+  display_order: number;
+  is_primary: boolean;
+  is_visible: boolean;
+}
+
+const WebAppsSection = () => {
+  const [apps, setApps] = useState<AppLink[]>([]);
+  const [adding, setAdding] = useState(false);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const empty = { name: "", url: "", icon: "LayoutDashboard", display_order: 0, is_primary: false, is_visible: true };
+  const [form, setForm] = useState(empty);
+
+  const fetchApps = async () => {
+    const { data } = await supabase.from("app_links").select("*").order("display_order");
+    setApps(data || []);
+  };
+
+  useEffect(() => { fetchApps(); }, []);
+
+  const handleToggleVisible = async (app: AppLink) => {
+    const { error } = await supabase.from("app_links").update({ is_visible: !app.is_visible, updated_at: new Date().toISOString() }).eq("id", app.id);
+    if (error) { toast.error("Failed to update visibility"); return; }
+    toast.success(app.is_visible ? "Hidden from site" : "Visible on site");
+    fetchApps();
+  };
+
+  const handleSave = async () => {
+    if (!form.name || !form.url) { toast.error("Name and URL required"); return; }
+    setLoading(true);
+    if (editing) {
+      const { error } = await supabase.from("app_links").update({ ...form, updated_at: new Date().toISOString() }).eq("id", editing);
+      if (error) { toast.error("Failed to update WebApp"); setLoading(false); return; }
+      toast.success("WebApp updated");
+      setEditing(null);
+    } else {
+      const maxOrder = apps.reduce((max, a) => Math.max(max, a.display_order), 0);
+      const { error } = await supabase.from("app_links").insert({ ...form, display_order: maxOrder + 1 });
+      if (error) { toast.error("Failed to add WebApp"); setLoading(false); return; }
+      toast.success("WebApp added");
+      setAdding(false);
+    }
+    setForm(empty);
+    fetchApps();
+    setLoading(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    setLoading(true);
+    const { error } = await supabase.from("app_links").delete().eq("id", id);
+    if (error) { toast.error("Failed to remove WebApp"); setLoading(false); return; }
+    toast.success("WebApp removed");
+    fetchApps();
+    setLoading(false);
+  };
+
+  const AppForm = () => (
+    <div className="space-y-3 p-4 rounded-xl" style={{ background: "#111827", border: "1px solid rgba(99,102,241,0.3)" }}>
+      <div className="grid grid-cols-2 gap-3">
+        <div><Label className="text-xs text-gray-400 mb-1 block">Name *</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="App name" /></div>
+        <div><Label className="text-xs text-gray-400 mb-1 block">Display order</Label><Input type="number" value={form.display_order} onChange={e => setForm({ ...form, display_order: Number(e.target.value) })} /></div>
+      </div>
+      <div><Label className="text-xs text-gray-400 mb-1 block">URL *</Label><Input value={form.url} onChange={e => setForm({ ...form, url: e.target.value })} placeholder="https://..." /></div>
+      <div className="flex items-center gap-4">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" checked={form.is_visible} onChange={e => setForm({ ...form, is_visible: e.target.checked })} className="w-4 h-4 rounded" />
+          <span className="text-xs text-gray-400">Visible on site</span>
+        </label>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" checked={form.is_primary} onChange={e => setForm({ ...form, is_primary: e.target.checked })} className="w-4 h-4 rounded" />
+          <span className="text-xs text-gray-400">Primary / featured</span>
+        </label>
+      </div>
+      <div className="flex gap-2">
+        <Button size="sm" onClick={handleSave} disabled={loading}><Check className="w-3 h-3 mr-1" />{editing ? "Save" : "Add WebApp"}</Button>
+        <Button size="sm" variant="ghost" onClick={() => { setAdding(false); setEditing(null); setForm(empty); }}><X className="w-3 h-3 mr-1" />Cancel</Button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs" style={{ color: "#6b7280" }}>
+        Toggle apps on or off to control what appears in the Featured WebApps section on the homepage.
+      </p>
+      {apps.map(app => (
+        <div key={app.id} className="rounded-xl overflow-hidden" style={{ background: "#111827", border: `1px solid ${app.is_visible ? "rgba(45,212,191,0.15)" : "rgba(255,255,255,0.06)"}` }}>
+          {editing === app.id ? (
+            <div className="p-4"><AppForm /></div>
+          ) : (
+            <div className="flex items-center justify-between px-4 py-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className={`w-2 h-2 rounded-full shrink-0 ${app.is_visible ? "bg-emerald-400" : "bg-gray-600"}`} />
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-white truncate">{app.name}</p>
+                  <p className="text-xs truncate" style={{ color: "#6b7280" }}>{app.url.replace(/^https?:\/\//, "")}</p>
+                </div>
+                {app.is_primary && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full shrink-0" style={{ background: "rgba(245,158,11,0.1)", color: "#f59e0b" }}>featured</span>
+                )}
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <button
+                  onClick={() => handleToggleVisible(app)}
+                  className="p-1.5 rounded hover:bg-white/5 transition-colors"
+                  title={app.is_visible ? "Hide from site" : "Show on site"}
+                >
+                  {app.is_visible
+                    ? <Eye className="w-4 h-4" style={{ color: "#2dd4bf" }} />
+                    : <EyeOff className="w-4 h-4" style={{ color: "#4b5563" }} />
+                  }
+                </button>
+                <a href={app.url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded hover:bg-white/5">
+                  <ExternalLink className="w-3.5 h-3.5" style={{ color: "#4b5563" }} />
+                </a>
+                <button onClick={() => { setEditing(app.id); setForm({ name: app.name, url: app.url, icon: app.icon, display_order: app.display_order, is_primary: app.is_primary, is_visible: app.is_visible }); }} className="p-1.5 rounded hover:bg-white/5">
+                  <Pencil className="w-3.5 h-3.5" style={{ color: "#4b5563" }} />
+                </button>
+                <button onClick={() => handleDelete(app.id)} className="p-1.5 rounded hover:bg-white/5">
+                  <Trash2 className="w-3.5 h-3.5 text-red-500/60" />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+      {adding ? (
+        <AppForm />
+      ) : (
+        <Button variant="outline" className="w-full" onClick={() => { setAdding(true); setEditing(null); setForm(empty); }}>
+          <Plus className="w-4 h-4 mr-2" />Add WebApp
+        </Button>
+      )}
+    </div>
+  );
+};
+
 /* ── TOOLS ─────────────────────────────────────────────────── */
 const ToolsSection = () => (
   <div className="space-y-3">
@@ -728,6 +871,7 @@ const NAV = [
   { id: "clients",   label: "Clients",   icon: Users },
   { id: "quotes",    label: "Quotes",    icon: FileText },
   { id: "catalog",   label: "Catalog",   icon: Package },
+  { id: "webapps",   label: "WebApps",   icon: LayoutGrid },
   { id: "tools",     label: "Tools",     icon: Wrench },
 ];
 
@@ -825,6 +969,7 @@ const AdminPage = () => {
             {tab === "clients"   && <ClientsSection />}
             {tab === "quotes"    && <QuotesSection />}
             {tab === "catalog"   && <CatalogSection />}
+            {tab === "webapps"   && <WebAppsSection />}
             {tab === "tools"     && <ToolsSection />}
           </div>
         </div>
