@@ -4,7 +4,7 @@ import logo from "@/assets/palawan-collective-logo.png";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-black">
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-background">
       <div className="relative z-10 w-full px-5 sm:px-6 pt-24 pb-20">
         {/* Logo */}
         <div
