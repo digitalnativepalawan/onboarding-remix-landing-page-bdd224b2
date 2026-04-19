@@ -181,8 +181,7 @@ export default function DashboardPage() {
     queryKey: ["dashboard-todays"],
     queryFn: async () => {
       const today = format(new Date(), "yyyy-MM-dd");
-      const sevenDaysAgo = format(subMonths(new Date(), 0).valueOf() - 7 * 86400000 > 0
-        ? new Date(Date.now() - 7 * 86400000) : new Date(), "yyyy-MM-dd");
+      const sevenDaysAgo = format(new Date(Date.now() - 7 * 86400000), "yyyy-MM-dd");
 
       const [followUps, draftOldQuotes, demos] = await Promise.all([
         supabase.from("clients").select("id, business_name, contact_name").eq("follow_up_date", today),
