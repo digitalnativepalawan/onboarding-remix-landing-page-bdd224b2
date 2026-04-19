@@ -923,24 +923,90 @@ export type Database = {
       }
       site_settings: {
         Row: {
+          address_line: string | null
+          city: string | null
+          color_accent: string | null
+          color_primary: string | null
+          color_secondary: string | null
+          company_name: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          contact_whatsapp: string | null
+          copyright_holder: string | null
+          country: string | null
           created_at: string
+          favicon_url: string | null
           id: string
           logo_dark_url: string | null
           logo_light_url: string | null
+          logo_main_url: string | null
+          postal_code: string | null
+          province: string | null
+          social_facebook: string | null
+          social_instagram: string | null
+          social_linkedin: string | null
+          social_tiktok: string | null
+          social_twitter: string | null
+          social_youtube: string | null
+          tagline: string | null
           updated_at: string
         }
         Insert: {
+          address_line?: string | null
+          city?: string | null
+          color_accent?: string | null
+          color_primary?: string | null
+          color_secondary?: string | null
+          company_name?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          contact_whatsapp?: string | null
+          copyright_holder?: string | null
+          country?: string | null
           created_at?: string
+          favicon_url?: string | null
           id?: string
           logo_dark_url?: string | null
           logo_light_url?: string | null
+          logo_main_url?: string | null
+          postal_code?: string | null
+          province?: string | null
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_tiktok?: string | null
+          social_twitter?: string | null
+          social_youtube?: string | null
+          tagline?: string | null
           updated_at?: string
         }
         Update: {
+          address_line?: string | null
+          city?: string | null
+          color_accent?: string | null
+          color_primary?: string | null
+          color_secondary?: string | null
+          company_name?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          contact_whatsapp?: string | null
+          copyright_holder?: string | null
+          country?: string | null
           created_at?: string
+          favicon_url?: string | null
           id?: string
           logo_dark_url?: string | null
           logo_light_url?: string | null
+          logo_main_url?: string | null
+          postal_code?: string | null
+          province?: string | null
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_tiktok?: string | null
+          social_twitter?: string | null
+          social_youtube?: string | null
+          tagline?: string | null
           updated_at?: string
         }
         Relationships: []
