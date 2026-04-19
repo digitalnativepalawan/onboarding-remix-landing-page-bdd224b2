@@ -19,6 +19,7 @@ import ToolsPage from "./pages/admin/ToolsPage";
 import NotesPage from "./pages/admin/NotesPage";
 import MediaPage from "./pages/admin/MediaPage";
 import RevenuePage from "./pages/admin/RevenuePage";
+import SiteSettingsPage from "./pages/admin/SiteSettingsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
                 <Route path="notes" element={<NotesPage />} />
                 <Route path="media" element={<MediaPage />} />
                 <Route path="revenue" element={<RevenuePage />} />
+                <Route path="site-settings" element={<SiteSettingsPage />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

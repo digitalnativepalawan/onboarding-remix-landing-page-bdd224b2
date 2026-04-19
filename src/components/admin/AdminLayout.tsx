@@ -13,6 +13,7 @@ const titleMap: Record<string, string> = {
   "/admin/notes": "Notes",
   "/admin/media": "Media",
   "/admin/revenue": "Revenue",
+  "/admin/site-settings": "Site Settings",
 };
 
 export default function AdminLayout() {

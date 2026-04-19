@@ -8,6 +8,7 @@ import {
   StickyNote,
   Image as ImageIcon,
   DollarSign,
+  Settings2,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -32,6 +33,7 @@ const items = [
   { title: "Notes", url: "/admin/notes", icon: StickyNote },
   { title: "Media", url: "/admin/media", icon: ImageIcon },
   { title: "Revenue", url: "/admin/revenue", icon: DollarSign },
+  { title: "Site Settings", url: "/admin/site-settings", icon: Settings2 },
 ];
 
 export function AdminSidebar() {
