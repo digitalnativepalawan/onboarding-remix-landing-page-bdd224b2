@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, Receipt, Search, Pencil, Trash2, FileText, RefreshCw, Filter, TrendingDown, Repeat, CheckCircle2 } from "lucide-react";
 import { formatCurrency } from "@/lib/currency";
 import ExpenseFormModal from "@/components/admin/expenses/ExpenseFormModal";
+import ExpenseDetailSheet from "@/components/admin/expenses/ExpenseDetailSheet";
 import { CATEGORY_COLORS, CATEGORY_OPTIONS, type ExpenseRow } from "@/components/admin/expenses/types";
 
 const StatCard = ({ icon: Icon, label, value, tone = "primary" }: any) => (
@@ -28,6 +29,8 @@ export default function ExpensesPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<ExpenseRow | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [detail, setDetail] = useState<ExpenseRow | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -68,8 +71,24 @@ export default function ExpensesPage() {
     return { totalPHP, monthPHP, recurring, billable };
   }, [rows]);
 
-  const onEdit = (e: ExpenseRow) => { setEditing(e); setModalOpen(true); };
+  const onEdit = (e: ExpenseRow) => { setEditing(e); setDetailOpen(false); setModalOpen(true); };
   const onAdd = () => { setEditing(null); setModalOpen(true); };
+  const onView = (e: ExpenseRow) => { setDetail(e); setDetailOpen(true); };
+  const onDuplicate = (e: ExpenseRow) => {
+    const dup: ExpenseRow = {
+      ...e,
+      id: "",
+      expense_name: `${e.expense_name} (copy)`,
+      receipt_path: null,
+      receipt_url: null,
+    } as ExpenseRow;
+    setEditing(null);
+    // open modal pre-filled with duplicate data by passing via editing trick:
+    // simplest: open a fresh add modal, user re-enters key fields. Instead pre-populate via editing without id.
+    setEditing({ ...dup, id: undefined as any });
+    setDetailOpen(false);
+    setModalOpen(true);
+  };
   const onDelete = async (id: string, path: string | null) => {
     if (!confirm("Delete this expense?")) return;
     if (path) await supabase.storage.from("receipts").remove([path]);
