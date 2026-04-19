@@ -9,6 +9,16 @@ import Index from "./pages/Index";
 import Setup from "./pages/Setup";
 import Dashboard from "./pages/Dashboard";
 import AdminPage from "./pages/AdminPage";
+import AdminLayout from "./components/admin/AdminLayout";
+import DashboardPage from "./pages/admin/DashboardPage";
+import ProjectsPage from "./pages/admin/ProjectsPage";
+import ClientsPage from "./pages/admin/ClientsPage";
+import CatalogPage from "./pages/admin/CatalogPage";
+import QuotesPage from "./pages/admin/QuotesPage";
+import ToolsPage from "./pages/admin/ToolsPage";
+import NotesPage from "./pages/admin/NotesPage";
+import MediaPage from "./pages/admin/MediaPage";
+import RevenuePage from "./pages/admin/RevenuePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,7 +35,18 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/setup" element={<Setup />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/admin" element={<AdminPage />} />
+              <Route path="/admin/legacy" element={<AdminPage />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<DashboardPage />} />
+                <Route path="projects" element={<ProjectsPage />} />
+                <Route path="clients" element={<ClientsPage />} />
+                <Route path="catalog" element={<CatalogPage />} />
+                <Route path="quotes" element={<QuotesPage />} />
+                <Route path="tools" element={<ToolsPage />} />
+                <Route path="notes" element={<NotesPage />} />
+                <Route path="media" element={<MediaPage />} />
+                <Route path="revenue" element={<RevenuePage />} />
+              </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
