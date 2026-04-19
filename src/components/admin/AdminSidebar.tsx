@@ -8,6 +8,7 @@ import {
   StickyNote,
   Image as ImageIcon,
   DollarSign,
+  Receipt,
   Settings2,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
@@ -33,6 +34,7 @@ const items = [
   { title: "Notes", url: "/admin/notes", icon: StickyNote },
   { title: "Media", url: "/admin/media", icon: ImageIcon },
   { title: "Revenue", url: "/admin/revenue", icon: DollarSign },
+  { title: "Expenses", url: "/admin/expenses", icon: Receipt },
   { title: "Site Settings", url: "/admin/site-settings", icon: Settings2 },
 ];
 
