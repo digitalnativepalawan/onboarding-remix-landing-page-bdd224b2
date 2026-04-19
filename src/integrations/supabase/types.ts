@@ -499,6 +499,124 @@ export type Database = {
         }
         Relationships: []
       }
+      expenses: {
+        Row: {
+          amount: number
+          amount_php: number | null
+          approved_at: string | null
+          approved_by: string | null
+          category: string
+          client_id: string | null
+          created_at: string
+          currency: string | null
+          description: string | null
+          expense_date: string
+          expense_name: string
+          expense_type: string | null
+          id: string
+          invoice_number: string | null
+          is_billable: boolean | null
+          is_recurring: boolean | null
+          next_recurring_date: string | null
+          notes: string | null
+          payment_method: string | null
+          payment_reference: string | null
+          project_id: string | null
+          quote_id: string | null
+          receipt_path: string | null
+          receipt_url: string | null
+          recurring_frequency: string | null
+          status: string | null
+          tags: string[] | null
+          updated_at: string
+          vendor_name: string | null
+        }
+        Insert: {
+          amount?: number
+          amount_php?: number | null
+          approved_at?: string | null
+          approved_by?: string | null
+          category: string
+          client_id?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          expense_date?: string
+          expense_name: string
+          expense_type?: string | null
+          id?: string
+          invoice_number?: string | null
+          is_billable?: boolean | null
+          is_recurring?: boolean | null
+          next_recurring_date?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          project_id?: string | null
+          quote_id?: string | null
+          receipt_path?: string | null
+          receipt_url?: string | null
+          recurring_frequency?: string | null
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          vendor_name?: string | null
+        }
+        Update: {
+          amount?: number
+          amount_php?: number | null
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string
+          client_id?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          expense_date?: string
+          expense_name?: string
+          expense_type?: string | null
+          id?: string
+          invoice_number?: string | null
+          is_billable?: boolean | null
+          is_recurring?: boolean | null
+          next_recurring_date?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          project_id?: string | null
+          quote_id?: string | null
+          receipt_path?: string | null
+          receipt_url?: string | null
+          recurring_frequency?: string | null
+          status?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          vendor_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expenses_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "expenses_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "expenses_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       faqs: {
         Row: {
           answer: string
