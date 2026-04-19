@@ -75,7 +75,7 @@ export default function ProjectsPage() {
     if (!project || project.stage === newStage) return;
 
     qc.setQueryData(["projects"], (old: any) => old?.map((p: any) => p.id === active.id ? { ...p, stage: newStage } : p));
-    const { error } = await supabase.from("projects").update({ stage: newStage }).eq("id", active.id);
+    const { error } = await supabase.from("projects").update({ stage: newStage }).eq("id", String(active.id));
     if (error) {
       toast.error(error.message);
       qc.invalidateQueries({ queryKey: ["projects"] });
