@@ -499,6 +499,39 @@ export type Database = {
         }
         Relationships: []
       }
+      expense_budgets: {
+        Row: {
+          budget_php: number
+          category: string
+          created_at: string
+          id: string
+          month: number
+          notes: string | null
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          budget_php?: number
+          category: string
+          created_at?: string
+          id?: string
+          month: number
+          notes?: string | null
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          budget_php?: number
+          category?: string
+          created_at?: string
+          id?: string
+          month?: number
+          notes?: string | null
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
       expenses: {
         Row: {
           amount: number
