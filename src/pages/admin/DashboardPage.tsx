@@ -397,6 +397,136 @@ export default function DashboardPage() {
   );
 }
 
+/* ── Expenses stat card (this month, vs last month) ───── */
+function ExpensesStatCard({ expensesData, loading, fmtPhp, navigate }: any) {
+  const cur = expensesData?.monthTotal ?? 0;
+  const prev = expensesData?.lastMonthTotal ?? 0;
+  const delta = prev > 0 ? ((cur - prev) / prev) * 100 : (cur > 0 ? 100 : 0);
+  const up = delta > 0;
+  return (
+    <Card onClick={() => navigate("/admin/expenses")} className="p-4 cursor-pointer hover:border-primary/50 transition-colors">
+      <div className="flex items-start justify-between">
+        <div className="space-y-1 min-w-0">
+          <p className="text-xs text-muted-foreground">Monthly expenses</p>
+          {loading ? <Skeleton className="h-7 w-16" /> : (
+            <>
+              <p className="text-2xl font-bold tabular-nums">{fmtPhp(cur)}</p>
+              {prev > 0 && (
+                <p className={`text-[10px] ${up ? "text-rose-400" : "text-emerald-400"} flex items-center gap-0.5`}>
+                  {up ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                  {Math.abs(delta).toFixed(0)}% vs last
+                </p>
+              )}
+            </>
+          )}
+        </div>
+        <Wallet className="w-5 h-5 text-rose-400 shrink-0" />
+      </div>
+    </Card>
+  );
+}
+
+/* ── Net profit stat card ─────────────────────── */
+function NetProfitStatCard({ revenueData, expensesData, loading, fmtPhp }: any) {
+  const now = new Date();
+  const monthKey = format(now, "MMM");
+  const revThisMonth = (revenueData || []).find((r: any) => r.month === monthKey)?.php ?? 0;
+  const expThisMonth = expensesData?.monthTotal ?? 0;
+  const profit = revThisMonth - expThisMonth;
+  const margin = revThisMonth > 0 ? (profit / revThisMonth) * 100 : 0;
+  const positive = profit >= 0;
+  return (
+    <Card className="p-4">
+      <div className="flex items-start justify-between">
+        <div className="space-y-1 min-w-0">
+          <p className="text-xs text-muted-foreground">Net profit</p>
+          {loading ? <Skeleton className="h-7 w-16" /> : (
+            <>
+              <p className={`text-2xl font-bold tabular-nums ${positive ? "text-emerald-400" : "text-rose-400"}`}>
+                {fmtPhp(profit)}
+              </p>
+              {revThisMonth > 0 && (
+                <p className="text-[10px] text-muted-foreground">{margin.toFixed(0)}% margin</p>
+              )}
+            </>
+          )}
+        </div>
+        {positive
+          ? <TrendingUp className="w-5 h-5 text-emerald-400 shrink-0" />
+          : <TrendingDown className="w-5 h-5 text-rose-400 shrink-0" />}
+      </div>
+    </Card>
+  );
+}
+
+/* ── Merge revenue & expenses buckets for the combined chart ───── */
+function mergeRevExp(
+  revenue: { month: string; php: number; usd: number }[] | undefined,
+  expenseBuckets: Record<string, number> | undefined,
+  currency: "PHP" | "USD",
+) {
+  if (!revenue) return [];
+  return revenue.map((r) => {
+    const expPhp = expenseBuckets?.[r.month] ?? 0;
+    const revVal = currency === "PHP" ? r.php : r.usd;
+    const expVal = currency === "PHP" ? expPhp : Math.round(expPhp / PHP_PER_USD);
+    return {
+      month: r.month,
+      revenue: revVal,
+      expenses: expVal,
+      profit: revVal - expVal,
+    };
+  });
+}
+
+/* ── Upcoming recurring renewals (next 7 days) ───────── */
+function UpcomingRenewals({ data, loading, navigate, fmtPhp }: any) {
+  const labelFor = (dateStr: string) => {
+    const d = parseISO(dateStr);
+    const days = differenceInDays(d, new Date());
+    if (days <= 0) return "Today";
+    if (days === 1) return "Tomorrow";
+    return `In ${days} days`;
+  };
+  return (
+    <Card className="p-4">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-semibold flex items-center gap-2">
+          <Repeat className="w-4 h-4 text-blue-400" /> Upcoming renewals
+        </h3>
+        <button
+          onClick={() => navigate("/admin/expenses")}
+          className="text-[11px] text-primary hover:underline"
+        >
+          View all
+        </button>
+      </div>
+      {loading ? (
+        <Skeleton className="h-32 w-full" />
+      ) : !data?.length ? (
+        <p className="text-xs text-muted-foreground py-6 text-center">No renewals in the next 7 days</p>
+      ) : (
+        <div className="space-y-1">
+          {data.map((e: any) => (
+            <button
+              key={e.id}
+              onClick={() => navigate("/admin/expenses")}
+              className="w-full text-left px-2 py-1.5 rounded text-xs hover:bg-muted/50 flex items-center gap-2"
+            >
+              <Repeat className="w-3 h-3 text-blue-400 shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="font-medium truncate">{e.expense_name}</p>
+                <p className="text-[10px] text-muted-foreground">{labelFor(e.next_recurring_date)} · {e.category}</p>
+              </div>
+              <span className="text-[11px] font-mono tabular-nums shrink-0">{fmtPhp(Number(e.amount_php) || 0)}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </Card>
+  );
+}
+
 /* ── Quick action button ─────────────────────── */
 function QuickAction({ icon: Icon, label, onClick }: { icon: LucideIconType; label: string; onClick: () => void }) {
   return (
