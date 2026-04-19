@@ -322,26 +322,45 @@ export default function DashboardPage() {
             </div>
           </div>
           {revenue.isLoading || expensesData.isLoading ? (
-            <Skeleton className="h-[260px] w-full" />
+            <Skeleton className="h-[280px] w-full" />
           ) : (
-            <ResponsiveContainer width="100%" height={260}>
-              <ComposedChart data={mergeRevExp(revenue.data, expensesData.data?.buckets, currency)}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={11} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} />
+            <ResponsiveContainer width="100%" height={280}>
+              <ComposedChart data={mergeRevExp(revenue.data, expensesData.data?.buckets, currency)} margin={{ top: 10, right: 8, left: -12, bottom: 0 }} barCategoryGap="28%" barGap={4}>
+                <defs>
+                  <linearGradient id="grad-rev" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(152 70% 55%)" stopOpacity={0.95} />
+                    <stop offset="100%" stopColor="hsl(152 70% 45%)" stopOpacity={0.55} />
+                  </linearGradient>
+                  <linearGradient id="grad-exp" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(346 80% 62%)" stopOpacity={0.95} />
+                    <stop offset="100%" stopColor="hsl(346 80% 50%)" stopOpacity={0.55} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeOpacity={0.4} strokeDasharray="2 4" />
+                <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} dy={6} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={10} tickLine={false} axisLine={false} width={48}
+                  tickFormatter={(v: number) => currency === "PHP"
+                    ? (Math.abs(v) >= 1000 ? `₱${(v / 1000).toFixed(0)}k` : `₱${v}`)
+                    : (Math.abs(v) >= 1000 ? `$${(v / 1000).toFixed(1)}k` : `$${v}`)} />
                 <Tooltip
+                  cursor={{ fill: "hsl(var(--muted))", fillOpacity: 0.35 }}
                   contentStyle={{
-                    background: "hsl(var(--card))",
+                    background: "hsl(var(--popover))",
                     border: "1px solid hsl(var(--border))",
-                    borderRadius: "6px",
-                    fontSize: "12px",
+                    borderRadius: 10,
+                    fontSize: 12,
+                    boxShadow: "0 8px 24px -8px hsl(var(--background) / 0.5)",
+                    padding: "8px 10px",
                   }}
-                  formatter={(v: number) => currency === "PHP" ? fmtPhp(v) : `$${v}`}
+                  labelStyle={{ fontWeight: 600, marginBottom: 4, color: "hsl(var(--foreground))" }}
+                  formatter={(v: number) => currency === "PHP" ? fmtPhp(v) : `$${v.toLocaleString()}`}
                 />
-                <Legend wrapperStyle={{ fontSize: "11px" }} />
-                <Bar dataKey="revenue" name="Revenue" fill="hsl(142 76% 45%)" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="expenses" name="Expenses" fill="hsl(0 72% 55%)" radius={[4, 4, 0, 0]} />
-                <Line type="monotone" dataKey="profit" name="Net Profit" stroke="hsl(217 91% 60%)" strokeWidth={2} dot={{ r: 3 }} />
+                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+                <Bar dataKey="revenue" name="Revenue" fill="url(#grad-rev)" radius={[6, 6, 0, 0]} maxBarSize={28} />
+                <Bar dataKey="expenses" name="Expenses" fill="url(#grad-exp)" radius={[6, 6, 0, 0]} maxBarSize={28} />
+                <Line type="monotone" dataKey="profit" name="Net Profit" stroke="hsl(217 91% 65%)" strokeWidth={2.5}
+                  dot={{ r: 3, strokeWidth: 0, fill: "hsl(217 91% 65%)" }}
+                  activeDot={{ r: 5, strokeWidth: 2, stroke: "hsl(var(--background))" }} />
               </ComposedChart>
             </ResponsiveContainer>
           )}
