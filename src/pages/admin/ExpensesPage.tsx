@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Receipt, Search, Pencil, Trash2, FileText, RefreshCw, Filter, TrendingDown, Repeat, CheckCircle2 } from "lucide-react";
+import { Plus, Receipt, Search, Pencil, Trash2, FileText, RefreshCw, Filter, TrendingDown, Repeat, CheckCircle2, Download, FileSpreadsheet, FileArchive, Loader2 } from "lucide-react";
 import { formatCurrency } from "@/lib/currency";
 import ExpenseFormModal from "@/components/admin/expenses/ExpenseFormModal";
 import ExpenseDetailSheet from "@/components/admin/expenses/ExpenseDetailSheet";
@@ -12,6 +12,11 @@ import RecurringTab from "@/components/admin/expenses/RecurringTab";
 import BudgetsTab from "@/components/admin/expenses/BudgetsTab";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CATEGORY_COLORS, CATEGORY_OPTIONS, type ExpenseRow } from "@/components/admin/expenses/types";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { exportExpensesCSV, exportExpensesPDF, exportReceiptsZIP } from "@/components/admin/expenses/exportUtils";
 
 const StatCard = ({ icon: Icon, label, value, tone = "primary" }: any) => (
   <div className="rounded-xl border border-border/40 bg-card p-3 flex items-center gap-3">
@@ -34,6 +39,45 @@ export default function ExpensesPage() {
   const [editing, setEditing] = useState<ExpenseRow | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [detail, setDetail] = useState<ExpenseRow | null>(null);
+  const { settings } = useSiteSettings();
+  const [zipOpen, setZipOpen] = useState(false);
+  const [zipFrom, setZipFrom] = useState(() => {
+    const d = new Date(); d.setMonth(d.getMonth() - 1); return d.toISOString().slice(0, 10);
+  });
+  const [zipTo, setZipTo] = useState(() => new Date().toISOString().slice(0, 10));
+  const [zipBusy, setZipBusy] = useState(false);
+  const [zipProgress, setZipProgress] = useState<{ n: number; total: number } | null>(null);
+
+  const handleExportCSV = () => {
+    if (filtered.length === 0) return toast.error("No expenses to export");
+    exportExpensesCSV(filtered);
+    toast.success(`Exported ${filtered.length} expenses to CSV`);
+  };
+  const handleExportPDF = () => {
+    if (filtered.length === 0) return toast.error("No expenses to export");
+    const dates = filtered.map((r) => r.expense_date).sort();
+    exportExpensesPDF(filtered, settings, { from: dates[0], to: dates[dates.length - 1] });
+    toast.success("PDF report generated");
+  };
+  const handleExportZIP = async () => {
+    setZipBusy(true);
+    setZipProgress(null);
+    try {
+      const inRange = rows.filter((r) => r.expense_date >= zipFrom && r.expense_date <= zipTo && r.receipt_path);
+      if (inRange.length === 0) {
+        toast.error("No receipts found in this date range");
+        return;
+      }
+      await exportReceiptsZIP(inRange, (n, total) => setZipProgress({ n, total }));
+      toast.success(`Downloaded ${inRange.length} receipts`);
+      setZipOpen(false);
+    } catch (e: any) {
+      toast.error(e.message || "ZIP export failed");
+    } finally {
+      setZipBusy(false);
+      setZipProgress(null);
+    }
+  };
 
   const load = async () => {
     setLoading(true);
@@ -118,9 +162,58 @@ export default function ExpensesPage() {
         </div>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={load}><RefreshCw className="w-3.5 h-3.5 mr-1.5" />Refresh</Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline"><Download className="w-3.5 h-3.5 mr-1.5" />Export</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="text-[10px] uppercase tracking-wide text-muted-foreground">Current view ({filtered.length})</DropdownMenuLabel>
+              <DropdownMenuItem onClick={handleExportCSV}>
+                <FileSpreadsheet className="w-4 h-4 mr-2" /> CSV (Excel)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportPDF}>
+                <FileText className="w-4 h-4 mr-2" /> PDF Report
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setZipOpen(true)}>
+                <FileArchive className="w-4 h-4 mr-2" /> Receipts ZIP…
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button size="sm" onClick={onAdd}><Plus className="w-3.5 h-3.5 mr-1.5" />Add Expense</Button>
         </div>
       </div>
+
+      {/* ZIP date range dialog */}
+      <Dialog open={zipOpen} onOpenChange={(o) => !zipBusy && setZipOpen(o)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2"><FileArchive className="w-4 h-4" />Download Receipts ZIP</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-xs text-muted-foreground">Select a date range. All expenses with attached receipts in this range will be bundled into a ZIP.</p>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label className="text-xs">From</Label>
+                <Input type="date" value={zipFrom} onChange={(e) => setZipFrom(e.target.value)} disabled={zipBusy} />
+              </div>
+              <div>
+                <Label className="text-xs">To</Label>
+                <Input type="date" value={zipTo} onChange={(e) => setZipTo(e.target.value)} disabled={zipBusy} />
+              </div>
+            </div>
+            {zipProgress && (
+              <p className="text-xs text-muted-foreground">Downloading {zipProgress.n} / {zipProgress.total}…</p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={() => setZipOpen(false)} disabled={zipBusy}>Cancel</Button>
+            <Button size="sm" onClick={handleExportZIP} disabled={zipBusy}>
+              {zipBusy ? <><Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />Bundling…</> : <><Download className="w-3.5 h-3.5 mr-1.5" />Download ZIP</>}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
