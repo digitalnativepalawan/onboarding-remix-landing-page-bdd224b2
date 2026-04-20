@@ -37,84 +37,99 @@ const Footer = () => {
     { url: settings.social_youtube, Icon: Youtube, label: "YouTube" },
   ].filter((s) => s.url);
 
-  const ContactBlock = () => (
-    <div className="flex flex-col gap-1.5 text-xs text-foreground/60">
-      {settings.contact_phone && (
-        <a href={`tel:${settings.contact_phone}`} className="flex items-center gap-1.5 hover:text-foreground transition-colors">
-          <Phone className="w-3 h-3" />{settings.contact_phone}
-        </a>
-      )}
-      {settings.contact_whatsapp && (
-        <a href={`https://wa.me/${settings.contact_whatsapp.replace(/[^0-9]/g, "")}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
-          <MessageCircle className="w-3 h-3" />{settings.contact_whatsapp}
-        </a>
-      )}
-      {settings.contact_email && (
-        <a href={`mailto:${settings.contact_email}`} className="flex items-center gap-1.5 hover:text-foreground transition-colors">
-          <Mail className="w-3 h-3" />{settings.contact_email}
-        </a>
-      )}
-    </div>
-  );
-
-  const BrandBlock = () => (
-    <div>
-      <h3 className="text-sm font-medium text-foreground mb-2">{companyName}</h3>
-      <p className="text-xs text-foreground/70 leading-relaxed mb-3">{tagline}</p>
-      {addressParts.length > 0 && (
-        <p className="text-[11px] text-foreground/50 leading-relaxed mb-3 whitespace-pre-line">
-          {addressParts.join("\n")}
-        </p>
-      )}
-      <ContactBlock />
-      {socials.length > 0 && (
-        <div className="flex items-center gap-3 mt-3">
-          {socials.map(({ url, Icon, label }) => (
-            <a key={label} href={url!} target="_blank" rel="noopener noreferrer" aria-label={label} className="text-foreground/50 hover:text-primary transition-colors">
-              <Icon className="w-4 h-4" />
-            </a>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-
   return (
-    <footer className="bg-background border-t border-border/20 py-12 md:py-16">
-      <div className="px-5 sm:px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="sm:hidden space-y-6">
-            <BrandBlock />
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <h4 className="text-xs font-medium text-foreground/90 mb-3">{t("footer.integration")}</h4>
-                <p className="text-xs text-foreground/60 mb-2">{t("footer.poweredBy")} <a href="https://www.cloudbeds.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary transition-colors">Cloudbeds</a></p>
-                <ul className="space-y-1 text-xs text-foreground/50">{channels.map((ch) => <li key={ch}>{ch}</li>)}</ul>
-              </div>
-              <div>
-                <h4 className="text-xs font-medium text-foreground/90 mb-3">{t("footer.legal")}</h4>
-                <ul className="space-y-2">{legalLinks.map((link) => (<li key={link.key}><button onClick={() => setActiveLegal(link.key)} className="text-xs text-foreground/60 hover:text-foreground transition-colors text-left">{link.name}</button></li>))}</ul>
-              </div>
+    <footer className="bg-[#080809] border-t border-white/5 py-12 md:py-16">
+      <div className="max-w-6xl mx-auto px-6 md:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Brand */}
+          <div>
+            <h3 className="text-sm font-semibold text-white">{companyName}</h3>
+            <p className="text-xs text-[#71717A] mt-1">{tagline}</p>
+            {addressParts.length > 0 && (
+              <p className="text-sm text-[#A1A1AA] mt-4 whitespace-pre-line leading-relaxed">
+                {addressParts.join("\n")}
+              </p>
+            )}
+            <div className="flex flex-col gap-2 mt-4">
+              {settings.contact_phone && (
+                <a href={`tel:${settings.contact_phone}`} className="inline-flex items-center gap-2 text-sm text-[#A1A1AA] hover:text-burgundy transition-colors">
+                  <Phone className="w-3.5 h-3.5" />{settings.contact_phone}
+                </a>
+              )}
+              {settings.contact_whatsapp && (
+                <a href={`https://wa.me/${settings.contact_whatsapp.replace(/[^0-9]/g, "")}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-[#A1A1AA] hover:text-burgundy transition-colors">
+                  <MessageCircle className="w-3.5 h-3.5" />{settings.contact_whatsapp}
+                </a>
+              )}
+              {settings.contact_email && (
+                <a href={`mailto:${settings.contact_email}`} className="inline-flex items-center gap-2 text-sm text-[#A1A1AA] hover:text-burgundy transition-colors">
+                  <Mail className="w-3.5 h-3.5" />{settings.contact_email}
+                </a>
+              )}
             </div>
+            {socials.length > 0 && (
+              <div className="flex gap-3 mt-4">
+                {socials.map(({ url, Icon, label }) => (
+                  <a
+                    key={label}
+                    href={url!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="text-[#A1A1AA] hover:text-burgundy transition-colors"
+                  >
+                    <Icon className="w-5 h-5" />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="hidden sm:grid sm:grid-cols-3 gap-8">
-            <BrandBlock />
-            <div>
-              <h4 className="text-xs font-medium text-foreground/90 mb-3">{t("footer.integration")}</h4>
-              <p className="text-xs text-foreground/60 mb-2">{t("footer.poweredBy")} <a href="https://www.cloudbeds.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary transition-colors">Cloudbeds</a></p>
-              <ul className="space-y-1 text-xs text-foreground/50">{channels.map((ch) => <li key={ch}>{ch}</li>)}</ul>
-            </div>
-            <div>
-              <h4 className="text-xs font-medium text-foreground/90 mb-3">{t("footer.legal")}</h4>
-              <ul className="space-y-2">{legalLinks.map((link) => (<li key={link.key}><button onClick={() => setActiveLegal(link.key)} className="text-xs text-foreground/60 hover:text-foreground transition-colors text-left">{link.name}</button></li>))}</ul>
-            </div>
+          {/* Integration */}
+          <div>
+            <h4 className="text-sm font-semibold text-white mb-4">{t("footer.integration")}</h4>
+            <p className="text-xs text-[#71717A] mb-3">
+              {t("footer.poweredBy")}{" "}
+              <a
+                href="https://www.cloudbeds.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-burgundy hover:text-burgundy/80 transition-colors"
+              >
+                Cloudbeds
+              </a>
+            </p>
+            <ul className="space-y-2">
+              {channels.map((ch) => (
+                <li key={ch} className="text-sm text-[#A1A1AA]">
+                  {ch}
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <LegalModal open={activeLegal} onClose={() => setActiveLegal(null)} />
-          <div className="border-t border-border/10 mt-8 pt-6 text-center">
-            <p className="text-[11px] text-foreground/50">© {new Date().getFullYear()} {copyright}</p>
+          {/* Legal */}
+          <div>
+            <h4 className="text-sm font-semibold text-white mb-4">{t("footer.legal")}</h4>
+            <ul className="space-y-2">
+              {legalLinks.map((link) => (
+                <li key={link.key}>
+                  <button
+                    onClick={() => setActiveLegal(link.key)}
+                    className="text-sm text-[#A1A1AA] hover:text-burgundy transition-colors text-left"
+                  >
+                    {link.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
+        </div>
+
+        <LegalModal open={activeLegal} onClose={() => setActiveLegal(null)} />
+
+        <div className="border-t border-white/5 pt-6 mt-10 text-center">
+          <p className="text-xs text-[#71717A]">© {new Date().getFullYear()} {copyright}</p>
         </div>
       </div>
     </footer>
