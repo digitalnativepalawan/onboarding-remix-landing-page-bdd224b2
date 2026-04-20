@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowRight, X, MessageCircle } from "lucide-react";
+import { ArrowRight, X, MessageCircle, Briefcase, Building2, Bus, UtensilsCrossed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -15,6 +15,47 @@ interface BlogPost {
   published: boolean;
   created_at: string;
 }
+
+type AccentMeta = {
+  gradient: string;
+  pillBg: string;
+  pillText: string;
+  pillBorder: string;
+  Icon: typeof Briefcase;
+};
+
+const ACCENT_MAP: Record<string, AccentMeta> = {
+  "Business tips": {
+    gradient: "bg-gradient-to-br from-burgundy/30 via-burgundy/10 to-transparent",
+    pillBg: "bg-burgundy/15",
+    pillText: "text-burgundy",
+    pillBorder: "border-burgundy/25",
+    Icon: Briefcase,
+  },
+  "Resort ops": {
+    gradient: "bg-gradient-to-br from-amber-500/30 via-amber-500/10 to-transparent",
+    pillBg: "bg-amber-500/15",
+    pillText: "text-amber-400",
+    pillBorder: "border-amber-500/25",
+    Icon: Building2,
+  },
+  Transportation: {
+    gradient: "bg-gradient-to-br from-sky-500/30 via-sky-500/10 to-transparent",
+    pillBg: "bg-sky-500/15",
+    pillText: "text-sky-400",
+    pillBorder: "border-sky-500/25",
+    Icon: Bus,
+  },
+  "Food & orders": {
+    gradient: "bg-gradient-to-br from-orange-500/30 via-orange-500/10 to-transparent",
+    pillBg: "bg-orange-500/15",
+    pillText: "text-orange-400",
+    pillBorder: "border-orange-500/25",
+    Icon: UtensilsCrossed,
+  },
+};
+
+const DEFAULT_ACCENT: AccentMeta = ACCENT_MAP["Business tips"];
 
 const BlogSection = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -38,47 +79,71 @@ const BlogSection = () => {
   if (posts.length === 0) return null;
 
   return (
-    <section className="py-20 md:py-32 px-5 sm:px-6">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-10 md:mb-14">
-          <span className="section-tag mb-4">From the blog</span>
-          <h2 className="section-title mb-3">Digital tools for island businesses</h2>
-          <p className="section-subtitle mx-auto">
+    <section className="py-20 md:py-28 lg:py-32">
+      <div className="max-w-6xl mx-auto px-6 md:px-8">
+        <div className="text-center mb-12 md:mb-16">
+          <span className="text-[11px] uppercase tracking-[0.18em] font-medium text-burgundy">
+            FROM THE BLOG
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-white mt-3">
+            Digital tools for island businesses
+          </h2>
+          <p className="text-base md:text-lg text-[#A1A1AA] max-w-2xl mx-auto mt-4">
             Practical guides for resort owners, restaurant operators, transport
             companies, and other businesses building a digital presence in Palawan.
           </p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          {posts.map((post) => (
-            <button
-              key={post.id}
-              className="group glass-card text-left p-6 md:p-7 rounded-2xl border border-white/5 flex flex-col gap-3 hover:border-white/15 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-              onClick={() => setActivePost(post)}
-            >
-              <span
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider self-start"
-                style={{ color: post.tag_color, background: post.tag_bg }}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {posts.map((post) => {
+            const accent = ACCENT_MAP[post.tag] ?? DEFAULT_ACCENT;
+            const { Icon } = accent;
+            return (
+              <button
+                key={post.id}
+                onClick={() => setActivePost(post)}
+                className="group bg-card border border-white/5 rounded-2xl overflow-hidden hover:border-white/15 hover:-translate-y-1 transition-all duration-300 text-left flex flex-col"
               >
-                {post.tag}
-              </span>
-              <h3 className="text-sm sm:text-base font-medium text-foreground leading-snug">
-                {post.title}
-              </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed flex-1">
-                {post.excerpt}
-              </p>
-              <div className="flex items-center justify-between pt-3 border-t border-border/30">
-                <span className="text-xs text-muted-foreground/60">
-                  {new Date(post.created_at).toLocaleDateString("en-US", {
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </span>
-                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:translate-x-1 group-hover:text-foreground transition-all" />
-              </div>
-            </button>
-          ))}
+                <div className={`relative aspect-[16/9] rounded-t-2xl overflow-hidden ${accent.gradient}`}>
+                  <div
+                    aria-hidden
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage:
+                        "radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)",
+                      backgroundSize: "16px 16px",
+                    }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Icon className="w-24 h-24 text-white opacity-[0.12]" />
+                  </div>
+                </div>
+
+                <div className="p-6 flex-1 flex flex-col">
+                  <span
+                    className={`inline-flex w-fit items-center px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.15em] font-medium border ${accent.pillBg} ${accent.pillText} ${accent.pillBorder}`}
+                  >
+                    {post.tag}
+                  </span>
+                  <h3 className="text-lg md:text-xl font-semibold text-white mt-4 group-hover:text-burgundy transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="text-sm text-[#A1A1AA] mt-2 line-clamp-2 leading-relaxed flex-1">
+                    {post.excerpt}
+                  </p>
+                  <div className="flex items-center justify-between mt-5">
+                    <span className="text-xs text-[#71717A]">
+                      {new Date(post.created_at).toLocaleDateString("en-US", {
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </span>
+                    <ArrowRight className="w-4 h-4 text-[#A1A1AA] group-hover:translate-x-1 group-hover:text-white transition-all" />
+                  </div>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
