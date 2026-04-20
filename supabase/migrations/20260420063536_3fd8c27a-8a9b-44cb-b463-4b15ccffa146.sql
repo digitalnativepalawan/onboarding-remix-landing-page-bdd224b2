@@ -1,0 +1,1 @@
+ALTER TABLE public.media DROP CONSTRAINT IF EXISTS media_media_type_check;
