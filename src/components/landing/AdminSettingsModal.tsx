@@ -256,8 +256,8 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     setEditingBlogId(null); setIsAddingBlog(false); setBlogForm(emptyBlog);
   };
 
-  /* ── Blog form shared UI ── */
-  const BlogForm = () => (
+  /* ── Blog form shared UI (inline JSX, NOT a component, to preserve input focus) ── */
+  const blogFormJsx = (
     <div className="space-y-3 p-3 rounded-lg border border-primary/30 bg-primary/5">
       <div>
         <Label className="text-xs">Cover image</Label>
