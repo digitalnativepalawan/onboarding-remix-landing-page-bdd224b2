@@ -105,19 +105,30 @@ const BlogSection = () => {
                 onClick={() => setActivePost(post)}
                 className="group bg-card border border-white/5 rounded-2xl overflow-hidden hover:border-white/15 hover:-translate-y-1 transition-all duration-300 text-left flex flex-col"
               >
-                <div className={`relative aspect-[16/9] rounded-t-2xl overflow-hidden ${accent.gradient}`}>
-                  <div
-                    aria-hidden
-                    className="absolute inset-0"
-                    style={{
-                      backgroundImage:
-                        "radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)",
-                      backgroundSize: "16px 16px",
-                    }}
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Icon className="w-24 h-24 text-white opacity-[0.12]" />
-                  </div>
+                <div className={`relative aspect-[16/9] rounded-t-2xl overflow-hidden ${post.image_url ? "" : accent.gradient}`}>
+                  {post.image_url ? (
+                    <img
+                      src={post.image_url}
+                      alt={post.title}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  ) : (
+                    <>
+                      <div
+                        aria-hidden
+                        className="absolute inset-0"
+                        style={{
+                          backgroundImage:
+                            "radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)",
+                          backgroundSize: "16px 16px",
+                        }}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Icon className="w-24 h-24 text-white opacity-[0.12]" />
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="p-6 flex-1 flex flex-col">
