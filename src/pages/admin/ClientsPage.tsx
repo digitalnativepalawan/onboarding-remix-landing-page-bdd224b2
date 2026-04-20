@@ -246,7 +246,7 @@ export default function ClientsPage() {
       {/* kanban */}
       {!isLoading && view === "kanban" && (
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-          <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4">
+          <div className="flex flex-col lg:grid lg:grid-cols-3 xl:grid-cols-4 gap-3 pb-4">
             {PIPELINE_STAGES.map((stage) => (
               <KanbanColumn
                 key={stage.id}
@@ -259,72 +259,62 @@ export default function ClientsPage() {
         </DndContext>
       )}
 
-      {/* list */}
+      {/* list - stacked cards on all devices */}
       {!isLoading && view === "list" && (
-        <Card className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-8">
-                  <Checkbox
-                    checked={selected.size > 0 && selected.size === filtered.length}
-                    onCheckedChange={(v) =>
-                      setSelected(v ? new Set(filtered.map((c) => c.id)) : new Set())
-                    }
-                  />
-                </TableHead>
-                <TableHead>Business</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Stage</TableHead>
-                <TableHead className="text-right">Value</TableHead>
-                <TableHead className="text-right">MRR</TableHead>
-                <TableHead>Follow up</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filtered.map((c) => {
-                const stage = PIPELINE_STAGES.find((s) => s.id === c.pipeline_stage);
-                return (
-                  <TableRow
-                    key={c.id}
-                    className="cursor-pointer"
-                    onClick={() => setDetailsClient(c)}
-                  >
-                    <TableCell onClick={(e) => e.stopPropagation()}>
+        filtered.length === 0 ? (
+          <Card className="p-8 text-center text-xs text-muted-foreground">
+            No clients match your filters
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filtered.map((c) => {
+              const stage = PIPELINE_STAGES.find((s) => s.id === c.pipeline_stage);
+              const isSelected = selected.has(c.id);
+              return (
+                <Card
+                  key={c.id}
+                  className={`p-4 cursor-pointer hover:border-primary/40 transition-colors space-y-2 ${isSelected ? "border-primary/60" : ""}`}
+                  onClick={() => setDetailsClient(c)}
+                >
+                  <div className="flex items-start gap-2">
+                    <div onClick={(e) => e.stopPropagation()} className="pt-0.5">
                       <Checkbox
-                        checked={selected.has(c.id)}
+                        checked={isSelected}
                         onCheckedChange={() => toggleSelect(c.id)}
                       />
-                    </TableCell>
-                    <TableCell className="font-medium">{c.business_name}</TableCell>
-                    <TableCell className="text-xs">{c.contact_name || "—"}</TableCell>
-                    <TableCell className="text-xs text-muted-foreground">{c.location || "—"}</TableCell>
-                    <TableCell>
-                      {stage && (
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded border ${stage.color}`}>
-                          {stage.label}
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right font-mono text-xs">{fmtPhp(c.estimated_value_php)}</TableCell>
-                    <TableCell className="text-right font-mono text-xs">{fmtPhp(c.monthly_recurring_php)}</TableCell>
-                    <TableCell className="text-xs">
-                      {c.follow_up_date ? format(parseISO(c.follow_up_date), "MMM d") : "—"}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              {filtered.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={8} className="text-center text-xs text-muted-foreground py-8">
-                    No clients match your filters
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </Card>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-medium truncate">{c.business_name}</h3>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {c.contact_name || "—"}{c.location ? ` · ${c.location}` : ""}
+                      </p>
+                    </div>
+                    {stage && (
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded border shrink-0 ${stage.color}`}>
+                        {stage.label}
+                      </span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-border">
+                    <div>
+                      <div className="text-muted-foreground">Value</div>
+                      <div className="font-mono">{fmtPhp(c.estimated_value_php)}</div>
+                    </div>
+                    <div>
+                      <div className="text-muted-foreground">MRR</div>
+                      <div className="font-mono">{fmtPhp(c.monthly_recurring_php)}</div>
+                    </div>
+                  </div>
+                  {c.follow_up_date && (
+                    <div className="text-[11px] text-muted-foreground pt-1">
+                      Follow up: {format(parseISO(c.follow_up_date), "MMM d")}
+                    </div>
+                  )}
+                </Card>
+              );
+            })}
+          </div>
+        )
       )}
 
       {/* modals */}

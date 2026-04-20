@@ -116,45 +116,45 @@ export default function ProjectsPage() {
         <p className="text-sm text-muted-foreground text-center py-8">Loading...</p>
       ) : view === "kanban" ? (
         <DndContext sensors={sensors} onDragEnd={onDragEnd}>
-          <div className="flex flex-col lg:flex-row gap-3 lg:overflow-x-auto pb-4">
+          <div className="flex flex-col lg:grid lg:grid-cols-3 xl:grid-cols-4 gap-3 pb-4">
             {PROJECT_STAGES.map((stage) => (
               <KanbanColumn key={stage.value} stage={stage} projects={grouped[stage.value]} onCardClick={openProject} />
             ))}
           </div>
         </DndContext>
+      ) : filtered.length === 0 ? (
+        <Card className="p-8 text-center text-sm text-muted-foreground">No projects yet</Card>
       ) : (
-        <Card className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Stage</TableHead>
-                <TableHead className="text-right">Budget</TableHead>
-                <TableHead className="text-right">Actual</TableHead>
-                <TableHead>Target Launch</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filtered.length === 0 ? (
-                <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-8">No projects yet</TableCell></TableRow>
-              ) : filtered.map((p: any) => {
-                const stage = PROJECT_STAGES.find((s) => s.value === p.stage);
-                const over = Number(p.actual_cost_php || 0) > Number(p.budget_php || 0) && Number(p.budget_php) > 0;
-                return (
-                  <TableRow key={p.id} className="cursor-pointer" onClick={() => openProject(p.id)}>
-                    <TableCell className="font-medium">{p.name}</TableCell>
-                    <TableCell className="text-muted-foreground">{p.category || "—"}</TableCell>
-                    <TableCell><Badge className={stage?.color}>{stage?.label}</Badge></TableCell>
-                    <TableCell className="text-right font-mono">{formatPHP(Number(p.budget_php))}</TableCell>
-                    <TableCell className={`text-right font-mono ${over ? "text-red-400" : ""}`}>{formatPHP(Number(p.actual_cost_php))}</TableCell>
-                    <TableCell className="text-xs text-muted-foreground">{p.target_launch || "—"}</TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </Card>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {filtered.map((p: any) => {
+            const stage = PROJECT_STAGES.find((s) => s.value === p.stage);
+            const over = Number(p.actual_cost_php || 0) > Number(p.budget_php || 0) && Number(p.budget_php) > 0;
+            return (
+              <Card key={p.id} className="p-4 cursor-pointer hover:border-primary/40 transition-colors space-y-2" onClick={() => openProject(p.id)}>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-medium truncate">{p.name}</h3>
+                    <p className="text-xs text-muted-foreground truncate">{p.category || "—"}</p>
+                  </div>
+                  <Badge className={`${stage?.color} shrink-0 text-[10px]`}>{stage?.label}</Badge>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-border">
+                  <div>
+                    <div className="text-muted-foreground">Budget</div>
+                    <div className="font-mono">{formatPHP(Number(p.budget_php))}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Actual</div>
+                    <div className={`font-mono ${over ? "text-red-400" : ""}`}>{formatPHP(Number(p.actual_cost_php))}</div>
+                  </div>
+                </div>
+                {p.target_launch && (
+                  <div className="text-[11px] text-muted-foreground pt-1">Launch: {p.target_launch}</div>
+                )}
+              </Card>
+            );
+          })}
+        </div>
       )}
 
       <ProjectFormModal open={formOpen} onOpenChange={setFormOpen} initial={editing} />
