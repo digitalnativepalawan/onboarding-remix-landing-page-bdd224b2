@@ -70,7 +70,7 @@ const Footer = () => {
       {socials.length > 0 && (
         <div className="flex items-center gap-3 mt-3">
           {socials.map(({ url, Icon, label }) => (
-            <a key={label} href={url!} target="_blank" rel="noopener noreferrer" aria-label={label} className="text-foreground/50 hover:text-foreground transition-colors">
+            <a key={label} href={url!} target="_blank" rel="noopener noreferrer" aria-label={label} className="text-foreground/50 hover:text-primary transition-colors">
               <Icon className="w-4 h-4" />
             </a>
           ))}
