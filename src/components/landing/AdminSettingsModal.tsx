@@ -232,6 +232,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
 
   const handleSaveBlog = async () => {
     if (!blogForm.title || !blogForm.excerpt || !blogForm.content) { toast.error("Title, excerpt and content are required"); return; }
+    if (imageUploading) { toast.error("Please wait for the image upload to finish"); return; }
     setLoading(true);
     const payload = {
       tag: blogForm.tag, tag_color: blogForm.tag_color, tag_bg: blogForm.tag_bg,
@@ -272,6 +273,18 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     <div className="space-y-3 p-3 rounded-lg border border-primary/30 bg-primary/5">
       <div>
         <Label className="text-xs">Cover image</Label>
+        <input
+          ref={blogImageInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          disabled={imageUploading}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleImageUpload(file);
+            e.target.value = "";
+          }}
+        />
         {blogForm.image_url ? (
           <div className="mt-1 relative rounded-lg overflow-hidden border border-border/50">
             <img src={blogForm.image_url} alt="Cover" className="w-full aspect-[16/9] object-cover" />
@@ -285,23 +298,17 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
             </button>
           </div>
         ) : (
-          <label className="mt-1 flex items-center justify-center gap-2 w-full aspect-[16/9] rounded-lg border border-dashed border-border/60 bg-muted/20 hover:bg-muted/40 cursor-pointer transition-colors">
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              disabled={imageUploading}
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleImageUpload(file);
-                e.target.value = "";
-              }}
-            />
+          <button
+            type="button"
+            onClick={openBlogImagePicker}
+            disabled={imageUploading}
+            className="mt-1 flex items-center justify-center gap-2 w-full aspect-[16/9] rounded-lg border border-dashed border-border/60 bg-muted/20 hover:bg-muted/40 cursor-pointer transition-colors disabled:cursor-not-allowed disabled:opacity-70"
+          >
             <ImageIcon className="w-5 h-5 text-muted-foreground" />
             <span className="text-xs text-muted-foreground">
               {imageUploading ? "Uploading..." : "Click to upload from device (max 5MB)"}
             </span>
-          </label>
+          </button>
         )}
       </div>
       <div>
