@@ -12,7 +12,7 @@ export function KanbanColumn({ stage, clients, onCardClick }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: stage.id });
 
   return (
-    <div className="flex flex-col w-72 shrink-0">
+    <div className="flex flex-col w-full min-w-0">
       <div className={`px-3 py-2 rounded-t-md border ${stage.color} flex items-center justify-between`}>
         <span className="text-xs font-semibold uppercase tracking-wide">{stage.label}</span>
         <span className="text-xs font-mono">{clients.length}</span>
