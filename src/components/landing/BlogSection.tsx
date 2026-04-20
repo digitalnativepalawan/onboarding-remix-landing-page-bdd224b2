@@ -14,6 +14,7 @@ interface BlogPost {
   display_order: number;
   published: boolean;
   created_at: string;
+  image_url: string | null;
 }
 
 type AccentMeta = {
