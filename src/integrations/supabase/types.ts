@@ -790,6 +790,7 @@ export type Database = {
           created_at: string
           due_date: string | null
           id: string
+          pinned: boolean
           priority: string
           project_id: string | null
           tags: string[] | null
@@ -805,6 +806,7 @@ export type Database = {
           created_at?: string
           due_date?: string | null
           id?: string
+          pinned?: boolean
           priority?: string
           project_id?: string | null
           tags?: string[] | null
@@ -820,6 +822,7 @@ export type Database = {
           created_at?: string
           due_date?: string | null
           id?: string
+          pinned?: boolean
           priority?: string
           project_id?: string | null
           tags?: string[] | null
@@ -848,6 +851,123 @@ export type Database = {
             columns: ["tool_id"]
             isOneToOne: false
             referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_comments: {
+        Row: {
+          author: string
+          content: string
+          created_at: string
+          id: string
+          project_id: string
+          resolved: boolean
+          updated_at: string
+        }
+        Insert: {
+          author?: string
+          content: string
+          created_at?: string
+          id?: string
+          project_id: string
+          resolved?: boolean
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          content?: string
+          created_at?: string
+          id?: string
+          project_id?: string
+          resolved?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_comments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_files: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_path: string
+          file_size: number
+          file_url: string
+          id: string
+          mime_type: string | null
+          project_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_path: string
+          file_size?: number
+          file_url: string
+          id?: string
+          mime_type?: string | null
+          project_id: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          file_url?: string
+          id?: string
+          mime_type?: string | null
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_files_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_links: {
+        Row: {
+          category: string
+          created_at: string
+          display_order: number
+          id: string
+          label: string
+          project_id: string
+          url: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          label: string
+          project_id: string
+          url: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          label?: string
+          project_id?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_links_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
             referencedColumns: ["id"]
           },
         ]

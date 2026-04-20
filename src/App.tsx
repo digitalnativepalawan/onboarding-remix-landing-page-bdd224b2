@@ -12,6 +12,7 @@ import AdminPage from "./pages/AdminPage";
 import AdminLayout from "./components/admin/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
 import ProjectsPage from "./pages/admin/ProjectsPage";
+import ProjectWorkspacePage from "./pages/admin/ProjectWorkspacePage";
 import ClientsPage from "./pages/admin/ClientsPage";
 import CatalogPage from "./pages/admin/CatalogPage";
 import QuotesPage from "./pages/admin/QuotesPage";
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<DashboardPage />} />
                 <Route path="projects" element={<ProjectsPage />} />
+                <Route path="projects/:id" element={<ProjectWorkspacePage />} />
                 <Route path="clients" element={<ClientsPage />} />
                 <Route path="catalog" element={<CatalogPage />} />
                 <Route path="quotes" element={<QuotesPage />} />
