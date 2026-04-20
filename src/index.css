@@ -153,6 +153,10 @@
     box-shadow: var(--shadow-subtle);
   }
 
+  .section-padding {
+    @apply py-20 md:py-28 lg:py-32;
+  }
+
   .glass-card-hover {
     @apply glass-card transition-all duration-200;
   }
