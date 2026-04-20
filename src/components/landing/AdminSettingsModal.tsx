@@ -338,7 +338,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="w-[calc(100vw-1rem)] sm:w-full max-w-2xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto overflow-x-hidden p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle>Admin Settings</DialogTitle>
         </DialogHeader>
