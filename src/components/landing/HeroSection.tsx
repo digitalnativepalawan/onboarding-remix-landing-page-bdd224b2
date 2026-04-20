@@ -85,7 +85,7 @@ const HeroSection = () => {
           >
             <Button
               size="lg"
-              className="w-full sm:w-auto gap-2 bg-[#25D366] hover:bg-[#1fb356] text-white border-0"
+              className="w-full sm:w-auto gap-2 h-12 px-7 rounded-full bg-[#25D366] hover:bg-[#1fb356] text-white border-0 shadow-lg shadow-[#25D366]/25 hover:scale-[1.02] transition-transform"
               onClick={() =>
                 window.open("https://wa.me/639474443597", "_blank")
               }
@@ -96,7 +96,7 @@ const HeroSection = () => {
             <Button
               size="lg"
               variant="outline"
-              className="w-full sm:w-auto gap-2"
+              className="w-full sm:w-auto gap-2 h-12 px-7 rounded-full hover:bg-foreground hover:text-background transition-colors"
               onClick={() =>
                 document
                   .getElementById("our-apps")
