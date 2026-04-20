@@ -80,7 +80,7 @@ const Footer = () => {
   );
 
   return (
-    <footer className="bg-background border-t border-border/20 py-8 sm:py-10">
+    <footer className="bg-background border-t border-border/20 py-12 md:py-16">
       <div className="px-5 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <div className="sm:hidden space-y-6">
