@@ -3,16 +3,18 @@ import { ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 /* ─────────────────────────────────────────────────────────────
-   PREVIEWS — preview content unchanged, only outer wrapper trimmed
+   PREVIEWS — unified neutral dark canvas, restrained accents
 ───────────────────────────────────────────────────────────── */
 
+const PREVIEW_BG = "bg-gradient-to-br from-[#11111A] via-[#0F0F14] to-[#0D0D12]";
+
 const BackofficePreview = () => (
-  <div className="p-3 flex flex-col gap-2" style={{ background: "#0d1422" }}>
-    <div className="flex gap-1.5 items-center rounded-md px-2 py-1.5" style={{ background: "#131d2e" }}>
+  <div className={`p-3 flex flex-col gap-2 ${PREVIEW_BG}`}>
+    <div className="flex gap-1.5 items-center rounded-md px-2 py-1.5 bg-white/[0.03] border border-white/5">
       {["Home", "My Work", "Service"].map((t) => (
-        <span key={t} className="text-[9px] px-1.5" style={{ color: "#4a6080" }}>{t}</span>
+        <span key={t} className="text-[9px] px-1.5" style={{ color: "#6b7280" }}>{t}</span>
       ))}
-      <span className="ml-auto text-[9px]" style={{ color: "#2dd4bf", opacity: 0.6 }}>admin</span>
+      <span className="ml-auto text-[9px]" style={{ color: "#2dd4bf", opacity: 0.7 }}>admin</span>
     </div>
     <div className="flex gap-1">
       {["Reception", "Housekeeping", "Kitchen", "Bar"].map((t, i) => (
@@ -20,8 +22,8 @@ const BackofficePreview = () => (
           key={t}
           className="px-2 py-0.5 rounded text-[8px]"
           style={i === 0
-            ? { background: "rgba(45,212,191,0.12)", color: "#2dd4bf", border: "1px solid rgba(45,212,191,0.2)" }
-            : { color: "#4a5568" }
+            ? { background: "rgba(45,212,191,0.12)", color: "#2dd4bf", border: "1px solid rgba(45,212,191,0.25)" }
+            : { color: "#6b7280" }
           }
         >{t}</div>
       ))}
@@ -33,17 +35,17 @@ const BackofficePreview = () => (
         { label: "To Clean",  val: "2",   color: "#f59e0b" },
         { label: "Ready",     val: "2",   color: "#34d399" },
       ].map((s) => (
-        <div key={s.label} className="rounded-md p-2 flex flex-col gap-1" style={{ background: "#131d2e", border: "1px solid rgba(30,58,74,0.6)" }}>
-          <span className="text-[7px] leading-none" style={{ color: "#4a6080" }}>{s.label}</span>
+        <div key={s.label} className="rounded-md p-2 flex flex-col gap-1 bg-white/[0.03] border border-white/5">
+          <span className="text-[7px] leading-none" style={{ color: "#6b7280" }}>{s.label}</span>
           <span className="text-base font-bold font-mono leading-none" style={{ color: s.color }}>{s.val}</span>
         </div>
       ))}
     </div>
-    <div className="rounded-md px-2 py-1.5 flex items-center gap-1" style={{ background: "#131d2e", border: "1px solid rgba(30,58,74,0.6)" }}>
-      <span className="text-[7px] mr-2 shrink-0" style={{ color: "#4a6080" }}>BOOKINGS</span>
+    <div className="rounded-md px-2 py-1.5 flex items-center gap-1 bg-white/[0.03] border border-white/5">
+      <span className="text-[7px] mr-2 shrink-0" style={{ color: "#6b7280" }}>BOOKINGS</span>
       {[
-        "rgba(45,212,191,0.5)", "rgba(30,45,66,1)", "rgba(245,158,11,0.4)",
-        "rgba(30,45,66,1)", "rgba(45,212,191,0.3)", "rgba(52,211,153,0.3)", "rgba(30,45,66,1)",
+        "rgba(45,212,191,0.45)", "rgba(255,255,255,0.05)", "rgba(245,158,11,0.4)",
+        "rgba(255,255,255,0.05)", "rgba(45,212,191,0.3)", "rgba(52,211,153,0.3)", "rgba(255,255,255,0.05)",
       ].map((c, i) => (
         <div key={i} className="flex-1 h-3 rounded-sm" style={{ background: c }} />
       ))}
@@ -52,7 +54,7 @@ const BackofficePreview = () => (
 );
 
 const TransitPreview = () => (
-  <div className="flex" style={{ background: "#0b1626", minHeight: 176 }}>
+  <div className={`flex ${PREVIEW_BG}`} style={{ minHeight: 176 }}>
     <div className="flex-1 p-3 flex flex-col justify-between">
       <div>
         <div className="flex items-baseline gap-1 mb-3">
@@ -61,33 +63,33 @@ const TransitPreview = () => (
         </div>
         <p className="text-lg text-white font-serif font-bold leading-tight">Move Through</p>
         <p className="text-lg font-serif italic leading-tight" style={{ color: "#c9a84c" }}>Palawan.</p>
-        <p className="text-[7px] tracking-widest mt-1" style={{ color: "#4a6080" }}>SHUTTLES · BANGKAS</p>
+        <p className="text-[7px] tracking-widest mt-1" style={{ color: "#6b7280" }}>SHUTTLES · BANGKAS</p>
       </div>
       <div className="space-y-1">
         {["Port Barton → El Nido", "Port Barton → Pto. Princesa"].map((r) => (
-          <div key={r} className="rounded px-2 py-1 flex items-center justify-between" style={{ background: "#0f1e33", border: "1px solid rgba(30,58,90,0.5)" }}>
+          <div key={r} className="rounded px-2 py-1 flex items-center justify-between bg-white/[0.03] border border-white/5">
             <span className="text-[8px] font-mono" style={{ color: "rgba(255,255,255,0.8)" }}>{r}</span>
-            <span className="text-[6px] px-1.5 py-0.5 rounded-full" style={{ color: "#c9a84c", background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.2)" }}>INSTANT</span>
+            <span className="text-[6px] px-1.5 py-0.5 rounded-full" style={{ color: "rgba(201,168,76,0.9)", background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.25)" }}>INSTANT</span>
           </div>
         ))}
       </div>
     </div>
     <div className="w-32 p-2">
-      <div className="rounded-lg p-2 h-full flex flex-col gap-1.5" style={{ background: "#0f1e33", border: "1px solid rgba(30,58,90,0.5)" }}>
+      <div className="rounded-lg p-2 h-full flex flex-col gap-1.5 bg-white/[0.02] border border-white/5">
         <div className="flex gap-1">
-          <div className="px-1.5 py-0.5 rounded" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.3)" }}>
+          <div className="px-1.5 py-0.5 rounded" style={{ background: "rgba(201,168,76,0.12)", border: "1px solid rgba(201,168,76,0.25)" }}>
             <span className="text-[6px] font-mono" style={{ color: "#c9a84c" }}>TRANSPORT</span>
           </div>
-          <span className="text-[6px] font-mono self-center" style={{ color: "#4a6080" }}>ISLAND</span>
+          <span className="text-[6px] font-mono self-center" style={{ color: "#6b7280" }}>ISLAND</span>
         </div>
         {[{ label: "FROM", val: "Puerto Princesa" }, { label: "TO", val: "El Nido" }].map((f) => (
-          <div key={f.label} className="rounded px-1.5 py-1" style={{ background: "#131d2e", border: "1px solid rgba(30,58,90,0.4)" }}>
-            <p className="text-[5px] leading-none mb-0.5" style={{ color: "#4a6080" }}>{f.label}</p>
+          <div key={f.label} className="rounded px-1.5 py-1 bg-white/[0.03] border border-white/5">
+            <p className="text-[5px] leading-none mb-0.5" style={{ color: "#6b7280" }}>{f.label}</p>
             <p className="text-[7px] leading-none" style={{ color: "rgba(255,255,255,0.7)" }}>{f.val}</p>
           </div>
         ))}
-        <div className="rounded px-1.5 py-1" style={{ background: "#131d2e", border: "1px solid rgba(30,58,90,0.4)" }}>
-          <p className="text-[5px] leading-none mb-0.5" style={{ color: "#4a6080" }}>DATE</p>
+        <div className="rounded px-1.5 py-1 bg-white/[0.03] border border-white/5">
+          <p className="text-[5px] leading-none mb-0.5" style={{ color: "#6b7280" }}>DATE</p>
           <p className="text-[7px] leading-none" style={{ color: "rgba(255,255,255,0.7)" }}>Apr 18, 2026</p>
         </div>
         <div className="rounded px-1.5 py-1.5 text-center mt-auto" style={{ background: "#c9a84c" }}>
@@ -136,11 +138,11 @@ const WildfallPreview = () => (
 );
 
 const SiteBuilderPreview = () => (
-  <div className="p-3 flex flex-col gap-2" style={{ background: "#111827" }}>
-    <div className="flex items-center justify-between rounded-md px-2 py-1.5" style={{ background: "#1f2937", border: "1px solid rgba(55,65,81,0.5)" }}>
+  <div className={`p-3 flex flex-col gap-2 ${PREVIEW_BG}`}>
+    <div className="flex items-center justify-between rounded-md px-2 py-1.5 bg-white/[0.03] border border-white/5">
       <span className="text-[9px] text-white font-medium">New Business</span>
       <div className="flex gap-1.5">
-        <div className="rounded px-2 py-0.5" style={{ background: "#374151" }}>
+        <div className="rounded px-2 py-0.5 bg-white/[0.05]">
           <span className="text-[7px]" style={{ color: "#9ca3af" }}>Cancel</span>
         </div>
         <div className="rounded px-2 py-0.5" style={{ background: "#6366f1" }}>
@@ -156,7 +158,7 @@ const SiteBuilderPreview = () => (
           { name: "Tropical Sunset", c1: "#f97316", c2: "#ef4444", active: false },
           { name: "Forest Retreat", c1: "#10b981", c2: "#065f46", active: true },
         ].map((p) => (
-          <div key={p.name} className="rounded-md p-1.5 flex items-center gap-1" style={{ background: "#1f2937", border: `1px solid ${p.active ? "rgba(99,102,241,0.6)" : "rgba(55,65,81,0.5)"}` }}>
+          <div key={p.name} className="rounded-md p-1.5 flex items-center gap-1 bg-white/[0.03]" style={{ border: `1px solid ${p.active ? "rgba(99,102,241,0.5)" : "rgba(255,255,255,0.05)"}` }}>
             <div className="w-3 h-3 rounded-full shrink-0" style={{ background: p.c1 }} />
             <div className="w-3 h-3 rounded-full shrink-0" style={{ background: p.c2 }} />
             <span className="text-[6px] truncate" style={{ color: "#9ca3af" }}>{p.name}</span>
@@ -168,8 +170,8 @@ const SiteBuilderPreview = () => (
       <p className="text-[7px] mb-1.5" style={{ color: "#6b7280" }}>Basic Information</p>
       <div className="grid grid-cols-2 gap-1.5">
         {["Business Name", "Location"].map((f) => (
-          <div key={f} className="rounded px-2 py-1.5" style={{ background: "#1f2937", border: "1px solid rgba(55,65,81,0.5)" }}>
-            <span className="text-[7px]" style={{ color: "#4b5563" }}>{f}</span>
+          <div key={f} className="rounded px-2 py-1.5 bg-white/[0.03] border border-white/5">
+            <span className="text-[7px]" style={{ color: "#6b7280" }}>{f}</span>
           </div>
         ))}
       </div>
@@ -177,8 +179,8 @@ const SiteBuilderPreview = () => (
     <div className="flex gap-1 flex-wrap">
       {["Modern Clean", "Elegant Classic", "Bold Impact", "Minimal"].map((t, i) => (
         <div key={t} className="rounded-full px-2 py-0.5" style={i === 0
-          ? { background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.3)", color: "#818cf8" }
-          : { background: "#1f2937", border: "1px solid rgba(55,65,81,0.5)", color: "#4b5563" }
+          ? { background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.3)", color: "#a5b4fc" }
+          : { background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", color: "#6b7280" }
         }>
           <span className="text-[6px]">{t}</span>
         </div>
@@ -188,22 +190,22 @@ const SiteBuilderPreview = () => (
 );
 
 const OrderPreview = () => (
-  <div className="flex flex-col" style={{ background: "#0d1117", minHeight: 176 }}>
-    <div className="px-3 py-1.5 flex items-center justify-between shrink-0" style={{ background: "#131920", borderBottom: "1px solid rgba(31,41,55,0.5)" }}>
+  <div className={`flex flex-col ${PREVIEW_BG}`} style={{ minHeight: 176 }}>
+    <div className="px-3 py-1.5 flex items-center justify-between shrink-0 bg-white/[0.03] border-b border-white/5">
       <span className="text-[9px] text-white font-medium">Order Online</span>
       <div className="flex gap-2">
         {["Order", "Specials"].map((n) => (
-          <span key={n} className="text-[7px]" style={{ color: "#6b7280" }}>{n}</span>
+          <span key={n} className="text-[7px]" style={{ color: "#9ca3af" }}>{n}</span>
         ))}
       </div>
     </div>
     <div className="flex gap-1 px-2 py-1.5 shrink-0">
       <div className="rounded-full px-2 py-0.5" style={{ background: "#f97316" }}>
-        <span className="text-[7px] text-white">All</span>
+        <span className="text-[7px] text-white font-medium">All</span>
       </div>
       {["Baking", "Dairy", "Meats", "Seafood"].map((c) => (
-        <div key={c} className="rounded-full px-2 py-0.5" style={{ background: "#1f2937" }}>
-          <span className="text-[7px]" style={{ color: "#6b7280" }}>{c}</span>
+        <div key={c} className="rounded-full px-2 py-0.5 bg-white/[0.03] border border-white/5">
+          <span className="text-[7px]" style={{ color: "#9ca3af" }}>{c}</span>
         </div>
       ))}
     </div>
@@ -214,17 +216,17 @@ const OrderPreview = () => (
       ].map((p) => {
         const [name, price] = p.split(" ₱");
         return (
-          <div key={p} className="rounded-md flex flex-col overflow-hidden" style={{ background: "#161c24", border: "1px solid rgba(31,41,55,0.6)" }}>
-            <div className="flex-1 flex items-center justify-center p-2" style={{ background: "#1a1a2e" }}>
-              <div className="w-6 h-6 rounded flex items-center justify-center" style={{ background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.15)" }}>
-                <div className="w-3 h-3 rounded-sm" style={{ background: "rgba(201,168,76,0.25)" }} />
-              </div>
+          <div key={p} className="rounded-lg flex flex-col overflow-hidden bg-white/[0.03] border border-white/5">
+            <div className="flex-1 flex items-center justify-center p-2 bg-white/[0.02]">
+              <div className="w-6 h-6 rounded bg-white/[0.04] border border-white/5" />
             </div>
-            <div className="px-1.5 py-1" style={{ background: "#131920" }}>
-              <p className="text-[6px] leading-tight truncate" style={{ color: "#d1d5db" }}>{name}</p>
-              <p className="text-[6px] font-mono" style={{ color: "#f97316" }}>₱{price}</p>
-              <div className="rounded mt-0.5 py-0.5 text-center" style={{ background: "#f97316" }}>
-                <span className="text-[5px] text-white font-medium">+ Add</span>
+            <div className="px-1.5 py-1 flex items-start justify-between gap-1">
+              <div className="min-w-0 flex-1">
+                <p className="text-[6px] leading-tight truncate text-white">{name}</p>
+                <p className="text-[6px] font-mono mt-0.5" style={{ color: "#9ca3af" }}>₱{price}</p>
+              </div>
+              <div className="rounded-full px-1.5 py-0.5 shrink-0" style={{ background: "rgba(249,115,22,0.15)", border: "1px solid rgba(249,115,22,0.3)" }}>
+                <span className="text-[5px] uppercase tracking-wide font-medium" style={{ color: "#fb923c" }}>+ Add</span>
               </div>
             </div>
           </div>
@@ -235,34 +237,34 @@ const OrderPreview = () => (
 );
 
 const LandPreview = () => (
-  <div className="p-3 flex flex-col gap-2" style={{ background: "#0d1f12" }}>
-    <div className="flex items-center justify-between rounded-md px-2 py-1.5" style={{ background: "#0f2518", border: "1px solid rgba(26,74,46,0.5)" }}>
+  <div className={`p-3 flex flex-col gap-2 ${PREVIEW_BG}`}>
+    <div className="flex items-center justify-between rounded-md px-2 py-1.5 bg-white/[0.03] border border-white/5">
       <div className="flex items-center gap-1.5">
-        <div className="w-4 h-4 rounded flex items-center justify-center" style={{ background: "rgba(22,163,74,0.1)" }}>
-          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5">
+        <div className="w-4 h-4 rounded flex items-center justify-center" style={{ background: "rgba(34,197,94,0.1)" }}>
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5">
             <path d="M3 9l9-6 9 6v11a1 1 0 01-1 1H4a1 1 0 01-1-1z" />
             <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
         </div>
         <span className="text-[9px] text-white font-medium">Sell Your Land</span>
       </div>
-      <div className="rounded px-1.5 py-0.5" style={{ background: "rgba(26,74,46,0.5)", border: "1px solid rgba(42,106,62,0.4)" }}>
-        <span className="text-[6px]" style={{ color: "#4ade80" }}>Admin</span>
+      <div className="rounded px-1.5 py-0.5 bg-white/[0.03] border border-white/10">
+        <span className="text-[6px]" style={{ color: "#9ca3af" }}>Admin</span>
       </div>
     </div>
-    <div className="rounded px-2 py-1.5" style={{ background: "#0f2518", border: "1px solid rgba(26,74,46,0.5)" }}>
-      <p className="text-[7px]" style={{ color: "rgba(22,163,74,0.3)" }}>e.g. 2-hectare lot in San Vicente</p>
+    <div className="rounded px-2 py-1.5 bg-white/[0.03] border border-white/5">
+      <p className="text-[7px]" style={{ color: "#6b7280" }}>e.g. 2-hectare lot in San Vicente</p>
     </div>
     <div>
-      <p className="text-[7px] mb-1" style={{ color: "rgba(74,222,128,0.4)" }}>Terrain</p>
+      <p className="text-[7px] mb-1" style={{ color: "#6b7280" }}>Terrain</p>
       <div className="flex flex-wrap gap-1">
         {[
-          { label: "Flat/Level", a: true }, { label: "Gently sloping", a: false },
+          { label: "Flat/Level", a: false }, { label: "Gently sloping", a: false },
           { label: "Beachfront", a: false }, { label: "Forested", a: true },
         ].map((t) => (
           <div key={t.label} className="rounded-full px-2 py-0.5" style={t.a
-            ? { background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.25)", color: "#4ade80" }
-            : { background: "#0f2518", border: "1px solid rgba(26,74,46,0.4)", color: "rgba(74,222,128,0.25)" }
+            ? { background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.3)", color: "#4ade80" }
+            : { background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "#9ca3af" }
           }>
             <span className="text-[6px]">{t.label}</span>
           </div>
@@ -270,15 +272,15 @@ const LandPreview = () => (
       </div>
     </div>
     <div>
-      <p className="text-[7px] mb-1" style={{ color: "rgba(74,222,128,0.4)" }}>Utilities</p>
+      <p className="text-[7px] mb-1" style={{ color: "#6b7280" }}>Utilities</p>
       <div className="flex flex-wrap gap-1">
         {[
           { label: "Electricity", a: true }, { label: "Solar power", a: false },
           { label: "Cell signal", a: true }, { label: "Water - spring", a: false },
         ].map((u) => (
           <div key={u.label} className="rounded-full px-2 py-0.5" style={u.a
-            ? { background: "rgba(74,222,128,0.08)", border: "1px solid rgba(74,222,128,0.25)", color: "#4ade80" }
-            : { background: "#0f2518", border: "1px solid rgba(26,74,46,0.4)", color: "rgba(74,222,128,0.25)" }
+            ? { background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.3)", color: "#4ade80" }
+            : { background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "#9ca3af" }
           }>
             <span className="text-[6px]">{u.label}</span>
           </div>
@@ -286,11 +288,11 @@ const LandPreview = () => (
       </div>
     </div>
     <div className="flex gap-1.5">
-      <div className="rounded-full px-2.5 py-1" style={{ background: "#16a34a" }}>
+      <div className="rounded-full px-2.5 py-1" style={{ background: "#22c55e" }}>
         <span className="text-[7px] text-white font-medium">Actual Owner</span>
       </div>
-      <div className="rounded-full px-2.5 py-1" style={{ background: "#0f2518", border: "1px solid rgba(26,74,46,0.5)" }}>
-        <span className="text-[7px]" style={{ color: "rgba(74,222,128,0.25)" }}>Sold by Agent</span>
+      <div className="rounded-full px-2.5 py-1 bg-transparent" style={{ border: "1px solid rgba(34,197,94,0.3)" }}>
+        <span className="text-[7px]" style={{ color: "#4ade80" }}>Verified Agent</span>
       </div>
     </div>
   </div>
@@ -311,10 +313,12 @@ interface ProductCard {
   hostname: string;
 }
 
+const UNIFIED_PREVIEW_BG = "#0F0F14";
+
 const PRODUCTS: ProductCard[] = [
   {
     preview: BackofficePreview,
-    previewBg: "#0d1422",
+    previewBg: UNIFIED_PREVIEW_BG,
     category: "Resort ops",
     accent: "#2dd4bf",
     title: "BackOffice Resort WebApp",
@@ -325,7 +329,7 @@ const PRODUCTS: ProductCard[] = [
   },
   {
     preview: TransitPreview,
-    previewBg: "#0b1626",
+    previewBg: UNIFIED_PREVIEW_BG,
     category: "Transportation",
     accent: "#c9a84c",
     title: "Palawan Transit",
@@ -347,7 +351,7 @@ const PRODUCTS: ProductCard[] = [
   },
   {
     preview: SiteBuilderPreview,
-    previewBg: "#111827",
+    previewBg: UNIFIED_PREVIEW_BG,
     category: "Website builder",
     accent: "#818cf8",
     title: "Your Own Website",
@@ -358,7 +362,7 @@ const PRODUCTS: ProductCard[] = [
   },
   {
     preview: OrderPreview,
-    previewBg: "#0d1117",
+    previewBg: UNIFIED_PREVIEW_BG,
     category: "Food & orders",
     accent: "#f97316",
     title: "Order Online WebApp",
@@ -369,7 +373,7 @@ const PRODUCTS: ProductCard[] = [
   },
   {
     preview: LandPreview,
-    previewBg: "#0d1f12",
+    previewBg: UNIFIED_PREVIEW_BG,
     category: "Real estate",
     accent: "#4ade80",
     title: "Buy Land in Palawan",
