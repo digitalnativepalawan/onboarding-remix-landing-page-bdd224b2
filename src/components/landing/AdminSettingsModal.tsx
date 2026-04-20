@@ -37,6 +37,7 @@ interface BlogPost {
   display_order: number;
   published: boolean;
   created_at: string;
+  image_url: string | null;
 }
 
 interface AdminSettingsModalProps {
@@ -77,8 +78,10 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     title: "",
     excerpt: "",
     content: "",
+    image_url: "" as string,
   };
   const [blogForm, setBlogForm] = useState(emptyBlog);
+  const [imageUploading, setImageUploading] = useState(false);
 
   /* ── Logo ── */
   const [logoLightUrl, setLogoLightUrl] = useState<string | null>(null);
@@ -198,18 +201,38 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     setBlogForm({
       tag: post.tag, tag_color: post.tag_color, tag_bg: post.tag_bg,
       title: post.title, excerpt: post.excerpt, content: post.content,
+      image_url: post.image_url ?? "",
     });
+  };
+
+  const handleImageUpload = async (file: File) => {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { toast.error("Image must be under 5MB"); return; }
+    setImageUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `blog/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error: upErr } = await supabase.storage.from("media").upload(path, file, { cacheControl: "3600", upsert: false });
+    if (upErr) { toast.error("Upload failed"); setImageUploading(false); return; }
+    const { data } = supabase.storage.from("media").getPublicUrl(path);
+    setBlogForm((f) => ({ ...f, image_url: data.publicUrl }));
+    toast.success("Image uploaded");
+    setImageUploading(false);
   };
 
   const handleSaveBlog = async () => {
     if (!blogForm.title || !blogForm.excerpt || !blogForm.content) { toast.error("Title, excerpt and content are required"); return; }
     setLoading(true);
+    const payload = {
+      tag: blogForm.tag, tag_color: blogForm.tag_color, tag_bg: blogForm.tag_bg,
+      title: blogForm.title, excerpt: blogForm.excerpt, content: blogForm.content,
+      image_url: blogForm.image_url || null,
+    };
     if (editingBlogId) {
-      const { error } = await supabase.from("blog_posts").update({ tag: blogForm.tag, tag_color: blogForm.tag_color, tag_bg: blogForm.tag_bg, title: blogForm.title, excerpt: blogForm.excerpt, content: blogForm.content }).eq("id", editingBlogId);
+      const { error } = await supabase.from("blog_posts").update(payload).eq("id", editingBlogId);
       if (error) toast.error("Failed to update post"); else { toast.success("Post updated"); setEditingBlogId(null); setBlogForm(emptyBlog); fetchBlogPosts(); }
     } else {
       const maxOrder = blogPosts.length > 0 ? Math.max(...blogPosts.map((p) => p.display_order)) : 0;
-      const { error } = await supabase.from("blog_posts").insert({ ...blogForm, display_order: maxOrder + 1, published: true });
+      const { error } = await supabase.from("blog_posts").insert({ ...payload, display_order: maxOrder + 1, published: true });
       if (error) toast.error("Failed to add post"); else { toast.success("Post published ✨"); setIsAddingBlog(false); setBlogForm(emptyBlog); fetchBlogPosts(); }
     }
     setLoading(false);
