@@ -728,41 +728,53 @@ export type Database = {
       media: {
         Row: {
           alt_text: string | null
+          category: string | null
           created_at: string
           device_type: string | null
           file_path: string
           file_url: string
+          folder: string | null
           id: string
           media_type: string | null
           project_id: string | null
           size_bytes: number | null
+          source_url: string | null
           tags: string[] | null
+          title: string | null
           tool_id: string | null
         }
         Insert: {
           alt_text?: string | null
+          category?: string | null
           created_at?: string
           device_type?: string | null
           file_path: string
           file_url: string
+          folder?: string | null
           id?: string
           media_type?: string | null
           project_id?: string | null
           size_bytes?: number | null
+          source_url?: string | null
           tags?: string[] | null
+          title?: string | null
           tool_id?: string | null
         }
         Update: {
           alt_text?: string | null
+          category?: string | null
           created_at?: string
           device_type?: string | null
           file_path?: string
           file_url?: string
+          folder?: string | null
           id?: string
           media_type?: string | null
           project_id?: string | null
           size_bytes?: number | null
+          source_url?: string | null
           tags?: string[] | null
+          title?: string | null
           tool_id?: string | null
         }
         Relationships: [
