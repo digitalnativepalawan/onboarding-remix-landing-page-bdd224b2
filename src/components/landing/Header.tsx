@@ -69,7 +69,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/30 overflow-hidden">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0C]/80 backdrop-blur-md border-b border-white/5 overflow-hidden">
         <div className="px-2 sm:px-6">
           <div className="flex items-center justify-between h-12 sm:h-14 min-w-0">
 
@@ -80,7 +80,7 @@ const Header = () => {
                   <img
                     src={currentLogo}
                     alt="Logo"
-                    className="h-6 sm:h-7 w-auto object-contain"
+                    className="h-8 md:h-9 w-auto object-contain"
                   />
                 </a>
               )}
