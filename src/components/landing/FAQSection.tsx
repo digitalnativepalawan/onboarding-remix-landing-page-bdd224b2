@@ -55,26 +55,26 @@ const FAQSection = () => {
   }, [language]);
 
   return (
-    <section className="py-12 sm:py-16 md:py-20">
+    <section className="py-20 md:py-32">
       <div className="px-5 sm:px-6">
         <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-8">
-            <span className="section-tag mb-3">{t("faq.tag")}</span>
-            <h2 className="section-title mb-2">{t("faq.title")}</h2>
+          <div className="text-center mb-10 md:mb-14">
+            <span className="section-tag mb-4">{t("faq.tag")}</span>
+            <h2 className="section-title mb-3">{t("faq.title")}</h2>
             <p className="section-subtitle mx-auto">{t("faq.subtitle")}</p>
           </div>
 
           {isUsingFallback && (
-            <p className="text-xs text-foreground/70 text-center mb-4 italic">
+            <p className="text-xs text-muted-foreground text-center mb-4 italic">
               {t("faq.fallbackNotice")}
             </p>
           )}
 
-          <Accordion type="single" collapsible className="space-y-2">
+          <Accordion type="single" collapsible className="space-y-3">
             {faqs.map((faq, index) => (
-              <AccordionItem key={faq.id} value={`item-${index}`} className="border border-border/20 rounded-lg px-4 bg-card/30 data-[state=open]:bg-card/50 transition-colors">
-                <AccordionTrigger className="text-left text-sm font-normal text-foreground hover:no-underline hover:text-foreground py-3.5">{faq.question}</AccordionTrigger>
-                <AccordionContent className="text-xs text-foreground/80 leading-relaxed pb-3.5 whitespace-pre-line">{faq.answer}</AccordionContent>
+              <AccordionItem key={faq.id} value={`item-${index}`} className="border border-border/30 rounded-xl px-5 bg-card/30 data-[state=open]:bg-card/70 data-[state=open]:border-border/60 transition-colors">
+                <AccordionTrigger className="text-left text-sm sm:text-base font-medium text-foreground hover:no-underline hover:text-foreground py-5">{faq.question}</AccordionTrigger>
+                <AccordionContent className="text-xs sm:text-sm text-muted-foreground leading-relaxed pb-5 whitespace-pre-line">{faq.answer}</AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
