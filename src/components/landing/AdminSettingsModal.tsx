@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -82,6 +82,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   };
   const [blogForm, setBlogForm] = useState(emptyBlog);
   const [imageUploading, setImageUploading] = useState(false);
+  const blogImageInputRef = useRef<HTMLInputElement | null>(null);
 
   /* ── Logo ── */
   const [logoLightUrl, setLogoLightUrl] = useState<string | null>(null);
@@ -203,6 +204,11 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
       title: post.title, excerpt: post.excerpt, content: post.content,
       image_url: post.image_url ?? "",
     });
+  };
+
+  const openBlogImagePicker = () => {
+    if (imageUploading) return;
+    blogImageInputRef.current?.click();
   };
 
   const handleImageUpload = async (file: File) => {
