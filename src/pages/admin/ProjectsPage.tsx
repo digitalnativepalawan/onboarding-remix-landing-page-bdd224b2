@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
@@ -13,16 +13,16 @@ import { Badge } from "@/components/ui/badge";
 import { PROJECT_STAGES, formatPHP } from "@/components/admin/projects/types";
 import { KanbanColumn } from "@/components/admin/projects/KanbanColumn";
 import { ProjectFormModal } from "@/components/admin/projects/ProjectFormModal";
-import { ProjectDetailModal } from "@/components/admin/projects/ProjectDetailModal";
 
 export default function ProjectsPage() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const [view, setView] = useState<"kanban" | "list">("kanban");
   const [search, setSearch] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
-  const [detailId, setDetailId] = useState<string | null>(null);
+  const openProject = (id: string) => navigate(`/admin/projects/${id}`);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
 
@@ -84,13 +84,6 @@ export default function ProjectsPage() {
     }
   };
 
-  const openEdit = async () => {
-    if (!detailId) return;
-    const proj = projects.find((p: any) => p.id === detailId);
-    setDetailId(null);
-    setEditing(proj);
-    setFormOpen(true);
-  };
 
   return (
     <div className="space-y-6">
@@ -125,7 +118,7 @@ export default function ProjectsPage() {
         <DndContext sensors={sensors} onDragEnd={onDragEnd}>
           <div className="flex flex-col lg:flex-row gap-3 lg:overflow-x-auto pb-4">
             {PROJECT_STAGES.map((stage) => (
-              <KanbanColumn key={stage.value} stage={stage} projects={grouped[stage.value]} onCardClick={setDetailId} />
+              <KanbanColumn key={stage.value} stage={stage} projects={grouped[stage.value]} onCardClick={openProject} />
             ))}
           </div>
         </DndContext>
@@ -149,7 +142,7 @@ export default function ProjectsPage() {
                 const stage = PROJECT_STAGES.find((s) => s.value === p.stage);
                 const over = Number(p.actual_cost_php || 0) > Number(p.budget_php || 0) && Number(p.budget_php) > 0;
                 return (
-                  <TableRow key={p.id} className="cursor-pointer" onClick={() => setDetailId(p.id)}>
+                  <TableRow key={p.id} className="cursor-pointer" onClick={() => openProject(p.id)}>
                     <TableCell className="font-medium">{p.name}</TableCell>
                     <TableCell className="text-muted-foreground">{p.category || "—"}</TableCell>
                     <TableCell><Badge className={stage?.color}>{stage?.label}</Badge></TableCell>
@@ -165,7 +158,6 @@ export default function ProjectsPage() {
       )}
 
       <ProjectFormModal open={formOpen} onOpenChange={setFormOpen} initial={editing} />
-      <ProjectDetailModal projectId={detailId} onOpenChange={(o) => !o && setDetailId(null)} onEdit={openEdit} />
     </div>
   );
 }
