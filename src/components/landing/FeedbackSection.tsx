@@ -54,27 +54,27 @@ const FeedbackSection = () => {
   };
 
   return (
-    <section id="feedback" className="py-12 sm:py-16 md:py-20 bg-muted/20">
+    <section id="feedback" className="py-20 md:py-32 bg-muted/20">
       <div className="px-5 sm:px-6">
         <div className="max-w-xl mx-auto">
-          <div className="text-center mb-6">
-            <span className="section-tag mb-3">{t("feedback.tag")}</span>
-            <h2 className="section-title mb-2">{t("feedback.title")}</h2>
+          <div className="text-center mb-8">
+            <span className="section-tag mb-4">{t("feedback.tag")}</span>
+            <h2 className="section-title mb-3">{t("feedback.title")}</h2>
             <p className="section-subtitle mx-auto">{t("feedback.subtitle")}</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="glass-card p-4 sm:p-5 mb-6">
+          <form onSubmit={handleSubmit} className="glass-card p-5 sm:p-6 rounded-2xl mb-8">
             <div className="space-y-3">
               <div>
                 <label htmlFor="author" className="block text-xs text-foreground/80 mb-1.5">{t("feedback.nameLabel")}</label>
-                <input id="author" type="text" value={authorName} onChange={(e) => setAuthorName(e.target.value)} placeholder={t("feedback.namePlaceholder")} className="w-full px-3 py-2 rounded-lg bg-muted/50 border border-border/30 text-sm text-foreground placeholder:text-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all" />
+                <input id="author" type="text" value={authorName} onChange={(e) => setAuthorName(e.target.value)} placeholder={t("feedback.namePlaceholder")} className="w-full px-4 py-2.5 rounded-xl bg-muted/50 border border-border/40 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-all" />
               </div>
               <div>
                 <label htmlFor="feedback" className="block text-xs text-foreground/80 mb-1.5">{t("feedback.feedbackLabel")}</label>
-                <textarea id="feedback" value={feedback} onChange={(e) => setFeedback(e.target.value)} placeholder={t("feedback.messagePlaceholder")} className="w-full h-24 px-3 py-2 rounded-lg bg-muted/50 border border-border/30 text-sm text-foreground placeholder:text-foreground/50 resize-none focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all" />
+                <textarea id="feedback" value={feedback} onChange={(e) => setFeedback(e.target.value)} placeholder={t("feedback.messagePlaceholder")} className="w-full h-28 px-4 py-2.5 rounded-xl bg-muted/50 border border-border/40 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/50 transition-all" />
               </div>
             </div>
-            <button type="submit" disabled={isSubmitting} className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm transition-all hover:opacity-90 disabled:opacity-50">
+            <button type="submit" disabled={isSubmitting} className="w-full mt-4 flex items-center justify-center gap-2 h-11 px-5 rounded-full bg-primary text-primary-foreground text-sm font-medium shadow-lg shadow-primary/20 transition-all hover:opacity-90 hover:scale-[1.01] disabled:opacity-50 disabled:hover:scale-100">
               {isSubmitting ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" /> : <><Send className="w-4 h-4" />{t("feedback.submitButton")}</>}
             </button>
           </form>

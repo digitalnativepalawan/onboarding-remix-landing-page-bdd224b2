@@ -38,26 +38,26 @@ const BlogSection = () => {
   if (posts.length === 0) return null;
 
   return (
-    <section className="py-16 sm:py-20 px-5 sm:px-6">
+    <section className="py-20 md:py-32 px-5 sm:px-6">
       <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-8">
-          <span className="section-tag mb-3">From the blog</span>
-          <h2 className="section-title mb-2">Digital tools for island businesses</h2>
+        <div className="text-center mb-10 md:mb-14">
+          <span className="section-tag mb-4">From the blog</span>
+          <h2 className="section-title mb-3">Digital tools for island businesses</h2>
           <p className="section-subtitle mx-auto">
             Practical guides for resort owners, restaurant operators, transport
             companies, and other businesses building a digital presence in Palawan.
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2">
           {posts.map((post) => (
             <button
               key={post.id}
-              className="glass-card text-left p-5 flex flex-col gap-3 hover:border-primary/20 transition-all duration-200 hover:-translate-y-px cursor-pointer"
+              className="group glass-card text-left p-6 md:p-7 rounded-2xl border border-white/5 flex flex-col gap-3 hover:border-white/15 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
               onClick={() => setActivePost(post)}
             >
               <span
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium self-start"
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider self-start"
                 style={{ color: post.tag_color, background: post.tag_bg }}
               >
                 {post.tag}
@@ -68,14 +68,14 @@ const BlogSection = () => {
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed flex-1">
                 {post.excerpt}
               </p>
-              <div className="flex items-center justify-between pt-1">
+              <div className="flex items-center justify-between pt-3 border-t border-border/30">
                 <span className="text-xs text-muted-foreground/60">
                   {new Date(post.created_at).toLocaleDateString("en-US", {
                     month: "long",
                     year: "numeric",
                   })}
                 </span>
-                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50" />
+                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:translate-x-1 group-hover:text-foreground transition-all" />
               </div>
             </button>
           ))}

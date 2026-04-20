@@ -465,19 +465,24 @@ const AgencyAppsSection = () => {
     : CARD_URL_MAP;
 
   return (
-    <section id="our-apps" className="py-12 sm:py-16 md:py-20 bg-background">
+    <section id="our-apps" className="py-20 md:py-32 bg-background">
       <div className="px-5 sm:px-6">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-8">
-            <span className="section-tag mb-3">Our webapps</span>
-            <h2 className="section-title mb-2">{visibleCards.length} live products. Real businesses.</h2>
+          <div className="text-center mb-10 md:mb-14">
+            <span className="section-tag mb-4">Our webapps</span>
+            <h2 className="section-title mb-3">{visibleCards.length} live products. Real businesses.</h2>
             <p className="section-subtitle mx-auto">
               Each one built for a specific Palawan business need — and available for your business too.
             </p>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-5">
             {visibleCards.map(({ component: Card, url }) => (
-              <Card key={url} />
+              <div
+                key={url}
+                className="rounded-2xl border border-white/5 hover:border-white/15 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              >
+                <Card />
+              </div>
             ))}
           </div>
         </div>
