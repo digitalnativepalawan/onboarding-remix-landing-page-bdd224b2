@@ -12,37 +12,51 @@ const BenefitsSection = () => {
   ];
 
   return (
-    <section id="benefits" className="py-20 md:py-32">
-      <div className="px-5 sm:px-6">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10 md:mb-14">
-            <span className="section-tag mb-4">{t("benefits.tag")}</span>
-            <h2 className="section-title mb-3">{t("benefits.title")}</h2>
-            <p className="section-subtitle mx-auto">{t("benefits.subtitle")}</p>
-          </div>
+    <section id="benefits" className="py-20 md:py-28 lg:py-32">
+      <div className="max-w-6xl mx-auto px-6 md:px-8">
+        <div className="text-center max-w-2xl mx-auto">
+          <span className="text-[11px] uppercase tracking-[0.18em] font-medium text-burgundy">
+            BENEFITS
+          </span>
+          <h2 className="mt-3 text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-white">
+            Why Resort Owners Use It
+          </h2>
+          <p className="mt-4 text-base md:text-lg text-muted-foreground">
+            {t("benefits.subtitle")}
+          </p>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 mb-6">
-            {benefits.map((benefit) => (
-              <div key={benefit.titleKey} className="flex items-start gap-4 p-5 md:p-6 rounded-xl bg-card/40 border border-border/30 hover:border-border/60 transition-colors">
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-primary shrink-0">
-                  <benefit.icon className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium mb-1 text-foreground">{t(benefit.titleKey)}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{t(benefit.descKey)}</p>
-                </div>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+          {benefits.map((benefit) => (
+            <div
+              key={benefit.titleKey}
+              className="bg-card border border-white/5 hover:border-white/15 transition-colors duration-300 rounded-xl p-6 md:p-7"
+            >
+              <div className="w-12 h-12 rounded-xl bg-burgundy/10 border border-burgundy/25 text-burgundy flex items-center justify-center">
+                <benefit.icon className="w-5 h-5" />
               </div>
-            ))}
-          </div>
-
-          <div className="p-6 rounded-xl border border-primary/30 bg-primary/5 text-center">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center">
-                <Wifi className="w-4 h-4 text-primary" />
-              </div>
-              <h3 className="text-sm font-medium text-primary">{t("benefits.offlineTitle")}</h3>
+              <h3 className="mt-5 text-lg md:text-xl font-semibold text-white">
+                {t(benefit.titleKey)}
+              </h3>
+              <p className="mt-2 text-sm md:text-base text-muted-foreground leading-relaxed">
+                {t(benefit.descKey)}
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed">{t("benefits.offlineDescription")}</p>
+          ))}
+        </div>
+
+        {/* Offline communication callout */}
+        <div className="mt-5 bg-burgundy/5 border border-burgundy/25 rounded-xl p-6 md:p-8 flex flex-col md:flex-row items-start gap-4">
+          <div className="w-12 h-12 rounded-full bg-burgundy/15 border border-burgundy/30 text-burgundy flex items-center justify-center flex-shrink-0">
+            <Wifi className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-lg md:text-xl font-semibold text-white">
+              {t("benefits.offlineTitle")}
+            </h3>
+            <p className="mt-1 text-sm md:text-base text-muted-foreground leading-relaxed">
+              {t("benefits.offlineDescription")}
+            </p>
           </div>
         </div>
       </div>
