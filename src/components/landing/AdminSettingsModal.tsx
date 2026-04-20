@@ -256,8 +256,8 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     setEditingBlogId(null); setIsAddingBlog(false); setBlogForm(emptyBlog);
   };
 
-  /* ── Blog form shared UI ── */
-  const BlogForm = () => (
+  /* ── Blog form shared UI (inline JSX, NOT a component, to preserve input focus) ── */
+  const blogFormJsx = (
     <div className="space-y-3 p-3 rounded-lg border border-primary/30 bg-primary/5">
       <div>
         <Label className="text-xs">Cover image</Label>
@@ -368,7 +368,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
             {blogPosts.map((post) => (
               <div key={post.id} className="rounded-lg border border-border/50 bg-card/50 overflow-hidden">
                 {editingBlogId === post.id ? (
-                  <div className="p-3"><BlogForm /></div>
+                  <div className="p-3">{blogFormJsx}</div>
                 ) : (
                   <div className="flex items-start gap-2 p-3">
                     <div className="flex-1 min-w-0">
@@ -416,7 +416,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
             ))}
 
             {isAddingBlog ? (
-              <BlogForm />
+              blogFormJsx
             ) : (
               <Button variant="outline" className="w-full" onClick={() => { setIsAddingBlog(true); setEditingBlogId(null); setBlogForm(emptyBlog); }}>
                 <Plus className="w-4 h-4 mr-2" /> Write New Post
