@@ -103,7 +103,7 @@ const Header = () => {
                   href={headerLink.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center text-foreground/80 hover:text-foreground transition-colors p-1 sm:px-2 sm:py-1 rounded-md hover:bg-foreground/10"
+                  className="flex items-center text-[#A1A1AA] hover:text-white transition-colors p-1 sm:px-2 sm:py-1 rounded-md hover:bg-white/5"
                   title={headerLink.title}
                 >
                   <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
@@ -116,7 +116,7 @@ const Header = () => {
                 href="https://github.com/digitalnativepalawan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-foreground/80 hover:text-foreground transition-colors p-1"
+                className="text-[#A1A1AA] hover:text-white transition-colors p-1"
                 aria-label="GitHub"
               >
                 <Github className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -125,7 +125,7 @@ const Header = () => {
                 href="https://ollama.com/palawancollective"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-foreground/80 hover:text-foreground transition-colors p-1"
+                className="text-[#A1A1AA] hover:text-white transition-colors p-1"
                 aria-label="Ollama"
               >
                 <img
@@ -137,7 +137,7 @@ const Header = () => {
               <ThemeToggle />
               <button
                 onClick={handleSettingsClick}
-                className="text-foreground/80 hover:text-foreground transition-colors p-1"
+                className="text-[#A1A1AA] hover:text-white transition-colors p-1"
                 aria-label="Settings"
               >
                 <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
