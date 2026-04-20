@@ -34,14 +34,14 @@ const HeroSection = () => {
             className="animate-fade-up opacity-0 flex justify-center"
             style={{ animationDelay: "0.05s", animationFillMode: "forwards" }}
           >
-            <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium tracking-wide">
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-medium uppercase tracking-[0.18em]">
               Digital Agency · Palawan, Philippines
             </span>
           </div>
 
           {/* Headline */}
           <h1
-            className="animate-fade-up opacity-0 text-2xl sm:text-3xl md:text-4xl font-medium tracking-tight leading-[1.15]"
+            className="animate-fade-up opacity-0 text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05]"
             style={{ animationDelay: "0.1s", animationFillMode: "forwards" }}
           >
             We build webapps
@@ -51,7 +51,7 @@ const HeroSection = () => {
 
           {/* Subheadline */}
           <p
-            className="animate-fade-up opacity-0 text-sm sm:text-base text-foreground/80 leading-relaxed max-w-lg mx-auto"
+            className="animate-fade-up opacity-0 text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto"
             style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}
           >
             Resort operations, transportation booking, online ordering, real
