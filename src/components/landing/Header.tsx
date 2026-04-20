@@ -125,7 +125,7 @@ const Header = () => {
                 href="https://ollama.com/palawancollective"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#A1A1AA] hover:text-white transition-colors p-1"
+                className="text-[#A1A1AA] hover:text-white transition-colors p-1 bg-white/90 hover:bg-white rounded-sm flex items-center justify-center"
                 aria-label="Ollama"
               >
                 <img
@@ -134,7 +134,6 @@ const Header = () => {
                   className="w-4 h-4 sm:w-5 sm:h-5 rounded-sm"
                 />
               </a>
-              <ThemeToggle />
               <button
                 onClick={handleSettingsClick}
                 className="text-[#A1A1AA] hover:text-white transition-colors p-1"
