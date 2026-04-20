@@ -177,6 +177,13 @@ const BlogSection = () => {
               </button>
             </div>
             <article className="w-full max-w-2xl space-y-6">
+              {activePost.image_url && (
+                <img
+                  src={activePost.image_url}
+                  alt={activePost.title}
+                  className="w-full rounded-xl object-cover aspect-[16/9]"
+                />
+              )}
               <span
                 className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                 style={{ color: activePost.tag_color, background: activePost.tag_bg }}
