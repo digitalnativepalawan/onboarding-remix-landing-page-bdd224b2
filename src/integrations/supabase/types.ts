@@ -324,6 +324,7 @@ export type Database = {
           display_order: number | null
           excerpt: string
           id: string
+          image_url: string | null
           published: boolean | null
           tag: string
           tag_bg: string
@@ -336,6 +337,7 @@ export type Database = {
           display_order?: number | null
           excerpt: string
           id?: string
+          image_url?: string | null
           published?: boolean | null
           tag: string
           tag_bg?: string
@@ -348,6 +350,7 @@ export type Database = {
           display_order?: number | null
           excerpt?: string
           id?: string
+          image_url?: string | null
           published?: boolean | null
           tag?: string
           tag_bg?: string
