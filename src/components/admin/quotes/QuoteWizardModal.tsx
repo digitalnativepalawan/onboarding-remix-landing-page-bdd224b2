@@ -291,6 +291,7 @@ export function QuoteWizardModal({ open, onOpenChange, initial }: Props) {
     phone: siteSettings?.contact_phone,
     copyrightHolder: siteSettings?.copyright_holder,
     logoUrl: siteSettings?.logo_main_url || siteSettings?.logo_dark_url || siteSettings?.logo_light_url,
+    primaryColor: siteSettings?.color_primary,
   });
 
   return (
