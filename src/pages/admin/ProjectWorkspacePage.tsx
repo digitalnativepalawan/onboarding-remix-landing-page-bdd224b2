@@ -14,7 +14,7 @@ import { TimelineTab } from "@/components/admin/projects/workspace/TimelineTab";
 import { FilesTab } from "@/components/admin/projects/workspace/FilesTab";
 
 const TABS = [
-  { value: "notes", label: "Notes" },
+  { value: "notes", label: "Work Station" },
   { value: "links", label: "Links" },
   { value: "gallery", label: "Gallery" },
   { value: "comments", label: "Comments" },
