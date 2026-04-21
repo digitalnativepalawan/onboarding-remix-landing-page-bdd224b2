@@ -19,9 +19,10 @@ import Highlight from "@tiptap/extension-highlight";
 import {
   Bold, Italic, Underline as UnderlineIcon, List, ListOrdered, Code, Heading2,
   Pin, PinOff, Trash2, Plus, Table as TableIcon, Image as ImageIcon, Link as LinkIcon,
-  Rows, Columns, Trash,
+  Rows, Columns, Trash, Receipt,
 } from "lucide-react";
 import { toast } from "sonner";
+import { LogWorkModal } from "./LogWorkModal";
 
 function Toolbar({ editor }: { editor: any }) {
   if (!editor) return null;
@@ -79,6 +80,7 @@ function Toolbar({ editor }: { editor: any }) {
 function NoteEditor({ note, projectId }: { note: any; projectId: string }) {
   const qc = useQueryClient();
   const [title, setTitle] = useState(note.title);
+  const [logOpen, setLogOpen] = useState(false);
   const timer = useRef<any>(null);
 
   const scheduleSave = (patch: any) => {
@@ -139,6 +141,9 @@ function NoteEditor({ note, projectId }: { note: any; projectId: string }) {
           placeholder="Note title"
           className="font-semibold"
         />
+        <Button size="icon" variant="ghost" className="h-9 w-9" onClick={() => setLogOpen(true)} title="Bill this note">
+          <Receipt className="h-4 w-4" />
+        </Button>
         <Button size="icon" variant="ghost" className="h-9 w-9" onClick={togglePin} title={note.pinned ? "Unpin" : "Pin"}>
           {note.pinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
         </Button>
@@ -154,12 +159,14 @@ function NoteEditor({ note, projectId }: { note: any; projectId: string }) {
         <span>{words} words · {text.length} chars</span>
         <span>Auto-saved · Paste from Docs/Sheets keeps formatting</span>
       </div>
+      <LogWorkModal open={logOpen} onClose={() => setLogOpen(false)} projectId={projectId} defaultDescription={note.title} />
     </Card>
   );
 }
 
 export function NotesTab({ projectId }: { projectId: string }) {
   const qc = useQueryClient();
+  const [logOpen, setLogOpen] = useState(false);
   const { data: notes = [] } = useQuery({
     queryKey: ["project-notes", projectId],
     queryFn: async () => {
@@ -183,9 +190,14 @@ export function NotesTab({ projectId }: { projectId: string }) {
 
   return (
     <div className="space-y-3">
-      <Button onClick={add} className="w-full sm:w-auto">
-        <Plus className="h-4 w-4 mr-1" /> New note
-      </Button>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <Button onClick={add} className="w-full sm:w-auto">
+          <Plus className="h-4 w-4 mr-1" /> New note
+        </Button>
+        <Button onClick={() => setLogOpen(true)} variant="secondary" className="w-full sm:w-auto">
+          <Receipt className="h-4 w-4 mr-1" /> Log billable work
+        </Button>
+      </div>
       {notes.length === 0 ? (
         <Card className="p-8 text-center text-sm text-muted-foreground">
           No notes yet. Create your first one above.
@@ -193,6 +205,7 @@ export function NotesTab({ projectId }: { projectId: string }) {
       ) : (
         notes.map((n: any) => <NoteEditor key={n.id} note={n} projectId={projectId} />)
       )}
+      <LogWorkModal open={logOpen} onClose={() => setLogOpen(false)} projectId={projectId} />
     </div>
   );
 }

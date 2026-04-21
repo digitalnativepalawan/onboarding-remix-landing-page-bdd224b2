@@ -201,6 +201,7 @@ export function QuoteDetailModal({ quoteId, onOpenChange, onEdit }: Props) {
                   phone: site?.contact_phone,
                   copyrightHolder: site?.copyright_holder,
                   logoUrl: site?.logo_main_url || site?.logo_dark_url || site?.logo_light_url,
+                  primaryColor: site?.color_primary,
                 },
               )}
             >

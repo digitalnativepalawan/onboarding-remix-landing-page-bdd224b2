@@ -993,6 +993,7 @@ export type Database = {
           actual_launch: string | null
           budget_php: number | null
           category: string | null
+          client_id: string | null
           created_at: string
           description: string | null
           display_order: number | null
@@ -1016,6 +1017,7 @@ export type Database = {
           actual_launch?: string | null
           budget_php?: number | null
           category?: string | null
+          client_id?: string | null
           created_at?: string
           description?: string | null
           display_order?: number | null
@@ -1039,6 +1041,7 @@ export type Database = {
           actual_launch?: string | null
           budget_php?: number | null
           category?: string | null
+          client_id?: string | null
           created_at?: string
           description?: string | null
           display_order?: number | null
@@ -1057,7 +1060,15 @@ export type Database = {
           updated_at?: string
           vercel_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "projects_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quote_items: {
         Row: {
@@ -1458,6 +1469,80 @@ export type Database = {
           week_start_date?: string
         }
         Relationships: []
+      }
+      work_logs: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          description: string
+          hours: number | null
+          id: string
+          line_total_php: number | null
+          logged_on: string
+          project_id: string | null
+          qty: number
+          quote_id: string | null
+          quote_item_id: string | null
+          unit_price_php: number
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          description: string
+          hours?: number | null
+          id?: string
+          line_total_php?: number | null
+          logged_on?: string
+          project_id?: string | null
+          qty?: number
+          quote_id?: string | null
+          quote_item_id?: string | null
+          unit_price_php?: number
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          description?: string
+          hours?: number | null
+          id?: string
+          line_total_php?: number | null
+          logged_on?: string
+          project_id?: string | null
+          qty?: number
+          quote_id?: string | null
+          quote_item_id?: string | null
+          unit_price_php?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_logs_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_logs_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_logs_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_logs_quote_item_id_fkey"
+            columns: ["quote_item_id"]
+            isOneToOne: false
+            referencedRelation: "quote_items"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
