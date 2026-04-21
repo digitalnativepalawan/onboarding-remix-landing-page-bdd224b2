@@ -356,13 +356,13 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[calc(100vw-1rem)] sm:w-full max-w-2xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto overflow-x-hidden p-4 sm:p-6">
+      <DialogContent className="flex h-[calc(100vh-1rem)] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] translate-x-[-50%] translate-y-[-50%] flex-col overflow-hidden p-4 sm:h-[calc(100vh-2rem)] sm:w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-2rem)] sm:p-6 lg:w-[min(96vw,1400px)] lg:max-w-[min(96vw,1400px)]">
         <DialogHeader>
           <DialogTitle>Admin Settings</DialogTitle>
         </DialogHeader>
 
-        <Tabs defaultValue="blog" className="mt-4">
-          <TabsList className="grid w-full grid-cols-4">
+        <Tabs defaultValue="blog" className="mt-4 flex min-h-0 flex-1 flex-col overflow-hidden">
+          <TabsList className="grid h-auto w-full grid-cols-2 gap-2 md:grid-cols-4">
             <TabsTrigger value="blog" className="flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5" />Blog
             </TabsTrigger>
@@ -378,7 +378,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
           </TabsList>
 
           {/* ── BLOG TAB ── */}
-          <TabsContent value="blog" className="space-y-3 mt-4">
+          <TabsContent value="blog" className="mt-4 space-y-3 overflow-y-auto pr-1">
             <p className="text-xs text-muted-foreground pb-2 border-b border-border/30">
               Add, edit, hide, or delete blog posts. Posts appear on the public site instantly.
             </p>
@@ -388,7 +388,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                 {editingBlogId === post.id ? (
                   <div className="p-3">{blogFormJsx}</div>
                 ) : (
-                  <div className="flex items-start gap-2 p-3">
+                  <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <span
@@ -406,7 +406,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                       <p className="text-sm font-medium truncate">{post.title}</p>
                       <p className="text-xs text-muted-foreground truncate mt-0.5">{post.excerpt}</p>
                     </div>
-                    <div className="flex gap-1 shrink-0">
+                     <div className="flex shrink-0 flex-wrap gap-1 self-end sm:self-start">
                       <Button
                         size="icon"
                         variant="ghost"
@@ -443,12 +443,12 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
           </TabsContent>
 
           {/* ── FAQS TAB ── */}
-          <TabsContent value="faqs" className="space-y-3 mt-4">
+          <TabsContent value="faqs" className="mt-4 space-y-3 overflow-y-auto pr-1">
             <p className="text-xs text-muted-foreground pb-2 border-b border-border/30">
               Manage FAQs in English. Translations are handled automatically.
             </p>
             {faqs.map((faq, index) => (
-              <div key={faq.id} className="flex items-start gap-2 p-3 rounded-lg border border-border/50 bg-card/50">
+               <div key={faq.id} className="flex flex-col gap-3 rounded-lg border border-border/50 bg-card/50 p-3 sm:flex-row sm:items-start">
                 <span className="text-xs text-muted-foreground pt-1 w-5 shrink-0">{index + 1}.</span>
                 {editingFaqId === faq.id ? (
                   <div className="flex-1 space-y-2">
@@ -465,7 +465,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
                       <p className="text-sm font-medium mb-1">{faq.question}</p>
                       <p className="text-xs text-muted-foreground whitespace-pre-wrap leading-relaxed">{faq.answer}</p>
                     </div>
-                    <div className="flex gap-1 shrink-0">
+                     <div className="flex shrink-0 flex-wrap gap-1 self-end sm:self-start">
                       <Button size="icon" variant="ghost" onClick={() => handleEditFaq(faq)}><Pencil className="w-3.5 h-3.5" /></Button>
                       <Button size="icon" variant="ghost" className="text-destructive hover:text-destructive" onClick={() => handleDeleteFaq(faq)} disabled={loading}><Trash2 className="w-3.5 h-3.5" /></Button>
                     </div>
@@ -491,7 +491,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
           </TabsContent>
 
           {/* ── HEADER LINK TAB ── */}
-          <TabsContent value="header" className="space-y-4 mt-4">
+          <TabsContent value="header" className="mt-4 space-y-4 overflow-y-auto pr-1">
             <p className="text-sm text-muted-foreground">Configure a download link or URL that appears in the header bar.</p>
             <div className="space-y-3 p-4 rounded-lg border border-border/50 bg-card/50">
               <div className="space-y-2"><Label htmlFor="header-title" className="text-xs">Title</Label><Input id="header-title" placeholder="e.g. Staff Manual, Menu PDF" value={headerLinkTitle} onChange={(e) => setHeaderLinkTitle(e.target.value)} /></div>
@@ -509,7 +509,7 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
           </TabsContent>
 
           {/* ── LOGO TAB ── */}
-          <TabsContent value="logo" className="mt-4">
+          <TabsContent value="logo" className="mt-4 overflow-y-auto pr-1">
             <LogoSettings
               logoLightUrl={logoLightUrl}
               logoDarkUrl={logoDarkUrl}
