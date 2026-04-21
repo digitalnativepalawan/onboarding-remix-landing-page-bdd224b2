@@ -188,8 +188,8 @@ export default function RevenuePage() {
         </Select>
       </div>
 
-      {/* Table */}
-      <Card>
+      {/* Table — desktop */}
+      <Card className="hidden md:block">
         <Table>
           <TableHeader>
             <TableRow>
@@ -243,6 +243,49 @@ export default function RevenuePage() {
           </TableBody>
         </Table>
       </Card>
+
+      {/* Stacked cards — mobile */}
+      <div className="md:hidden space-y-2">
+        {isLoading ? (
+          <Card className="p-6 text-center text-sm text-muted-foreground">Loading...</Card>
+        ) : filtered.length === 0 ? (
+          <Card className="p-6 text-center text-sm text-muted-foreground">No revenue recorded yet</Card>
+        ) : filtered.map((r: any) => {
+          const type = REVENUE_TYPES.find((t) => t.value === r.type);
+          const status = REVENUE_STATUSES.find((s) => s.value === r.status);
+          return (
+            <Card key={r.id} className="p-3 space-y-2">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium text-sm truncate">{r.clients?.business_name || "—"}</p>
+                  <p className="text-xs text-muted-foreground">{r.payment_date || "No date"}</p>
+                </div>
+                <p className="font-mono font-semibold text-sm whitespace-nowrap">{formatPHP(Number(r.amount_php))}</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="outline" className={type?.color}>{type?.label}</Badge>
+                <Select value={r.status} onValueChange={(v) => updateStatus(r.id, v)}>
+                  <SelectTrigger className="h-7 w-auto border-0 p-0">
+                    <Badge className={status?.color + " cursor-pointer"}>{status?.label}</Badge>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {REVENUE_STATUSES.map((s) => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <div className="ml-auto flex gap-1">
+                  <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => { setEditing(r); setFormOpen(true); }}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => remove(r.id)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              {r.notes && <p className="text-xs text-muted-foreground line-clamp-2">{r.notes}</p>}
+            </Card>
+          );
+        })}
+      </div>
 
       <RevenueFormModal open={formOpen} onOpenChange={setFormOpen} initial={editing} />
     </div>

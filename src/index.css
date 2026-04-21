@@ -331,3 +331,28 @@
   color: hsl(var(--foreground));
   padding: 0.75rem; border-radius: 0.375rem; overflow-x: auto;
 }
+
+/* Mobile: stack tiptap table cells vertically for true mobile-first reading */
+@media (max-width: 767px) {
+  .ProseMirror table,
+  .ProseMirror tbody,
+  .ProseMirror thead,
+  .ProseMirror tr {
+    display: block;
+    width: 100% !important;
+  }
+  .ProseMirror th,
+  .ProseMirror td {
+    display: block;
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+  }
+  .ProseMirror tr {
+    margin-bottom: 0.5rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.375rem;
+    overflow: hidden;
+  }
+  .ProseMirror th { background: hsl(var(--muted)); }
+}
