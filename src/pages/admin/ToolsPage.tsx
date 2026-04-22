@@ -10,6 +10,7 @@ import { Plus, Wrench, Search, ExternalLink, Pencil, Trash2, DollarSign, Trendin
 import { toast } from "sonner";
 import { Tool, TOKEN_BURN_OPTIONS, formatPHP, formatUSD } from "@/components/admin/tools/types";
 import { ToolFormModal } from "@/components/admin/tools/ToolFormModal";
+import { ToolDetailModal } from "@/components/admin/tools/ToolDetailModal";
 
 type Row = Tool & { id: string };
 
@@ -17,6 +18,8 @@ export default function ToolsPage() {
   const qc = useQueryClient();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Row | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [viewing, setViewing] = useState<Row | null>(null);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "installed" | "wishlist">("all");
 
@@ -121,8 +124,12 @@ export default function ToolsPage() {
           {filtered.map((t) => {
             const burn = TOKEN_BURN_OPTIONS.find((b) => b.value === t.token_burn);
             return (
-              <Card key={t.id} className="p-4 flex flex-col gap-3">
-                <div className="flex items-start justify-between gap-2">
+              <Card
+                key={t.id}
+                className="p-4 flex flex-col gap-3 cursor-pointer hover:border-primary/40 hover:shadow-md transition-all"
+                onClick={() => { setViewing(t); setDetailOpen(true); }}
+              >
+                <div className="flex items-start justify-between gap-2" onClick={(e) => e.stopPropagation()}>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="font-semibold leading-tight truncate">{t.name}</h3>
@@ -156,7 +163,7 @@ export default function ToolsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between gap-2 mt-auto">
+                <div className="flex items-center justify-between gap-2 mt-auto" onClick={(e) => e.stopPropagation()}>
                   {burn && <Badge className={burn.color} variant="outline">Burn: {burn.label}</Badge>}
                   <div className="flex gap-1 ml-auto">
                     {t.github_url && (
@@ -179,6 +186,12 @@ export default function ToolsPage() {
       )}
 
       <ToolFormModal open={formOpen} onOpenChange={setFormOpen} initial={editing} />
+      <ToolDetailModal
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        tool={viewing}
+        onEdit={(t) => { setDetailOpen(false); setEditing(t); setFormOpen(true); }}
+      />
     </div>
   );
 }
