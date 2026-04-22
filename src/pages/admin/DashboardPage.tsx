@@ -263,7 +263,7 @@ export default function DashboardPage() {
       {/* header */}
       <div className="flex items-center justify-between gap-2">
         <div>
-          <h2 className="text-lg font-semibold">Overview</h2>
+          <h2 className="text-lg font-semibold font-serif">Overview</h2>
           <p className="text-xs text-muted-foreground">Live data — auto-refreshes every minute</p>
         </div>
         <Button size="sm" variant="outline" onClick={refreshAll}>
@@ -304,7 +304,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="p-4 lg:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-            <h3 className="text-sm font-semibold">Revenue & Expenses — last 6 months</h3>
+            <h3 className="text-sm font-semibold font-serif">Revenue & Expenses — last 6 months</h3>
             <div className="flex gap-1">
               {(["PHP", "USD"] as const).map((c) => (
                 <Button
