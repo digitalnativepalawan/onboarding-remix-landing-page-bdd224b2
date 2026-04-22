@@ -10,6 +10,7 @@ import { Plus, Wrench, Search, ExternalLink, Pencil, Trash2, DollarSign, Trendin
 import { toast } from "sonner";
 import { Tool, TOKEN_BURN_OPTIONS, formatPHP, formatUSD } from "@/components/admin/tools/types";
 import { ToolFormModal } from "@/components/admin/tools/ToolFormModal";
+import { ToolDetailModal } from "@/components/admin/tools/ToolDetailModal";
 
 type Row = Tool & { id: string };
 
@@ -17,6 +18,8 @@ export default function ToolsPage() {
   const qc = useQueryClient();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Row | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [viewing, setViewing] = useState<Row | null>(null);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "installed" | "wishlist">("all");
 
