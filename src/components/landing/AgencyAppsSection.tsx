@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { ExternalLink, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 /* ─────────────────────────────────────────────────────────────
-   PREVIEWS — unified neutral dark canvas, restrained accents
+   PREVIEWS — kept from original, restrained dark canvas
 ───────────────────────────────────────────────────────────── */
 
 const PREVIEW_BG = "bg-gradient-to-br from-[#11111A] via-[#0F0F14] to-[#0D0D12]";
@@ -58,11 +58,11 @@ const TransitPreview = () => (
     <div className="flex-1 p-3 flex flex-col justify-between">
       <div>
         <div className="flex items-baseline gap-1 mb-3">
-          <span className="text-[11px] text-white font-serif tracking-[0.15em]">PALAWAN</span>
-          <span className="text-[8px] font-serif tracking-wider" style={{ color: "#c9a84c" }}>TRANSIT</span>
+          <span className="text-[11px] text-white font-display tracking-[0.15em]">PALAWAN</span>
+          <span className="text-[8px] font-display tracking-wider" style={{ color: "#c9a84c" }}>TRANSIT</span>
         </div>
-        <p className="text-lg text-white font-serif font-bold leading-tight">Move Through</p>
-        <p className="text-lg font-serif italic leading-tight" style={{ color: "#c9a84c" }}>Palawan.</p>
+        <p className="text-lg text-white font-display font-bold leading-tight">Move Through</p>
+        <p className="text-lg font-display italic leading-tight" style={{ color: "#c9a84c" }}>Palawan.</p>
         <p className="text-[7px] tracking-widest mt-1" style={{ color: "#6b7280" }}>SHUTTLES · BANGKAS</p>
       </div>
       <div className="space-y-1">
@@ -106,7 +106,7 @@ const WildfallPreview = () => (
       <div key={i} className="absolute w-full" style={{ height: 1, top: `${i * 15}%`, background: "rgba(201,168,76,0.04)" }} />
     ))}
     <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-3 py-2" style={{ background: "rgba(0,0,0,0.7)" }}>
-      <span className="text-[10px] font-serif tracking-[0.2em]" style={{ color: "#c9a84c" }}>WILDFALL</span>
+      <span className="text-[10px] font-display tracking-[0.2em]" style={{ color: "#c9a84c" }}>WILDFALL</span>
       <div className="flex gap-2">
         {["EXPERIENCE", "BATTLEFIELD", "LOGIN"].map((n) => (
           <span key={n} className="text-[6px] font-mono" style={{ color: "#4a4030" }}>{n}</span>
@@ -117,14 +117,14 @@ const WildfallPreview = () => (
       <div className="rounded-full px-3 py-0.5 mb-3" style={{ background: "#1a1200", border: "1px solid rgba(58,40,0,0.6)" }}>
         <span className="text-[7px] font-mono tracking-[0.1em]" style={{ color: "#7a5c20" }}>FULL-SCALE LIVE WAR SIMULATION</span>
       </div>
-      <p className="text-3xl font-serif font-bold tracking-[0.15em] leading-none" style={{ color: "#c9a84c" }}>WILDFALL</p>
+      <p className="text-3xl font-display font-bold tracking-[0.15em] leading-none" style={{ color: "#c9a84c" }}>WILDFALL</p>
       <p className="text-[9px] font-mono tracking-[0.2em] mt-1 mb-4" style={{ color: "#7a5c20" }}>— NO MAN'S JUNGLE —</p>
       <div className="flex items-center">
         {[{ val: "2", label: "DAYS" }, { val: "1", label: "NIGHT" }, { val: "60", label: "HECTARES" }].map((s, i) => (
           <div key={s.label} className="flex items-center">
             {i > 0 && <div className="w-px h-8 mx-4" style={{ background: "#3a2a08" }} />}
             <div className="text-center">
-              <p className="text-xl font-serif font-bold leading-none" style={{ color: "#c9a84c" }}>{s.val}</p>
+              <p className="text-xl font-display font-bold leading-none" style={{ color: "#c9a84c" }}>{s.val}</p>
               <p className="text-[6px] font-mono tracking-[0.15em] mt-0.5" style={{ color: "#5a4818" }}>{s.label}</p>
             </div>
           </div>
@@ -299,14 +299,14 @@ const LandPreview = () => (
 );
 
 /* ─────────────────────────────────────────────────────────────
-   PRODUCT METADATA — drives content + footer zones
+   PRODUCT METADATA
 ───────────────────────────────────────────────────────────── */
 
 interface ProductCard {
   preview: React.FC;
   previewBg: string;
   category: string;
-  accent: string; // hex for tag/footer accent
+  accent: string;
   title: string;
   description: string;
   url: string;
@@ -389,7 +389,6 @@ interface AppLink {
   is_visible: boolean;
 }
 
-/* hex (#RRGGBB) → "r, g, b" for inline rgba() use */
 const hexToRgb = (hex: string) => {
   const h = hex.replace("#", "");
   const r = parseInt(h.slice(0, 2), 16);
@@ -398,57 +397,55 @@ const hexToRgb = (hex: string) => {
   return `${r}, ${g}, ${b}`;
 };
 
-const ProductCardView = ({ product }: { product: ProductCard }) => {
+const ProductCardView = ({ product, index }: { product: ProductCard; index: number }) => {
   const Preview = product.preview;
   const rgb = hexToRgb(product.accent);
-  return (
-    <article className="group bg-card border border-white/5 hover:border-white/15 hover:-translate-y-1 transition-all duration-300 rounded-2xl overflow-hidden">
-      {/* Preview zone */}
-      <div
-        className="relative rounded-t-2xl overflow-hidden"
-        style={{
-          background: product.previewBg,
-          boxShadow: "inset 0 -20px 20px -20px rgba(0,0,0,0.5)",
-        }}
-      >
-        <Preview />
-      </div>
+  const isEven = index % 2 === 0;
 
-      {/* Content zone */}
-      <div className="p-6 md:p-7">
-        <span
-          className="inline-flex items-center rounded-full px-3 py-1 text-[10px] uppercase tracking-[0.15em] font-medium"
+  return (
+    <article className="group glass-card-hover overflow-hidden fade-up-hidden">
+      {/* Desktop zigzag: lg grid */}
+      <div className={`flex flex-col lg:grid lg:grid-cols-5 ${!isEven ? "lg:[direction:rtl]" : ""}`}>
+        {/* Preview zone */}
+        <div
+          className="lg:col-span-3 relative overflow-hidden lg:[direction:ltr]"
           style={{
-            background: `rgba(${rgb}, 0.15)`,
-            color: product.accent,
-            border: `1px solid rgba(${rgb}, 0.25)`,
+            background: product.previewBg,
           }}
         >
-          {product.category}
-        </span>
-        <h3 className="mt-3 text-xl md:text-2xl font-semibold text-white">
-          {product.title}
-        </h3>
-        <p className="mt-2 text-sm md:text-base text-muted-foreground leading-relaxed">
-          {product.description}
-        </p>
-      </div>
-
-      {/* Live site footer */}
-      <a
-        href={product.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center justify-between border-t border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors px-6 md:px-7 py-4"
-      >
-        <div className="min-w-0">
-          <p className="text-[10px] uppercase tracking-[0.15em] font-medium text-[hsl(174_50%_50%)]">
-            LIVE SITE
-          </p>
-          <p className="text-sm text-white truncate">{product.hostname}</p>
+          <Preview />
         </div>
-        <ExternalLink className="w-4 h-4 shrink-0 text-muted-foreground group-hover:text-white group-hover:translate-x-1 transition-all" />
-      </a>
+
+        {/* Content zone */}
+        <div className="lg:col-span-2 p-6 md:p-7 flex flex-col justify-center lg:[direction:ltr]">
+          <span
+            className="inline-flex w-fit items-center rounded-full px-3 py-1 text-[10px] uppercase tracking-[0.15em] font-medium"
+            style={{
+              background: `rgba(${rgb}, 0.15)`,
+              color: product.accent,
+              border: `1px solid rgba(${rgb}, 0.25)`,
+            }}
+          >
+            {product.category}
+          </span>
+          <h3 className="mt-3 font-display font-semibold text-[#F0EDE8]">
+            {product.title}
+          </h3>
+          <p className="mt-2 text-sm text-[#888888] leading-relaxed">
+            {product.description}
+          </p>
+          <a
+            href={product.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 mt-5 text-sm font-medium transition-colors duration-200 min-h-[44px] group/link"
+            style={{ color: product.accent }}
+          >
+            View Product
+            <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
+          </a>
+        </div>
+      </div>
     </article>
   );
 };
@@ -456,6 +453,7 @@ const ProductCardView = ({ product }: { product: ProductCard }) => {
 const AgencyAppsSection = () => {
   const [appLinks, setAppLinks] = useState<AppLink[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const fetchAppLinks = async () => {
@@ -467,6 +465,28 @@ const AgencyAppsSection = () => {
     };
     fetchAppLinks();
   }, []);
+
+  // Intersection Observer for fade-up
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("fade-up-visible");
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+    );
+    const cards = section.querySelectorAll(".fade-up-hidden");
+    cards.forEach((card, i) => {
+      (card as HTMLElement).style.transitionDelay = `${i * 100}ms`;
+      observer.observe(card);
+    });
+    return () => observer.disconnect();
+  }, [loaded]);
 
   const visibilityMap = new Map(
     appLinks.map((link) => [link.url.replace(/\/$/, ""), link.is_visible])
@@ -482,23 +502,21 @@ const AgencyAppsSection = () => {
     : PRODUCTS;
 
   return (
-    <section id="our-apps" className="py-20 md:py-28 lg:py-32 bg-background">
-      <div className="max-w-6xl mx-auto px-6 md:px-8">
-        <div className="text-center max-w-2xl mx-auto">
-          <span className="text-[11px] uppercase tracking-[0.18em] font-medium text-burgundy">
-            OUR WEBAPPS
-          </span>
-          <h2 className="mt-3 text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-white">
+    <section id="our-apps" ref={sectionRef} className="section-padding bg-[#0a0a0a]">
+      <div className="page-container">
+        <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+          <span className="section-tag">OUR WEBAPPS</span>
+          <h2 className="mt-3 font-display font-semibold tracking-tight text-[#F0EDE8]">
             {visibleProducts.length} live products. Real businesses.
           </h2>
-          <p className="mt-4 text-base md:text-lg text-muted-foreground">
+          <p className="mt-4 text-base text-[#888888]">
             Each one built for a specific Palawan business need — and available for your business too.
           </p>
         </div>
 
-        <div className="mt-12 space-y-6 md:space-y-8">
-          {visibleProducts.map((product) => (
-            <ProductCardView key={product.url} product={product} />
+        <div className="space-y-6 md:space-y-8">
+          {visibleProducts.map((product, i) => (
+            <ProductCardView key={product.url} product={product} index={i} />
           ))}
         </div>
       </div>

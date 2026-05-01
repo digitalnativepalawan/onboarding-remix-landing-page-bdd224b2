@@ -1,151 +1,158 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Settings, Download, Github } from "lucide-react";
-import { useTranslation } from "@/contexts/LocaleContext";
+import { Settings, Menu, X, MessageCircle } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
-import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
-import ThemeToggle from "./ThemeToggle";
 
-interface HeaderLink {
-  id: string;
-  title: string;
-  url: string;
-}
-
-const TIMEZONES = [
-  { id: "manila", label: "MNL", zone: "Asia/Manila" },
-  { id: "london", label: "LON", zone: "Europe/London" },
-  { id: "texas",  label: "TEX", zone: "America/Chicago" },
+const NAV_LINKS = [
+  { label: "Products", href: "#our-apps" },
+  { label: "Benefits", href: "#benefits" },
+  { label: "Blog", href: "#blog" },
+  { label: "FAQ", href: "#faq" },
 ];
 
 const Header = () => {
-  const { t } = useTranslation();
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const [times, setTimes] = useState<Record<string, string>>({});
-  const [headerLink, setHeaderLink] = useState<HeaderLink | null>(null);
   const { settings } = useSiteSettings();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const currentLogo = theme === "dark"
     ? (settings.logo_dark_url || settings.logo_light_url)
     : (settings.logo_light_url || settings.logo_dark_url);
 
-  const fetchHeaderLink = async () => {
-    const { data } = await supabase
-      .from("header_link")
-      .select("*")
-      .limit(1)
-      .maybeSingle();
-    setHeaderLink(data);
-  };
-
   useEffect(() => {
-    fetchHeaderLink();
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    const updateTimes = () => {
-      const now = new Date();
-      const newTimes: Record<string, string> = {};
-      TIMEZONES.forEach(({ id, zone }) => {
-        newTimes[id] = now.toLocaleString("en-US", {
-          timeZone: zone,
-          hour: "numeric",
-          minute: "2-digit",
-          hour12: false,
-        });
-      });
-      setTimes(newTimes);
-    };
-    updateTimes();
-    const interval = setInterval(updateTimes, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
 
-  const handleSettingsClick = () => {
-    navigate("/admin");
+  const handleNavClick = (href: string) => {
+    setMobileOpen(false);
+    const el = document.querySelector(href);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0C]/80 backdrop-blur-md border-b border-white/5 overflow-hidden">
-        <div className="px-2 sm:px-6">
-          <div className="flex items-center justify-between h-12 sm:h-14 min-w-0">
-
-            {/* Left: Logo + clocks */}
-            <div className="flex items-center gap-2 sm:gap-5 shrink-0">
-              {currentLogo && (
-                <a href="/" aria-label="Home" className="hover:opacity-80 transition-opacity">
-                  <img
-                    src={currentLogo}
-                    alt="Logo"
-                    className="h-8 md:h-9 w-auto object-contain"
-                  />
-                </a>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+          scrolled
+            ? "bg-[#0a0a0a]/90 backdrop-blur-xl border-b border-white/[0.08]"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="page-container">
+          <div className="flex items-center justify-between h-14 md:h-16">
+            {/* Logo */}
+            <a href="/" aria-label="Home" className="shrink-0 hover:opacity-80 transition-opacity">
+              {currentLogo ? (
+                <img src={currentLogo} alt="Logo" className="h-8 md:h-9 w-auto object-contain" />
+              ) : (
+                <span className="font-display text-lg font-bold text-[#F0EDE8]">PC</span>
               )}
-              {TIMEZONES.map(({ id, label }) => (
-                <div key={id} className="flex items-center gap-1">
-                  <span className="text-[9px] sm:text-[11px] text-foreground/50 font-medium tracking-wide">
-                    {label}
-                  </span>
-                  <span className="text-[9px] sm:text-[11px] text-foreground font-mono tabular-nums">
-                    {times[id] || "--:--"}
-                  </span>
-                </div>
-              ))}
-            </div>
+            </a>
 
-            {/* Right side actions */}
-            <div className="flex items-center gap-1 sm:gap-3 shrink-0">
-              {headerLink && (
-                <a
-                  href={headerLink.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center text-[#A1A1AA] hover:text-white transition-colors p-1 sm:px-2 sm:py-1 rounded-md hover:bg-white/5"
-                  title={headerLink.title}
+            {/* Desktop nav */}
+            <nav className="hidden md:flex items-center gap-8">
+              {NAV_LINKS.map((link) => (
+                <button
+                  key={link.href}
+                  onClick={() => handleNavClick(link.href)}
+                  className="text-sm font-medium text-[#888888] hover:text-[#F0EDE8] transition-colors duration-200 min-h-[44px] flex items-center"
                 >
-                  <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-                  <span className="hidden sm:inline text-xs font-medium truncate max-w-[120px] ml-1.5">
-                    {headerLink.title}
-                  </span>
-                </a>
-              )}
+                  {link.label}
+                </button>
+              ))}
               <a
-                href="https://github.com/digitalnativepalawan"
+                href="https://wa.me/639474443597"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#A1A1AA] hover:text-white transition-colors p-1"
-                aria-label="GitHub"
+                className="inline-flex items-center gap-2 px-5 h-10 rounded-[4px] bg-[#FF4D2E] text-white text-sm font-medium hover:bg-[#e6432a] transition-colors duration-200 min-h-[44px]"
               >
-                <Github className="w-4 h-4 sm:w-5 sm:h-5" />
-              </a>
-              <a
-                href="https://ollama.com/palawancollective"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#A1A1AA] hover:text-white transition-colors p-1 bg-white/90 hover:bg-white rounded-sm flex items-center justify-center"
-                aria-label="Ollama"
-              >
-                <img
-                  src="https://ollama.com/public/ollama.png"
-                  alt="Ollama"
-                  className="w-4 h-4 sm:w-5 sm:h-5 rounded-sm"
-                />
+                <MessageCircle className="w-4 h-4" />
+                Talk to Us
               </a>
               <button
-                onClick={handleSettingsClick}
-                className="text-[#A1A1AA] hover:text-white transition-colors p-1"
+                onClick={() => navigate("/admin")}
+                className="text-[#888888] hover:text-[#F0EDE8] transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label="Settings"
               >
-                <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Settings className="w-4 h-4" />
+              </button>
+            </nav>
+
+            {/* Mobile: settings + hamburger */}
+            <div className="flex md:hidden items-center gap-1">
+              <button
+                onClick={() => navigate("/admin")}
+                className="text-[#888888] hover:text-[#F0EDE8] transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="Settings"
+              >
+                <Settings className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setMobileOpen(true)}
+                className="text-[#F0EDE8] p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="Open menu"
+              >
+                <Menu className="w-5 h-5" />
               </button>
             </div>
-
           </div>
         </div>
       </header>
+
+      {/* Mobile full-screen overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-[60] bg-[#0a0a0a] flex flex-col">
+          <div className="flex items-center justify-between h-14 px-5">
+            <a href="/" aria-label="Home" className="shrink-0">
+              {currentLogo ? (
+                <img src={currentLogo} alt="Logo" className="h-8 w-auto object-contain" />
+              ) : (
+                <span className="font-display text-lg font-bold text-[#F0EDE8]">PC</span>
+              )}
+            </a>
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="text-[#F0EDE8] p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Close menu"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <nav className="flex-1 flex flex-col justify-center px-8 gap-6">
+            {NAV_LINKS.map((link) => (
+              <button
+                key={link.href}
+                onClick={() => handleNavClick(link.href)}
+                className="text-2xl font-display font-semibold text-[#F0EDE8] hover:text-[#FF4D2E] transition-colors text-left min-h-[44px]"
+              >
+                {link.label}
+              </button>
+            ))}
+          </nav>
+          <div className="px-8 pb-10">
+            <a
+              href="https://wa.me/639474443597"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full h-12 rounded-[4px] bg-[#FF4D2E] text-white text-base font-medium min-h-[44px]"
+            >
+              <MessageCircle className="w-4 h-4" />
+              Talk to Us
+            </a>
+          </div>
+        </div>
+      )}
     </>
   );
 };

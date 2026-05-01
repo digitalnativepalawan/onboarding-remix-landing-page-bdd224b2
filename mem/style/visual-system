@@ -1,0 +1,21 @@
+---
+name: Visual System
+description: Design system tokens — Syne + DM Sans, coral-red accent, glassmorphism cards, 1100px max-width
+type: design
+---
+
+## Fonts
+- Display (headings H1-H3): Syne (Google Fonts), weights 600/700/800
+- Body (all other text): DM Sans (Google Fonts), weights 400/500/600
+- Never use Inter, Roboto, or Arial
+
+## Color Palette
+- Background: #0a0a0a | Surface: #111111 | Surface-2: #1a1a1a
+- Accent: #FF4D2E (coral-red) | Accent-2: #FFB347 (warm amber)
+- Text primary: #F0EDE8 | Text muted: #888888 | Text dim: #555555
+- Border: rgba(255,255,255,0.08)
+
+## Layout
+- Max width: 1100px | Padding: 20/40/80px | Border-radius: 8px cards, 4px buttons
+- Glassmorphism: bg rgba(255,255,255,0.04), blur(12px), border rgba(255,255,255,0.08)
+- Touch targets: min 44px | Transitions: 0.2s ease

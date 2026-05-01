@@ -17,6 +17,7 @@ const FAQSection = () => {
   const { language } = useLocale();
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [isUsingFallback, setIsUsingFallback] = useState(false);
+  const [openItem, setOpenItem] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const fetchFaqs = async () => {
@@ -53,56 +54,67 @@ const FAQSection = () => {
   }, [language]);
 
   return (
-    <section className="py-20 md:py-28 lg:py-32">
-      <div className="max-w-6xl mx-auto px-6 md:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-          {/* Left column */}
-          <div className="lg:col-span-5 lg:sticky lg:top-24 lg:self-start">
-            <span className="text-[11px] uppercase tracking-[0.18em] font-medium text-burgundy">
-              {t("faq.tag")}
-            </span>
-            <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight text-white mt-3">
-              {t("faq.title")}
-            </h2>
-            <p className="text-base text-[#A1A1AA] mt-4 max-w-sm">
-              {t("faq.subtitle")}
-            </p>
-            <a
-              href="https://wa.me/639474443597"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 hover:gap-2 transition-all text-sm font-medium text-burgundy mt-6"
-            >
-              Still have questions?
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
+    <section id="faq" className="section-padding">
+      <div className="page-container max-w-3xl">
+        <div className="text-center mb-10 md:mb-14">
+          <span className="section-tag">{t("faq.tag")}</span>
+          <h2 className="mt-3 font-display font-semibold tracking-tight text-[#F0EDE8]">
+            Common Questions
+          </h2>
+          <p className="text-base text-[#888888] mt-4">
+            {t("faq.subtitle")}
+          </p>
+        </div>
 
-          {/* Right column */}
-          <div className="lg:col-span-7">
-            {isUsingFallback && (
-              <p className="text-xs text-[#A1A1AA] mb-4 italic">
-                {t("faq.fallbackNotice")}
-              </p>
-            )}
+        {isUsingFallback && (
+          <p className="text-xs text-[#888888] mb-4 italic">
+            {t("faq.fallbackNotice")}
+          </p>
+        )}
 
-            <Accordion type="single" collapsible className="border-t border-white/5">
-              {faqs.map((faq, index) => (
-                <AccordionItem
-                  key={faq.id}
-                  value={`item-${index}`}
-                  className="border-b border-white/5"
+        <Accordion
+          type="single"
+          collapsible
+          value={openItem}
+          onValueChange={setOpenItem}
+          className="border-t border-white/[0.08]"
+        >
+          {faqs.map((faq, index) => {
+            const itemValue = `item-${index}`;
+            const isActive = openItem === itemValue;
+            return (
+              <AccordionItem
+                key={faq.id}
+                value={itemValue}
+                className={`border-b border-white/[0.08] transition-all duration-200 ${
+                  isActive ? "border-l-[3px] border-l-[#FF4D2E] pl-4" : "border-l-[3px] border-l-transparent pl-4"
+                }`}
+              >
+                <AccordionTrigger
+                  className={`py-5 text-base font-medium hover:no-underline transition-colors duration-200 text-left min-h-[44px] ${
+                    isActive ? "text-[#FF4D2E]" : "text-[#F0EDE8] hover:text-[#FF4D2E]"
+                  }`}
                 >
-                  <AccordionTrigger className="py-5 text-base md:text-lg font-medium text-white hover:text-burgundy hover:no-underline transition-colors text-left">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-5 pt-0 text-sm md:text-base text-[#A1A1AA] leading-relaxed max-w-prose whitespace-pre-line">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="pb-5 pt-0 text-sm text-[#888888] leading-relaxed max-w-prose whitespace-pre-line">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+
+        <div className="text-center mt-10">
+          <a
+            href="https://wa.me/639474443597"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 hover:gap-2 transition-all text-sm font-medium text-[#FF4D2E] min-h-[44px]"
+          >
+            Still have questions?
+            <ArrowRight className="w-4 h-4" />
+          </a>
         </div>
       </div>
     </section>

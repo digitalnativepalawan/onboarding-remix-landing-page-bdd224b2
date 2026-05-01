@@ -54,24 +54,22 @@ const FeedbackSection = () => {
   };
 
   return (
-    <section id="feedback" className="py-20 md:py-28 lg:py-32">
-      <div className="max-w-3xl mx-auto px-6 md:px-8">
+    <section id="feedback" className="section-padding">
+      <div className="page-container max-w-3xl">
         <div className="text-center">
-          <span className="text-[11px] uppercase tracking-[0.18em] font-medium text-burgundy">
-            {t("feedback.tag")}
-          </span>
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-white mt-3">
+          <span className="section-tag">{t("feedback.tag")}</span>
+          <h2 className="mt-3 font-display font-semibold tracking-tight text-[#F0EDE8]">
             {t("feedback.title")}
           </h2>
-          <p className="text-base md:text-lg text-[#A1A1AA] mt-4">
+          <p className="text-base text-[#888888] mt-4">
             {t("feedback.subtitle")}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-card border border-white/5 rounded-2xl p-6 md:p-8 mt-10">
+        <form onSubmit={handleSubmit} className="glass-card p-6 md:p-8 mt-10">
           <div className="space-y-4">
             <div>
-              <label htmlFor="author" className="text-sm font-medium text-white mb-2 block">
+              <label htmlFor="author" className="text-sm font-medium text-[#F0EDE8] mb-2 block">
                 {t("feedback.nameLabel")}
               </label>
               <input
@@ -80,11 +78,11 @@ const FeedbackSection = () => {
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
                 placeholder={t("feedback.namePlaceholder")}
-                className="w-full bg-[#1A1A1D] border border-white/10 rounded-xl px-4 py-3 text-sm md:text-base text-white placeholder:text-[#71717A] focus:outline-none focus:ring-2 focus:ring-burgundy/40 focus:border-burgundy/50 transition-all duration-200"
+                className="w-full bg-[#1a1a1a] border border-white/[0.08] rounded-[4px] px-4 py-3 text-sm text-[#F0EDE8] placeholder:text-[#555555] focus:outline-none focus:ring-2 focus:ring-[#FF4D2E]/40 focus:border-[#FF4D2E]/50 transition-all duration-200 min-h-[44px]"
               />
             </div>
             <div>
-              <label htmlFor="feedback" className="text-sm font-medium text-white mb-2 block">
+              <label htmlFor="feedback" className="text-sm font-medium text-[#F0EDE8] mb-2 block">
                 {t("feedback.feedbackLabel")}
               </label>
               <textarea
@@ -92,14 +90,15 @@ const FeedbackSection = () => {
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 placeholder={t("feedback.messagePlaceholder")}
-                className="w-full min-h-[120px] resize-y bg-[#1A1A1D] border border-white/10 rounded-xl px-4 py-3 text-sm md:text-base text-white placeholder:text-[#71717A] focus:outline-none focus:ring-2 focus:ring-burgundy/40 focus:border-burgundy/50 transition-all duration-200"
+                rows={4}
+                className="w-full resize-y bg-[#1a1a1a] border border-white/[0.08] rounded-[4px] px-4 py-3 text-sm text-[#F0EDE8] placeholder:text-[#555555] focus:outline-none focus:ring-2 focus:ring-[#FF4D2E]/40 focus:border-[#FF4D2E]/50 transition-all duration-200 min-h-[44px]"
               />
             </div>
           </div>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full mt-5 inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-burgundy hover:bg-burgundy/90 text-white text-sm font-medium shadow-lg shadow-burgundy/25 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:hover:scale-100"
+            className="w-full md:w-auto mt-5 inline-flex items-center justify-center gap-2 h-12 px-8 rounded-[4px] bg-[#FF4D2E] hover:bg-[#e6432a] text-white text-sm font-medium shadow-lg shadow-[#FF4D2E]/15 transition-all duration-200 disabled:opacity-50 min-h-[44px]"
           >
             {isSubmitting ? (
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -113,36 +112,36 @@ const FeedbackSection = () => {
         </form>
 
         <div className="mt-10">
-          <h3 className="text-sm font-medium text-white mb-4">
+          <h3 className="text-sm font-medium text-[#F0EDE8] mb-4 font-display">
             {t("feedback.recentTitle")} ({feedbackList.length})
           </h3>
           {isLoading ? (
-            <div className="bg-card/50 border border-white/5 rounded-xl p-6 text-center">
-              <div className="w-5 h-5 border-2 border-burgundy/30 border-t-burgundy rounded-full animate-spin mx-auto" />
+            <div className="glass-card p-6 text-center">
+              <div className="w-5 h-5 border-2 border-[#FF4D2E]/30 border-t-[#FF4D2E] rounded-full animate-spin mx-auto" />
             </div>
           ) : feedbackList.length === 0 ? (
-            <div className="bg-card/50 border border-white/5 rounded-xl p-6 text-center">
-              <p className="text-sm text-[#A1A1AA]">{t("feedback.noFeedback")}</p>
+            <div className="glass-card p-6 text-center">
+              <p className="text-sm text-[#888888]">{t("feedback.noFeedback")}</p>
             </div>
           ) : (
             <div className="space-y-3">
               {feedbackList.slice(0, 5).map((item) => (
-                <div key={item.id} className="bg-card/50 border border-white/5 rounded-xl p-4">
+                <div key={item.id} className="glass-card p-4">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-7 h-7 rounded-full bg-burgundy/15 border border-burgundy/25 flex items-center justify-center text-burgundy shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-[#FF4D2E]/10 border border-[#FF4D2E]/25 flex items-center justify-center text-[#FF4D2E] shrink-0">
                         <User className="w-3.5 h-3.5" />
                       </div>
-                      <span className="text-sm font-medium text-white truncate">
+                      <span className="text-sm font-medium text-[#F0EDE8] truncate">
                         {item.author_name || t("feedback.anonymous")}
                       </span>
                     </div>
-                    <span className="text-xs text-[#71717A] flex items-center gap-1 shrink-0">
+                    <span className="text-xs text-[#555555] flex items-center gap-1 shrink-0">
                       <Clock className="w-3 h-3" />
                       {format(new Date(item.created_at), 'MMM d')}
                     </span>
                   </div>
-                  <p className="text-sm text-[#A1A1AA] mt-2 leading-relaxed">{item.message}</p>
+                  <p className="text-sm text-[#888888] mt-2 leading-relaxed">{item.message}</p>
                 </div>
               ))}
             </div>
