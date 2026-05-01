@@ -20,7 +20,7 @@ const StickyMobileCTA = () => {
   }, []);
   return (
     <div
-      className={`md:hidden fixed bottom-0 inset-x-0 z-40 px-4 pb-4 pt-3 border-t border-border/40 bg-background/85 backdrop-blur-md transition-transform duration-300 ${
+      className={`md:hidden fixed bottom-0 inset-x-0 z-40 px-4 pb-4 pt-3 border-t border-white/[0.08] bg-[#0a0a0a]/90 backdrop-blur-xl transition-transform duration-300 ${
         show ? "translate-y-0" : "translate-y-full"
       }`}
     >
@@ -29,14 +29,14 @@ const StickyMobileCTA = () => {
           href="https://wa.me/639474443597"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 inline-flex items-center justify-center gap-2 h-11 rounded-full bg-[#25D366] text-white text-sm font-medium shadow-lg shadow-[#25D366]/25 active:scale-[0.98] transition-transform"
+          className="flex-1 inline-flex items-center justify-center gap-2 h-11 rounded-[4px] bg-[#FF4D2E] text-white text-sm font-medium shadow-lg shadow-[#FF4D2E]/20 active:scale-[0.98] transition-transform min-h-[44px]"
         >
           <MessageCircle className="w-4 h-4" />
-          WhatsApp
+          Talk to Us
         </a>
         <a
           href="#our-apps"
-          className="flex-1 inline-flex items-center justify-center gap-2 h-11 rounded-full border border-border/60 bg-card/40 text-foreground text-sm font-medium active:scale-[0.98] transition-transform"
+          className="flex-1 inline-flex items-center justify-center gap-2 h-11 rounded-[4px] border border-white/[0.15] bg-transparent text-[#F0EDE8] text-sm font-medium active:scale-[0.98] transition-transform min-h-[44px]"
         >
           See work
           <ArrowRight className="w-4 h-4" />
@@ -48,7 +48,7 @@ const StickyMobileCTA = () => {
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background bg-grain">
+    <div className="min-h-screen bg-[#0a0a0a]">
       <Header />
       <HeroSection />
       <AgencyAppsSection />
