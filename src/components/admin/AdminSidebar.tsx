@@ -3,6 +3,7 @@ import {
   FolderKanban,
   Users,
   Package,
+  LayoutGrid,
   FileText,
   Wrench,
   StickyNote,
@@ -26,6 +27,7 @@ import {
 
 const items = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard, end: true },
+  { title: "Products", url: "/admin/products", icon: LayoutGrid },
   { title: "Projects", url: "/admin/projects", icon: FolderKanban },
   { title: "Clients", url: "/admin/clients", icon: Users },
   { title: "Catalog", url: "/admin/catalog", icon: Package },

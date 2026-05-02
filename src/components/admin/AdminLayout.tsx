@@ -11,6 +11,7 @@ const titleMap: Record<string, string> = {
   "/admin/projects": "Projects",
   "/admin/clients": "Clients",
   "/admin/catalog": "Catalog",
+  "/admin/products": "Products",
   "/admin/quotes": "Quotes",
   "/admin/tools": "Tools",
   "/admin/notes": "Notes",
