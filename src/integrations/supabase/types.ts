@@ -870,6 +870,57 @@ export type Database = {
           },
         ]
       }
+      products: {
+        Row: {
+          accent_color: string
+          category: string
+          created_at: string
+          description: string
+          hostname: string
+          id: string
+          images: Json
+          is_visible: boolean
+          legacy_component_key: string | null
+          preview_type: string
+          sort_order: number
+          title: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          accent_color?: string
+          category: string
+          created_at?: string
+          description?: string
+          hostname?: string
+          id?: string
+          images?: Json
+          is_visible?: boolean
+          legacy_component_key?: string | null
+          preview_type?: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+          url?: string
+        }
+        Update: {
+          accent_color?: string
+          category?: string
+          created_at?: string
+          description?: string
+          hostname?: string
+          id?: string
+          images?: Json
+          is_visible?: boolean
+          legacy_component_key?: string | null
+          preview_type?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       project_comments: {
         Row: {
           author: string
