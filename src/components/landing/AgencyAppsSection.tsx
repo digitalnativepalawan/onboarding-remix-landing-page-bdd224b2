@@ -302,91 +302,37 @@ const LandPreview = () => (
    PRODUCT METADATA
 ───────────────────────────────────────────────────────────── */
 
-interface ProductCard {
-  preview: React.FC;
-  previewBg: string;
-  category: string;
-  accent: string;
-  title: string;
-  description: string;
-  url: string;
-  hostname: string;
-}
-
 const UNIFIED_PREVIEW_BG = "#0F0F14";
 
-const PRODUCTS: ProductCard[] = [
-  {
-    preview: BackofficePreview,
-    previewBg: UNIFIED_PREVIEW_BG,
-    category: "Resort ops",
-    accent: "#2dd4bf",
-    title: "BackOffice Resort WebApp",
-    description:
-      "Full resort operations — reception, housekeeping, kitchen, bar, bookings, payroll, and P&L in one dashboard. Built for small resorts in Palawan.",
-    url: "https://euro.palawancollective.com",
-    hostname: "euro.palawancollective.com",
-  },
-  {
-    preview: TransitPreview,
-    previewBg: UNIFIED_PREVIEW_BG,
-    category: "Transportation",
-    accent: "#c9a84c",
-    title: "Palawan Transit",
-    description:
-      "Book shuttles and bangkas across Palawan. Operators manage routes, set seats, and get bookings instantly. Tourists book before they even arrive.",
-    url: "https://palawan-transit.vercel.app",
-    hostname: "palawan-transit.vercel.app",
-  },
-  {
-    preview: WildfallPreview,
-    previewBg: "#050505",
-    category: "Experience",
-    accent: "#c9a84c",
-    title: "WildFall Soft Air",
-    description:
-      "Full-scale live war simulation on 60 hectares in San Vicente, Palawan. Register your team, book your slot, and manage the field — all online.",
-    url: "https://wildfallpalawan.vercel.app",
-    hostname: "wildfallpalawan.vercel.app",
-  },
-  {
-    preview: SiteBuilderPreview,
-    previewBg: UNIFIED_PREVIEW_BG,
-    category: "Website builder",
-    accent: "#818cf8",
-    title: "Your Own Website",
-    description:
-      "Fill a short form, pick your colors and fonts, and get a professional website for your Palawan business — no coding, no agencies, ready fast.",
-    url: "https://site-builder-palawan.vercel.app",
-    hostname: "site-builder-palawan.vercel.app",
-  },
-  {
-    preview: OrderPreview,
-    previewBg: UNIFIED_PREVIEW_BG,
-    category: "Food & orders",
-    accent: "#f97316",
-    title: "Order Online WebApp",
-    description:
-      "Online ordering for restaurants and shops. Guests scan a QR code, browse the menu, add to cart and checkout — no app download needed.",
-    url: "https://jaycee.palawancollective.com",
-    hostname: "jaycee.palawancollective.com",
-  },
-  {
-    preview: LandPreview,
-    previewBg: UNIFIED_PREVIEW_BG,
-    category: "Real estate",
-    accent: "#4ade80",
-    title: "Buy Land in Palawan",
-    description:
-      "List and discover land for sale across Palawan. Verified owner listings with terrain details, utilities, Google Maps, drone video, and title info.",
-    url: "https://land.palawancollective.com",
-    hostname: "land.palawancollective.com",
-  },
-];
+const LEGACY_PREVIEWS: Record<string, React.FC> = {
+  backoffice: BackofficePreview,
+  transit: TransitPreview,
+  wildfall: WildfallPreview,
+  site_builder: SiteBuilderPreview,
+  order: OrderPreview,
+  land: LandPreview,
+};
 
-interface AppLink {
+const LEGACY_BG: Record<string, string> = {
+  wildfall: "#050505",
+};
+
+interface ProductImage {
+  path: string;
   url: string;
-  is_visible: boolean;
+}
+
+interface ProductCard {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  accent: string;
+  url: string;
+  hostname: string;
+  preview_type: string;
+  legacy_component_key: string | null;
+  images: ProductImage[];
 }
 
 const hexToRgb = (hex: string) => {
@@ -398,9 +344,16 @@ const hexToRgb = (hex: string) => {
 };
 
 const ProductCardView = ({ product, index }: { product: ProductCard; index: number }) => {
-  const Preview = product.preview;
   const rgb = hexToRgb(product.accent);
   const isEven = index % 2 === 0;
+
+  const LegacyPreview =
+    product.preview_type === "legacy_css" && product.legacy_component_key
+      ? LEGACY_PREVIEWS[product.legacy_component_key]
+      : null;
+  const previewBg =
+    (product.legacy_component_key && LEGACY_BG[product.legacy_component_key]) || UNIFIED_PREVIEW_BG;
+  const cover = product.images?.[0]?.url;
 
   return (
     <article className="group glass-card-hover overflow-hidden fade-up-hidden">
@@ -409,11 +362,28 @@ const ProductCardView = ({ product, index }: { product: ProductCard; index: numb
         {/* Preview zone */}
         <div
           className="lg:col-span-3 relative overflow-hidden lg:[direction:ltr]"
-          style={{
-            background: product.previewBg,
-          }}
+          style={{ background: previewBg }}
         >
-          <Preview />
+          {LegacyPreview ? (
+            <LegacyPreview />
+          ) : cover ? (
+            <img
+              src={cover}
+              alt={product.title}
+              className="w-full h-full object-cover"
+              style={{ minHeight: 200 }}
+              loading="lazy"
+            />
+          ) : (
+            <div
+              className="flex items-center justify-center"
+              style={{ minHeight: 200, color: product.accent }}
+            >
+              <span className="text-4xl font-display font-bold opacity-60">
+                {product.title.slice(0, 2).toUpperCase()}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Content zone */}
@@ -451,19 +421,33 @@ const ProductCardView = ({ product, index }: { product: ProductCard; index: numb
 };
 
 const AgencyAppsSection = () => {
-  const [appLinks, setAppLinks] = useState<AppLink[]>([]);
+  const [products, setProducts] = useState<ProductCard[]>([]);
   const [loaded, setLoaded] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const fetchAppLinks = async () => {
+    const fetchProducts = async () => {
       const { data } = await supabase
-        .from("app_links")
-        .select("url, is_visible");
-      setAppLinks(data || []);
+        .from("products")
+        .select("id,title,description,category,accent_color,url,hostname,preview_type,legacy_component_key,images,is_visible,sort_order")
+        .eq("is_visible", true)
+        .order("sort_order", { ascending: true });
+      const mapped: ProductCard[] = (data || []).map((r: any) => ({
+        id: r.id,
+        title: r.title || "",
+        description: r.description || "",
+        category: r.category || "",
+        accent: r.accent_color || "#FF4D2E",
+        url: r.url || "",
+        hostname: r.hostname || "",
+        preview_type: r.preview_type || "screenshots",
+        legacy_component_key: r.legacy_component_key ?? null,
+        images: Array.isArray(r.images) ? (r.images as ProductImage[]) : [],
+      }));
+      setProducts(mapped);
       setLoaded(true);
     };
-    fetchAppLinks();
+    fetchProducts();
   }, []);
 
   // Intersection Observer for fade-up
@@ -486,20 +470,9 @@ const AgencyAppsSection = () => {
       observer.observe(card);
     });
     return () => observer.disconnect();
-  }, [loaded]);
+  }, [loaded, products.length]);
 
-  const visibilityMap = new Map(
-    appLinks.map((link) => [link.url.replace(/\/$/, ""), link.is_visible])
-  );
-
-  const visibleProducts = loaded
-    ? PRODUCTS.filter(({ url }) => {
-        const normalizedUrl = url.replace(/\/$/, "");
-        return visibilityMap.has(normalizedUrl)
-          ? visibilityMap.get(normalizedUrl)
-          : true;
-      })
-    : PRODUCTS;
+  const visibleProducts = products;
 
   return (
     <section id="our-apps" ref={sectionRef} className="section-padding bg-[#0a0a0a]">
@@ -516,7 +489,7 @@ const AgencyAppsSection = () => {
 
         <div className="space-y-6 md:space-y-8">
           {visibleProducts.map((product, i) => (
-            <ProductCardView key={product.url} product={product} index={i} />
+            <ProductCardView key={product.id} product={product} index={i} />
           ))}
         </div>
       </div>

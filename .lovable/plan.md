@@ -1,125 +1,86 @@
+## Goal
 
+Add a "Products" section to the existing admin panel for full CRUD + image management of the cards displayed on the landing page (`AgencyAppsSection`). The frontend visual design stays exactly the same — only the data source becomes the `products` table instead of the hardcoded `PRODUCTS` array.
 
-# Work Station + Billable Work Logging + Professional Invoice
+## What already exists (no changes needed)
 
-Two related upgrades wrapped into one workflow:
+- `products` table with the right columns: `id, title, category, hostname, url, accent_color, description, images (jsonb), preview_type, legacy_component_key, sort_order, is_visible`. RLS is open for read + manage.
+- 6 products already seeded (BackOffice, Palawan Transit, WildFall, Your Own Website, Order Online, Buy Land).
+- Storage bucket `product-images` (public).
+- Admin shell at `/admin` with `AdminLayout` + `AdminSidebar` + `PasskeyGate` (5309).
+- Landing component `AgencyAppsSection.tsx` already fetches from `app_links` for visibility — we'll replace its hardcoded list with the DB.
 
-1. **Rename "Notes" tab → "Work Station"** inside each project workspace, and add a "Log billable work" action that pushes line items straight to the client's quote/invoice.
-2. **Redesign the Quote/Invoice PDF** so it actually looks like a professional invoice (the current PDF has an empty items table and wasted whitespace).
+## New files
 
----
+1. **`src/pages/admin/ProductsPage.tsx`** — list view
+   - Uses TanStack Query (key `["admin-products"]`) → `supabase.from("products").select("*").order("sort_order")`.
+   - Page header: title + "New Product" button.
+   - Drag-and-drop reorder using `@dnd-kit/core` + `@dnd-kit/sortable` (already in shadcn-friendly stack; will install if missing).
+   - Each row card shows: cover image thumb (first image in `images[]`, or initials fallback with `accent_color`), title, category chip, hostname, URL (clickable), `is_visible` toggle, Edit button, Delete button.
+   - On reorder: bulk update `sort_order` (multiples of 10) via one Promise.all of updates, then invalidate query.
+   - Visibility toggle: optimistic `update({ is_visible }).eq("id", id)`.
 
-## Part 1 — Work Station (project workspace)
+2. **`src/components/admin/products/ProductFormModal.tsx`** — create/edit dialog
+   - Fields: Title, Category (free-text input — current values are short labels like "Resort ops"), Description (textarea), URL, Hostname (auto-derived from URL on blur, editable), Accent color (color input + hex text), Visible (switch), Sort order (number, defaults to max+10).
+   - Images section: see #3.
+   - Save: insert or update row, invalidate `["admin-products"]`, toast.
+   - Delete (only in edit mode): confirms, then deletes images from storage + row.
 
-**Tab rename**
-- In `ProjectWorkspacePage.tsx`, change the `notes` tab label to **"Work Station"**. Keep the `notes` route value so existing data/queries are untouched.
-- Mobile select + desktop tab list both show "Work Station".
+3. **`src/components/admin/products/ProductImagesManager.tsx`**
+   - Reads `images` jsonb (array of `{ path: string, url: string }` objects).
+   - **Upload**: file input (multi-select, accepts image/*). Each file → `supabase.storage.from("product-images").upload(\`${productId}/${crypto.randomUUID()}-${name}\`, file)`, then get `getPublicUrl`, append to local list. Save persists `images` jsonb on the product row.
+   - **Delete**: remove from storage + local list.
+   - **Replace**: delete old + upload new at same index.
+   - **Reorder**: drag-and-drop using `@dnd-kit/sortable`; first image is the cover.
+   - For new products (no id yet): require Save first to enable image uploads (use the inserted id), or store files temporarily and upload after first save. Simpler: on create, save row first, then enable image manager — show hint "Save the product to add images".
 
-**New "Log Work" button (top of Work Station + Timeline tabs)**
-- Opens a small modal: **Description**, **Hours** (optional), **Unit price (PHP)**, **Quantity** (defaults to 1 or hours), **Date** (defaults to today), and **Push to** dropdown listing the project's open quotes/invoices for the linked client (plus "Create new draft quote").
-- On save:
-  - Inserts a row into a new `work_logs` table (timestamped log of work done).
-  - Inserts a matching row into `quote_items` for the chosen quote (or creates a new draft quote first if "Create new draft" is selected).
-  - Recalculates and updates `quotes.total_php`.
-  - Writes an entry to `activity_log` so it shows in the Timeline tab.
-- Toast confirms: "Logged · Pushed to invoice INV-2026-000X".
+## Modified files
 
-**Where the button appears**
-- Header of the Work Station tab (next to "New note").
-- Header of the Timeline tab (so logging from a daily activity scroll is one tap).
-- Optional inline button on each existing note card ("Bill this note" — pre-fills description from the note title).
+4. **`src/components/admin/AdminSidebar.tsx`**
+   - Add `{ title: "Products", url: "/admin/products", icon: Package }` (use a different icon — `LayoutGrid` — since `Package` is already used for "Catalog"). Insert near top, after Dashboard.
 
----
+5. **`src/components/admin/AdminLayout.tsx`**
+   - Add `"/admin/products": "Products"` to `titleMap`.
 
-## Part 2 — Database
+6. **`src/App.tsx`**
+   - Add route: `<Route path="products" element={<ProductsPage />} />` inside the `/admin` layout.
 
-New table `work_logs`:
-- `id`, `project_id` (FK projects), `client_id` (FK clients, nullable — auto-derived from project's linked client), `quote_id` (FK quotes, nullable — set once pushed), `quote_item_id` (FK quote_items, nullable), `description`, `hours` (numeric, nullable), `qty` (numeric, default 1), `unit_price_php` (numeric), `line_total_php` (numeric, generated), `logged_on` (date, default today), `created_at`.
-- RLS open policy (matches existing project pattern).
+7. **`src/components/landing/AgencyAppsSection.tsx`** — make dynamic, keep design identical
+   - Remove the hardcoded `PRODUCTS` array.
+   - Keep all 6 preview components (`BackofficePreview`, `TransitPreview`, `WildfallPreview`, `SiteBuilderPreview`, `OrderPreview`, `LandPreview`) — these are the rich CSS mockups.
+   - Build a `LEGACY_PREVIEWS` registry mapping `legacy_component_key` → component:
+     ```ts
+     const LEGACY_PREVIEWS = { backoffice: BackofficePreview, transit: TransitPreview, wildfall: WildfallPreview, site_builder: SiteBuilderPreview, order: OrderPreview, land: LandPreview };
+     ```
+   - Fetch from `products` where `is_visible = true` ordered by `sort_order`.
+   - Render logic per product:
+     - If `preview_type === "legacy_css"` and a matching `legacy_component_key` exists → render that component.
+     - Else if `images` array has at least one entry → render an `<img>` of `images[0].url` (object-cover, fills preview zone).
+     - Else → render initials placeholder using `accent_color`.
+   - Remove the now-unused `app_links` fetch (visibility now lives on the `products` row).
+   - "View Product" link uses `product.url` directly — already the pattern.
 
-Projects table needs a `client_id` link so the modal can default the client. We'll add `client_id uuid references clients(id)` to `projects` (nullable). The modal will let the user pick/confirm the client if the project doesn't have one yet.
+## Database
 
----
+No migration needed. The `products` table and the `product-images` storage bucket already exist. We'll need one small data update to set `legacy_component_key` for the 6 existing rows so the rich previews keep showing:
+- `backoffice` → BackOffice Resort
+- `transit` → Palawan Transit
+- `wildfall` → WildFall Soft Air
+- `site_builder` → Your Own Website
+- `order` → Order Online WebApp
+- `land` → Buy Land in Palawan
 
-## Part 3 — Professional Invoice PDF (`pdf.ts` rewrite)
+This will be done via a one-shot insert/update SQL after building the page.
 
-The screenshot shows: empty item table, "PHP 0" totals, address block stacked too tightly, logo isolated. Redesign:
+## Dependencies
 
-```text
-┌────────────────────────────────────────────────────────────┐
-│  [LOGO]                                          INVOICE   │
-│  merQato Digitals                                #INV-...  │
-│  Smart Solutions for Bold Ambitions          Issued: ...   │
-│                                              Due:    ...   │
-├────────────────────────────────────────────────────────────┤
-│  FROM                          BILL TO                     │
-│  merQato Digitals              Blue Lagoon                 │
-│  123 Sunset Beach Rd           [client address if stored]  │
-│  San Vicente, Palawan 5309                                 │
-│  info@merqato.digitals                                     │
-│  +63 947 444 3597                                          │
-├────────────────────────────────────────────────────────────┤
-│  PROJECT: Blue Lagoon — Full Stack Package                 │
-├────────────────────────────────────────────────────────────┤
-│  # │ Description           │ Date    │ Qty │ Unit │ Total  │
-│  1 │ API integration work  │ Apr 12  │ 2.0 │ 1500 │  3,000 │
-│  2 │ ...                                                   │
-├────────────────────────────────────────────────────────────┤
-│                                       Subtotal:    XX,XXX  │
-│                                       Discount:   -X,XXX  │
-│                                       Tax (12%):   X,XXX  │
-│                                       ───────────────────  │
-│                                       TOTAL:    PHP XX,XXX │
-├────────────────────────────────────────────────────────────┤
-│  PAYMENT OPTIONS              │  [QR code]                 │
-│  • Cash                       │  Scan to pay GCash         │
-│  • GCash · 0917-...                                        │
-│  • BPI · merQato · 1234-...                                │
-├────────────────────────────────────────────────────────────┤
-│  Notes / Terms                                             │
-│                                                            │
-│  Thank you for your business — merQato Digitals · 2026     │
-└────────────────────────────────────────────────────────────┘
-```
+- `@dnd-kit/core` and `@dnd-kit/sortable` for drag-and-drop reordering (products list + image gallery). Will `bun add` if not already present.
 
-**Concrete PDF changes (`src/components/admin/quotes/pdf.ts`)**
-- Top band with brand color underline (uses site settings primary color when available).
-- Right-aligned title block: "INVOICE" / "QUOTE" + invoice #, issue date, due date, valid-until.
-- Two-column **FROM / BILL TO** with proper spacing (current layout overlaps the meta box).
-- Project line as its own banded row.
-- Items table: numbered rows, alternating row shading, right-aligned numerics, money formatted with thousands separators and 2-decimal currency. If a line came from `work_logs`, show the `logged_on` date in a small grey sub-line under the description.
-- Empty-state guard: if no items, render a friendly "No line items yet" row instead of a blank table.
-- Totals block: clearer hierarchy, bold `TOTAL` row with brand-colored bar, currency code on its own.
-- Payment block in a bordered card; QR rendered larger (45mm) with caption.
-- Footer: thin divider + brand line + page number.
-- Filename: `invoice-{number}-{client-slug}.pdf` for invoices, `quote-{client-slug}-{title-slug}.pdf` for quotes.
+## Behavior summary for the user
 
----
-
-## Part 4 — Mobile
-
-- Log Work modal uses the same full-screen sheet pattern as other admin modals on mobile.
-- Work Station header buttons stack (`flex-col sm:flex-row`) so they don't clip on small screens.
-
----
-
-## Files touched
-
-- `src/pages/admin/ProjectWorkspacePage.tsx` — rename tab label.
-- `src/components/admin/projects/workspace/NotesTab.tsx` — add "Log billable work" button + per-note bill action.
-- `src/components/admin/projects/workspace/TimelineTab.tsx` — add "Log billable work" button.
-- **New** `src/components/admin/projects/workspace/LogWorkModal.tsx` — the form + push-to-quote logic.
-- `src/components/admin/quotes/pdf.ts` — full PDF redesign.
-- New migration: `work_logs` table + `projects.client_id` column.
-- Update `src/integrations/supabase/types.ts` regenerates automatically.
-
----
-
-## Open question
-
-Right now a project is linked to a client only implicitly. When you click "Log work", should we:
-- **A)** Require the project to have a `client_id` first (one-time pick), then auto-route every log to that client's quotes; or
-- **B)** Ask each time which client + which quote to push to (more flexible, more taps).
-
-Default plan above uses **A** with a one-time client picker on first use. Tell me if you'd rather have B.
-
+- New "Products" item appears in the admin sidebar.
+- Click it → list of all products with cover thumbs, visibility toggle, drag handle.
+- Click a product → modal with title, description, URL, accent color, visibility, and an image gallery (upload, delete, reorder, replace).
+- Add new products with the "New Product" button. Newly created products without a `legacy_component_key` will display their first uploaded image as the preview on the landing page.
+- The 5 existing legacy products keep their hand-coded mockups untouched — you only edit text/URL/visibility/order on those, unless you upload images and switch their preview type to "screenshots" later.
+- "View Product" button on the landing page links to the URL stored in the DB — change it in admin and it's live immediately on the site.
