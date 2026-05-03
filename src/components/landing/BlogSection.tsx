@@ -1,7 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowRight, X, MessageCircle, Briefcase, Building2, Bus, UtensilsCrossed } from "lucide-react";
+import { ArrowRight, X, MessageCircle, Briefcase, Building2, Bus, UtensilsCrossed, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface BlogPost {
   id: string;
@@ -15,6 +22,8 @@ interface BlogPost {
   published: boolean;
   created_at: string;
   image_url: string | null;
+  cta_url: string | null;
+  images: { path: string; url: string }[] | null;
 }
 
 type AccentMeta = {
@@ -72,6 +81,7 @@ const BlogSection = () => {
         .eq("published", true)
         .order("display_order", { ascending: true });
       if (!error && data) setPosts(data);
+      // images may come back as Json
       setLoading(false);
     };
     fetchPosts();
@@ -198,13 +208,40 @@ const BlogSection = () => {
               </button>
             </div>
             <article className="w-full max-w-2xl space-y-6">
-              {activePost.image_url && (
-                <img
-                  src={activePost.image_url}
-                  alt={activePost.title}
-                  className="w-full rounded-lg object-cover aspect-[16/9]"
-                />
-              )}
+              {(() => {
+                const gallery = Array.isArray(activePost.images) ? activePost.images : [];
+                const slides = gallery.length > 0
+                  ? gallery
+                  : activePost.image_url ? [{ path: "cover", url: activePost.image_url }] : [];
+                if (slides.length === 0) return null;
+                if (slides.length === 1) {
+                  return (
+                    <img
+                      src={slides[0].url}
+                      alt={activePost.title}
+                      className="w-full rounded-lg object-cover aspect-[16/9]"
+                    />
+                  );
+                }
+                return (
+                  <Carousel className="w-full">
+                    <CarouselContent>
+                      {slides.map((s, i) => (
+                        <CarouselItem key={s.path + i}>
+                          <img
+                            src={s.url}
+                            alt={`${activePost.title} — ${i + 1}`}
+                            loading="lazy"
+                            className="w-full rounded-lg object-cover aspect-[16/9]"
+                          />
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="left-2 min-h-[44px] min-w-[44px]" />
+                    <CarouselNext className="right-2 min-h-[44px] min-w-[44px]" />
+                  </Carousel>
+                );
+              })()}
               <span
                 className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                 style={{ color: activePost.tag_color, background: activePost.tag_bg }}
@@ -220,6 +257,16 @@ const BlogSection = () => {
                   year: "numeric",
                 })}
               </p>
+              {activePost.cta_url && (
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto gap-2 bg-[#FF4D2E] hover:bg-[#e64225] text-white border-0 min-h-[44px] rounded-[4px]"
+                  onClick={() => window.open(activePost.cta_url!, "_blank", "noopener,noreferrer")}
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Visit live site
+                </Button>
+              )}
               <div className="space-y-4">
                 {activePost.content.split("\n\n").map((paragraph, i) => (
                   <p key={i} className="text-sm sm:text-base text-[#888888] leading-relaxed">
