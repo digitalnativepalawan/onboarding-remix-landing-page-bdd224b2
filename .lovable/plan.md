@@ -1,86 +1,57 @@
 ## Goal
 
-Add a "Products" section to the existing admin panel for full CRUD + image management of the cards displayed on the landing page (`AgencyAppsSection`). The frontend visual design stays exactly the same — only the data source becomes the `products` table instead of the hardcoded `PRODUCTS` array.
+Each blog post (in admin + on the public site) needs:
+1. An editable **"Visit site"** URL — renders as a prominent CTA button in the post detail modal.
+2. A **multi-image gallery** — uploaded in admin, displayed as a swipeable carousel in the post modal so visitors can see all webapp screenshots.
 
-## What already exists (no changes needed)
+The existing single `image_url` (cover) stays as the card thumbnail.
 
-- `products` table with the right columns: `id, title, category, hostname, url, accent_color, description, images (jsonb), preview_type, legacy_component_key, sort_order, is_visible`. RLS is open for read + manage.
-- 6 products already seeded (BackOffice, Palawan Transit, WildFall, Your Own Website, Order Online, Buy Land).
-- Storage bucket `product-images` (public).
-- Admin shell at `/admin` with `AdminLayout` + `AdminSidebar` + `PasskeyGate` (5309).
-- Landing component `AgencyAppsSection.tsx` already fetches from `app_links` for visibility — we'll replace its hardcoded list with the DB.
+---
 
-## New files
+## 1. Database migration
 
-1. **`src/pages/admin/ProductsPage.tsx`** — list view
-   - Uses TanStack Query (key `["admin-products"]`) → `supabase.from("products").select("*").order("sort_order")`.
-   - Page header: title + "New Product" button.
-   - Drag-and-drop reorder using `@dnd-kit/core` + `@dnd-kit/sortable` (already in shadcn-friendly stack; will install if missing).
-   - Each row card shows: cover image thumb (first image in `images[]`, or initials fallback with `accent_color`), title, category chip, hostname, URL (clickable), `is_visible` toggle, Edit button, Delete button.
-   - On reorder: bulk update `sort_order` (multiples of 10) via one Promise.all of updates, then invalidate query.
-   - Visibility toggle: optimistic `update({ is_visible }).eq("id", id)`.
+Add two columns to `blog_posts`:
 
-2. **`src/components/admin/products/ProductFormModal.tsx`** — create/edit dialog
-   - Fields: Title, Category (free-text input — current values are short labels like "Resort ops"), Description (textarea), URL, Hostname (auto-derived from URL on blur, editable), Accent color (color input + hex text), Visible (switch), Sort order (number, defaults to max+10).
-   - Images section: see #3.
-   - Save: insert or update row, invalidate `["admin-products"]`, toast.
-   - Delete (only in edit mode): confirms, then deletes images from storage + row.
+- `cta_url text` — optional link to the live webapp.
+- `images jsonb default '[]'::jsonb` — array of `{ path, url }` objects (same shape used by `ProductImagesManager`).
 
-3. **`src/components/admin/products/ProductImagesManager.tsx`**
-   - Reads `images` jsonb (array of `{ path: string, url: string }` objects).
-   - **Upload**: file input (multi-select, accepts image/*). Each file → `supabase.storage.from("product-images").upload(\`${productId}/${crypto.randomUUID()}-${name}\`, file)`, then get `getPublicUrl`, append to local list. Save persists `images` jsonb on the product row.
-   - **Delete**: remove from storage + local list.
-   - **Replace**: delete old + upload new at same index.
-   - **Reorder**: drag-and-drop using `@dnd-kit/sortable`; first image is the cover.
-   - For new products (no id yet): require Save first to enable image uploads (use the inserted id), or store files temporarily and upload after first save. Simpler: on create, save row first, then enable image manager — show hint "Save the product to add images".
+No RLS change needed (existing policies cover all columns).
 
-## Modified files
+---
 
-4. **`src/components/admin/AdminSidebar.tsx`**
-   - Add `{ title: "Products", url: "/admin/products", icon: Package }` (use a different icon — `LayoutGrid` — since `Package` is already used for "Catalog"). Insert near top, after Dashboard.
+## 2. Admin — `src/components/landing/AdminSettingsModal.tsx`
 
-5. **`src/components/admin/AdminLayout.tsx`**
-   - Add `"/admin/products": "Products"` to `titleMap`.
+Extend the blog form:
 
-6. **`src/App.tsx`**
-   - Add route: `<Route path="products" element={<ProductsPage />} />` inside the `/admin` layout.
+- **Site URL field** (Input, type=url) under the Title field, labeled "Live site URL (optional)" with helper text "Shown as a button on the post."
+- **Gallery section** below the cover image, labeled "Additional screenshots (carousel)". Reuse `ProductImagesManager` pattern but uploads go to the existing `media` bucket under `blog/{postId}/...`. Supports multi-upload, drag-reorder, delete.
+  - Gallery is only enabled while editing an existing post (needs an id for the storage folder); for new posts, show a hint "Save the post first, then add gallery images."
+- Update `BlogPost` type, `emptyBlog`, `handleStartEditBlog`, and `handleSaveBlog` payload to include `cta_url` and `images`.
 
-7. **`src/components/landing/AgencyAppsSection.tsx`** — make dynamic, keep design identical
-   - Remove the hardcoded `PRODUCTS` array.
-   - Keep all 6 preview components (`BackofficePreview`, `TransitPreview`, `WildfallPreview`, `SiteBuilderPreview`, `OrderPreview`, `LandPreview`) — these are the rich CSS mockups.
-   - Build a `LEGACY_PREVIEWS` registry mapping `legacy_component_key` → component:
-     ```ts
-     const LEGACY_PREVIEWS = { backoffice: BackofficePreview, transit: TransitPreview, wildfall: WildfallPreview, site_builder: SiteBuilderPreview, order: OrderPreview, land: LandPreview };
-     ```
-   - Fetch from `products` where `is_visible = true` ordered by `sort_order`.
-   - Render logic per product:
-     - If `preview_type === "legacy_css"` and a matching `legacy_component_key` exists → render that component.
-     - Else if `images` array has at least one entry → render an `<img>` of `images[0].url` (object-cover, fills preview zone).
-     - Else → render initials placeholder using `accent_color`.
-   - Remove the now-unused `app_links` fetch (visibility now lives on the `products` row).
-   - "View Product" link uses `product.url` directly — already the pattern.
+## 3. Public site — `src/components/landing/BlogSection.tsx`
 
-## Database
+Update the `BlogPost` interface with `cta_url: string | null` and `images: {path:string;url:string}[] | null`.
 
-No migration needed. The `products` table and the `product-images` storage bucket already exist. We'll need one small data update to set `legacy_component_key` for the 6 existing rows so the rich previews keep showing:
-- `backoffice` → BackOffice Resort
-- `transit` → Palawan Transit
-- `wildfall` → WildFall Soft Air
-- `site_builder` → Your Own Website
-- `order` → Order Online WebApp
-- `land` → Buy Land in Palawan
+In the post detail modal:
+- Replace the single hero image with a **carousel** when `images` has entries (fallback to `image_url`, then nothing). Use existing shadcn `@/components/ui/carousel` (embla). Show dots + prev/next arrows; swipe on mobile. Aspect 16/9, lazy-loaded.
+- Above the WhatsApp button, add a primary **"Visit live site →"** button (opens `cta_url` in new tab) when `cta_url` is set. Keep WhatsApp button as secondary.
 
-This will be done via a one-shot insert/update SQL after building the page.
+No card layout changes; the cover thumbnail stays as-is.
 
-## Dependencies
+## 4. Constraints respected
 
-- `@dnd-kit/core` and `@dnd-kit/sortable` for drag-and-drop reordering (products list + image gallery). Will `bun add` if not already present.
+- WhatsApp link untouched.
+- Feedback table not touched.
+- No horizontal overflow: carousel is contained, images use `object-cover`.
+- 44px min touch targets on all new buttons.
+- Reuses existing `media` bucket — no new storage bucket.
 
-## Behavior summary for the user
+---
 
-- New "Products" item appears in the admin sidebar.
-- Click it → list of all products with cover thumbs, visibility toggle, drag handle.
-- Click a product → modal with title, description, URL, accent color, visibility, and an image gallery (upload, delete, reorder, replace).
-- Add new products with the "New Product" button. Newly created products without a `legacy_component_key` will display their first uploaded image as the preview on the landing page.
-- The 5 existing legacy products keep their hand-coded mockups untouched — you only edit text/URL/visibility/order on those, unless you upload images and switch their preview type to "screenshots" later.
-- "View Product" button on the landing page links to the URL stored in the DB — change it in admin and it's live immediately on the site.
+## Files touched
+
+- **Migration**: add `cta_url`, `images` to `blog_posts`.
+- **Modify**: `src/components/landing/AdminSettingsModal.tsx`
+- **Modify**: `src/components/landing/BlogSection.tsx`
+
+That's it. No other components affected.

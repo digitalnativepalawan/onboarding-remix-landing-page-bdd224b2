@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
   Pencil, Trash2, Plus, Check, X,
-  HelpCircle, Download, FileText, Eye, EyeOff, ImageIcon,
+  HelpCircle, Download, FileText, Eye, EyeOff, ImageIcon, ExternalLink, GripVertical,
 } from "lucide-react";
 import LogoSettings from "./LogoSettings";
 
@@ -38,6 +38,8 @@ interface BlogPost {
   published: boolean;
   created_at: string;
   image_url: string | null;
+  cta_url: string | null;
+  images: { path: string; url: string }[] | null;
 }
 
 interface AdminSettingsModalProps {
@@ -79,10 +81,14 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     excerpt: "",
     content: "",
     image_url: "" as string,
+    cta_url: "" as string,
+    images: [] as { path: string; url: string }[],
   };
   const [blogForm, setBlogForm] = useState(emptyBlog);
   const [imageUploading, setImageUploading] = useState(false);
+  const [galleryUploading, setGalleryUploading] = useState(false);
   const blogImageInputRef = useRef<HTMLInputElement | null>(null);
+  const galleryInputRef = useRef<HTMLInputElement | null>(null);
 
   /* ── Logo ── */
   const [logoLightUrl, setLogoLightUrl] = useState<string | null>(null);
@@ -104,7 +110,10 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
 
   const fetchBlogPosts = async () => {
     const { data } = await supabase.from("blog_posts").select("*").order("display_order", { ascending: true });
-    setBlogPosts(data || []);
+    setBlogPosts(((data as any[]) || []).map((p) => ({
+      ...p,
+      images: Array.isArray(p.images) ? p.images : [],
+    })) as BlogPost[]);
   };
 
   const fetchLogoSettings = async () => {
@@ -203,6 +212,8 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
       tag: post.tag, tag_color: post.tag_color, tag_bg: post.tag_bg,
       title: post.title, excerpt: post.excerpt, content: post.content,
       image_url: post.image_url ?? "",
+      cta_url: post.cta_url ?? "",
+      images: Array.isArray(post.images) ? post.images : [],
     });
   };
 
@@ -233,11 +244,14 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   const handleSaveBlog = async () => {
     if (!blogForm.title || !blogForm.excerpt || !blogForm.content) { toast.error("Title, excerpt and content are required"); return; }
     if (imageUploading) { toast.error("Please wait for the image upload to finish"); return; }
+    if (galleryUploading) { toast.error("Please wait for the gallery upload to finish"); return; }
     setLoading(true);
     const payload = {
       tag: blogForm.tag, tag_color: blogForm.tag_color, tag_bg: blogForm.tag_bg,
       title: blogForm.title, excerpt: blogForm.excerpt, content: blogForm.content,
       image_url: blogForm.image_url?.trim() || null,
+      cta_url: blogForm.cta_url?.trim() || null,
+      images: blogForm.images ?? [],
     };
     if (editingBlogId) {
       const { error } = await supabase.from("blog_posts").update(payload).eq("id", editingBlogId);
@@ -266,6 +280,44 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
 
   const handleCancelBlog = () => {
     setEditingBlogId(null); setIsAddingBlog(false); setBlogForm(emptyBlog);
+  };
+
+  /* ── Gallery handlers ── */
+  const handleGalleryUpload = async (files: FileList) => {
+    setGalleryUploading(true);
+    const next = [...(blogForm.images || [])];
+    try {
+      for (const file of Array.from(files)) {
+        if (!file.type.startsWith("image/")) continue;
+        if (file.size > 5 * 1024 * 1024) { toast.error(`${file.name} exceeds 5MB`); continue; }
+        const folder = editingBlogId || "new";
+        const ext = file.name.split(".").pop() || "jpg";
+        const path = `blog/${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const { error } = await supabase.storage.from("media").upload(path, file, { contentType: file.type });
+        if (error) { toast.error(`Upload failed: ${error.message}`); continue; }
+        const { data } = supabase.storage.from("media").getPublicUrl(path);
+        next.push({ path, url: data.publicUrl });
+      }
+      setBlogForm((f) => ({ ...f, images: next }));
+      toast.success("Gallery updated");
+    } finally {
+      setGalleryUploading(false);
+    }
+  };
+
+  const removeGalleryImage = async (idx: number) => {
+    const img = blogForm.images?.[idx];
+    if (!img) return;
+    try { await supabase.storage.from("media").remove([img.path]); } catch {}
+    setBlogForm((f) => ({ ...f, images: (f.images || []).filter((_, i) => i !== idx) }));
+  };
+
+  const moveGalleryImage = (idx: number, dir: -1 | 1) => {
+    const arr = [...(blogForm.images || [])];
+    const target = idx + dir;
+    if (target < 0 || target >= arr.length) return;
+    [arr[idx], arr[target]] = [arr[target], arr[idx]];
+    setBlogForm((f) => ({ ...f, images: arr }));
   };
 
   /* ── Blog form shared UI (inline JSX, NOT a component, to preserve input focus) ── */
@@ -336,12 +388,59 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
         <Input placeholder="Post title" value={blogForm.title} onChange={(e) => setBlogForm({ ...blogForm, title: e.target.value })} />
       </div>
       <div>
+        <Label className="text-xs flex items-center gap-1.5">
+          <ExternalLink className="w-3 h-3" /> Live site URL (optional)
+        </Label>
+        <Input
+          type="url"
+          placeholder="https://your-webapp.com"
+          value={blogForm.cta_url}
+          onChange={(e) => setBlogForm({ ...blogForm, cta_url: e.target.value })}
+        />
+        <p className="text-[10px] text-muted-foreground mt-1">Shown as a big "Visit live site" button on the post.</p>
+      </div>
+      <div>
         <Label className="text-xs">Excerpt (shown on card)</Label>
         <Textarea placeholder="Short summary shown on the blog card" value={blogForm.excerpt} onChange={(e) => setBlogForm({ ...blogForm, excerpt: e.target.value })} rows={2} />
       </div>
       <div>
         <Label className="text-xs">Content (separate paragraphs with a blank line)</Label>
         <Textarea placeholder="Write your post here...&#10;&#10;Start a new paragraph by leaving a blank line between them." value={blogForm.content} onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })} rows={10} className="font-mono text-xs w-full break-words" />
+      </div>
+      <div>
+        <div className="flex items-center justify-between mb-1.5">
+          <Label className="text-xs">Carousel images ({blogForm.images?.length || 0})</Label>
+          <Button
+            type="button" size="sm" variant="outline"
+            onClick={() => galleryInputRef.current?.click()}
+            disabled={galleryUploading}
+          >
+            <Plus className="w-3 h-3 mr-1" /> {galleryUploading ? "Uploading…" : "Add images"}
+          </Button>
+          <input
+            ref={galleryInputRef} type="file" accept="image/*" multiple className="hidden"
+            onChange={(e) => { if (e.target.files?.length) handleGalleryUpload(e.target.files); e.target.value = ""; }}
+          />
+        </div>
+        {(blogForm.images?.length || 0) === 0 ? (
+          <p className="text-[10px] text-muted-foreground">Upload multiple webapp screenshots — visitors swipe through them on the post.</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+            {(blogForm.images || []).map((img, i) => (
+              <div key={img.path} className="relative group rounded-md overflow-hidden border border-border bg-muted/30">
+                <img src={img.url} alt="" className="w-full h-24 object-cover" />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-colors flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100">
+                  <button type="button" onClick={() => moveGalleryImage(i, -1)} className="p-1 rounded bg-background/80 text-[10px]" title="Move left">←</button>
+                  <button type="button" onClick={() => moveGalleryImage(i, 1)} className="p-1 rounded bg-background/80 text-[10px]" title="Move right">→</button>
+                  <button type="button" onClick={() => removeGalleryImage(i)} className="p-1 rounded bg-destructive/80 text-destructive-foreground" title="Delete">
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                </div>
+                {i === 0 && <span className="absolute top-1 left-1 text-[9px] px-1 rounded bg-primary text-primary-foreground">1st</span>}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="flex gap-2">
         <Button size="sm" onClick={handleSaveBlog} disabled={loading}>
