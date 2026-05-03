@@ -110,7 +110,10 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
 
   const fetchBlogPosts = async () => {
     const { data } = await supabase.from("blog_posts").select("*").order("display_order", { ascending: true });
-    setBlogPosts(data || []);
+    setBlogPosts(((data as any[]) || []).map((p) => ({
+      ...p,
+      images: Array.isArray(p.images) ? p.images : [],
+    })) as BlogPost[]);
   };
 
   const fetchLogoSettings = async () => {
