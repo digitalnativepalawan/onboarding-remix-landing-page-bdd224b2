@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
   Pencil, Trash2, Plus, Check, X,
-  HelpCircle, Download, FileText, Eye, EyeOff, ImageIcon,
+  HelpCircle, Download, FileText, Eye, EyeOff, ImageIcon, ExternalLink, GripVertical,
 } from "lucide-react";
 import LogoSettings from "./LogoSettings";
 
@@ -38,6 +38,8 @@ interface BlogPost {
   published: boolean;
   created_at: string;
   image_url: string | null;
+  cta_url: string | null;
+  images: { path: string; url: string }[] | null;
 }
 
 interface AdminSettingsModalProps {
@@ -79,10 +81,14 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
     excerpt: "",
     content: "",
     image_url: "" as string,
+    cta_url: "" as string,
+    images: [] as { path: string; url: string }[],
   };
   const [blogForm, setBlogForm] = useState(emptyBlog);
   const [imageUploading, setImageUploading] = useState(false);
+  const [galleryUploading, setGalleryUploading] = useState(false);
   const blogImageInputRef = useRef<HTMLInputElement | null>(null);
+  const galleryInputRef = useRef<HTMLInputElement | null>(null);
 
   /* ── Logo ── */
   const [logoLightUrl, setLogoLightUrl] = useState<string | null>(null);
@@ -203,6 +209,8 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
       tag: post.tag, tag_color: post.tag_color, tag_bg: post.tag_bg,
       title: post.title, excerpt: post.excerpt, content: post.content,
       image_url: post.image_url ?? "",
+      cta_url: post.cta_url ?? "",
+      images: Array.isArray(post.images) ? post.images : [],
     });
   };
 
@@ -233,11 +241,14 @@ const AdminSettingsModal = ({ open, onOpenChange }: AdminSettingsModalProps) => 
   const handleSaveBlog = async () => {
     if (!blogForm.title || !blogForm.excerpt || !blogForm.content) { toast.error("Title, excerpt and content are required"); return; }
     if (imageUploading) { toast.error("Please wait for the image upload to finish"); return; }
+    if (galleryUploading) { toast.error("Please wait for the gallery upload to finish"); return; }
     setLoading(true);
     const payload = {
       tag: blogForm.tag, tag_color: blogForm.tag_color, tag_bg: blogForm.tag_bg,
       title: blogForm.title, excerpt: blogForm.excerpt, content: blogForm.content,
       image_url: blogForm.image_url?.trim() || null,
+      cta_url: blogForm.cta_url?.trim() || null,
+      images: blogForm.images ?? [],
     };
     if (editingBlogId) {
       const { error } = await supabase.from("blog_posts").update(payload).eq("id", editingBlogId);
