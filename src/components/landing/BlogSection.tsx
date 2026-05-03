@@ -80,8 +80,12 @@ const BlogSection = () => {
         .select("*")
         .eq("published", true)
         .order("display_order", { ascending: true });
-      if (!error && data) setPosts(data);
-      // images may come back as Json
+      if (!error && data) {
+        setPosts(data.map((p: any) => ({
+          ...p,
+          images: Array.isArray(p.images) ? p.images : [],
+        })) as BlogPost[]);
+      }
       setLoading(false);
     };
     fetchPosts();
