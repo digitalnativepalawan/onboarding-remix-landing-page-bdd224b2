@@ -321,10 +321,12 @@ export type Database = {
         Row: {
           content: string
           created_at: string | null
+          cta_url: string | null
           display_order: number | null
           excerpt: string
           id: string
           image_url: string | null
+          images: Json
           published: boolean | null
           tag: string
           tag_bg: string
@@ -334,10 +336,12 @@ export type Database = {
         Insert: {
           content: string
           created_at?: string | null
+          cta_url?: string | null
           display_order?: number | null
           excerpt: string
           id?: string
           image_url?: string | null
+          images?: Json
           published?: boolean | null
           tag: string
           tag_bg?: string
@@ -347,10 +351,12 @@ export type Database = {
         Update: {
           content?: string
           created_at?: string | null
+          cta_url?: string | null
           display_order?: number | null
           excerpt?: string
           id?: string
           image_url?: string | null
+          images?: Json
           published?: boolean | null
           tag?: string
           tag_bg?: string
