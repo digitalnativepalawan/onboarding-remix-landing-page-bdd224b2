@@ -255,14 +255,25 @@ export function ProductFormModal({ open, onOpenChange, initial, nextSortOrder }:
               </div>
             </div>
 
-            {draft.preview_type === "legacy_css" && (
-              <div className="rounded-md border border-border p-3 bg-muted/30 text-xs text-muted-foreground">
-                Using built-in mockup: <code className="font-mono">{draft.legacy_component_key || "(none)"}</code>.
-                Switch to "Screenshots" to use your uploaded images instead.
-              </div>
-            )}
-
             <div className="border-t border-border pt-4">
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-base">Product Images</Label>
+                {draft.preview_type === "legacy_css" && (
+                  <button
+                    type="button"
+                    onClick={() => setDraft({ ...draft, preview_type: "screenshots" })}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Switch to screenshots →
+                  </button>
+                )}
+              </div>
+              {draft.preview_type === "legacy_css" ? (
+                <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200 mb-3">
+                  ⚠️ This product uses a built-in mockup (<code className="font-mono">{draft.legacy_component_key || "none"}</code>).
+                  Uploaded images will <strong>not</strong> show on the website until you switch Preview Type to "Screenshots".
+                </div>
+              ) : null}
               <ProductImagesManager
                 productId={isEdit ? initial!.id! : draftId}
                 images={draft.images}
