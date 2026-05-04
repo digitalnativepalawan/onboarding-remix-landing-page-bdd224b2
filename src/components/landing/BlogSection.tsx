@@ -278,19 +278,6 @@ const BlogSection = () => {
                   </p>
                 ))}
               </div>
-              <div className="pt-4 border-t border-white/[0.08]">
-                <p className="text-sm text-[#888888] mb-4">
-                  Want to build something like this for your business in Palawan?
-                </p>
-                <Button
-                  size="lg"
-                  className="gap-2 bg-[#25D366] hover:bg-[#1fb356] text-white border-0 min-h-[44px] rounded-[4px]"
-                  onClick={() => window.open("https://wa.me/639474443597", "_blank")}
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  Chat with us on WhatsApp
-                </Button>
-              </div>
             </article>
           </div>
         </div>
