@@ -60,6 +60,7 @@ export function ProductFormModal({ open, onOpenChange, initial, nextSortOrder }:
   const qc = useQueryClient();
   const [draft, setDraft] = useState<ProductRow>(empty);
   const [saving, setSaving] = useState(false);
+  const [draftId, setDraftId] = useState<string>("");
 
   useEffect(() => {
     if (open) {
@@ -68,6 +69,7 @@ export function ProductFormModal({ open, onOpenChange, initial, nextSortOrder }:
           ? { ...initial, images: Array.isArray(initial.images) ? initial.images : [] }
           : { ...empty, sort_order: nextSortOrder }
       );
+      setDraftId(initial?.id || crypto.randomUUID());
     }
   }, [open, initial, nextSortOrder]);
 
@@ -115,7 +117,7 @@ export function ProductFormModal({ open, onOpenChange, initial, nextSortOrder }:
         const { error } = await supabase.from("products").update(payload).eq("id", initial!.id!);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("products").insert(payload);
+        const { error } = await supabase.from("products").insert({ id: draftId, ...payload });
         if (error) throw error;
       }
       qc.invalidateQueries({ queryKey: ["admin-products"] });
@@ -261,16 +263,15 @@ export function ProductFormModal({ open, onOpenChange, initial, nextSortOrder }:
             )}
 
             <div className="border-t border-border pt-4">
-              {isEdit && initial?.id ? (
-                <ProductImagesManager
-                  productId={initial.id}
-                  images={draft.images}
-                  onChange={handleImagesChange}
-                />
-              ) : (
-                <div className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground text-center">
-                  Save the product first to start uploading images.
-                </div>
+              <ProductImagesManager
+                productId={isEdit ? initial!.id! : draftId}
+                images={draft.images}
+                onChange={handleImagesChange}
+              />
+              {!isEdit && (
+                <p className="mt-2 text-[11px] text-muted-foreground">
+                  Images upload immediately. Click Save to publish the product.
+                </p>
               )}
             </div>
           </div>
