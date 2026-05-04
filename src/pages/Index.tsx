@@ -3,6 +3,7 @@ import { MessageCircle, ArrowRight } from "lucide-react";
 import Header from "@/components/landing/Header";
 import HeroSection from "@/components/landing/HeroSection";
 import AgencyAppsSection from "@/components/landing/AgencyAppsSection";
+import BackofficeShowcaseSection from "@/components/landing/BackofficeShowcaseSection";
 import BlogSection from "@/components/landing/BlogSection";
 import BenefitsSection from "@/components/landing/BenefitsSection";
 import FAQSection from "@/components/landing/FAQSection";
@@ -52,6 +53,7 @@ const Index = () => {
       <Header />
       <HeroSection />
       <AgencyAppsSection />
+      <BackofficeShowcaseSection />
       <BenefitsSection />
       <BlogSection />
       <FAQSection />
