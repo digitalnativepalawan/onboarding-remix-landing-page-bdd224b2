@@ -17,6 +17,7 @@ export default {
         sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
         display: ['"Syne"', 'sans-serif'],
         serif: ['"DM Sans"', 'system-ui', 'sans-serif'],
+        poppins: ['"Poppins"', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
