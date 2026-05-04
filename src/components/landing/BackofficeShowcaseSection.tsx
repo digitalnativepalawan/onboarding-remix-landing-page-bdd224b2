@@ -5,6 +5,7 @@ import baiaGuestPortal from "@/assets/backoffice/baia-guest-portal.png";
 import baiaKitchen from "@/assets/backoffice/baia-kitchen.png";
 import baiaReception from "@/assets/backoffice/baia-reception.png";
 import baiaBill from "@/assets/backoffice/baia-bill.png";
+import baiaReceipt from "@/assets/backoffice/baia-receipt.png";
 
 const GOLD = "#C8A96E";
 
@@ -16,6 +17,8 @@ type Card = {
   image: string;
   alt: string;
   imageRight: boolean;
+  extraImage?: string;
+  extraAlt?: string;
 };
 
 const cards: Card[] = [
@@ -68,6 +71,8 @@ const cards: Card[] = [
     image: baiaBill,
     alt: "Guest bill with itemized room charges and I Agree button",
     imageRight: true,
+    extraImage: baiaReceipt,
+    extraAlt: "Printed BAIA Boutique guest bill receipt with itemized charges",
   },
 ];
 
@@ -118,7 +123,24 @@ const StoryCard = ({ card }: { card: Card }) => (
         </ul>
       </div>
       <div className={card.imageRight ? "md:order-2" : "md:order-1"}>
-        <BrowserMockup src={card.image} alt={card.alt} />
+        <div className="space-y-6 md:space-y-8">
+          <BrowserMockup src={card.image} alt={card.alt} />
+          {card.extraImage && (
+            <div className="relative mx-auto w-full max-w-[320px] sm:max-w-[360px] md:max-w-full">
+              <div
+                aria-hidden
+                className="absolute -inset-4 rounded-[24px] blur-2xl opacity-50"
+                style={{ background: `radial-gradient(circle at 50% 50%, ${GOLD}22, transparent 70%)` }}
+              />
+              <img
+                src={card.extraImage}
+                alt={card.extraAlt ?? ""}
+                loading="lazy"
+                className="relative block w-full h-auto rounded-lg shadow-2xl ring-1 ring-white/10 bg-white"
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   </article>
