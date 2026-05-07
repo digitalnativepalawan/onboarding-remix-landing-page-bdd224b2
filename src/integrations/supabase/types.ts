@@ -1306,6 +1306,48 @@ export type Database = {
           },
         ]
       }
+      resort_os_cards: {
+        Row: {
+          body: string
+          bullets: Json
+          created_at: string
+          eyebrow: string
+          id: string
+          image_right: boolean
+          images: Json
+          is_visible: boolean
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string
+          bullets?: Json
+          created_at?: string
+          eyebrow?: string
+          id?: string
+          image_right?: boolean
+          images?: Json
+          is_visible?: boolean
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          bullets?: Json
+          created_at?: string
+          eyebrow?: string
+          id?: string
+          image_right?: boolean
+          images?: Json
+          is_visible?: boolean
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       revenue: {
         Row: {
           amount_php: number
