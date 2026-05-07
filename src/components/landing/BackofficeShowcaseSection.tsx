@@ -1,80 +1,20 @@
 import { useEffect, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight, MessageCircle } from "lucide-react";
-import baiaLogin from "@/assets/backoffice/baia-login.png";
-import baiaGuestPortal from "@/assets/backoffice/baia-guest-portal.png";
-import baiaKitchen from "@/assets/backoffice/baia-kitchen.png";
-import baiaReception from "@/assets/backoffice/baia-reception.png";
-import baiaBill from "@/assets/backoffice/baia-bill.png";
-import baiaReceipt from "@/assets/backoffice/baia-receipt.png";
 
 const GOLD = "#C8A96E";
 
+type CardImage = { path: string; url: string };
 type Card = {
+  id: string;
   eyebrow: string;
   title: string;
   body: string;
   bullets: string[];
-  image: string;
-  alt: string;
+  images: CardImage[];
   imageRight: boolean;
-  extraImage?: string;
-  extraAlt?: string;
 };
-
-const cards: Card[] = [
-  {
-    eyebrow: "THE PLATFORM",
-    title: "One login. Every role.",
-    body:
-      "Guest. Staff. Kitchen. Billing. All connected in one system. No switching apps, no missed updates, no chaos.",
-    bullets: ["Guest portal", "Staff dashboard", "Kitchen board", "Admin controls"],
-    image: baiaLogin,
-    alt: "BAIA Boutique login screen with Guest, Staff, and Admin entry",
-    imageRight: true,
-  },
-  {
-    eyebrow: "GUEST PORTAL",
-    title: "Guests order from their room.",
-    body:
-      "No front desk calls. No waiting. Guests tap food, drinks, tours, and services directly from their phone. Everything charged to their room automatically.",
-    bullets: ["Order food & drinks", "Book tours & transport", "View live bill", "Sign off digitally"],
-    image: baiaGuestPortal,
-    alt: "Guest portal with Order Food, Drinks, Experiences, Service tiles",
-    imageRight: false,
-  },
-  {
-    eyebrow: "KITCHEN BOARD",
-    title: "Orders land instantly.",
-    body:
-      "The moment a guest orders, kitchen staff see it highlighted in real time. Audio chime. Telegram backup. No paper tickets. No shouting.",
-    bullets: ["Live order queue", "New → Preparing → Ready", "Audio + Telegram alerts", "Zero paper"],
-    image: baiaKitchen,
-    alt: "Kitchen board showing new order ticket and Start Preparing button",
-    imageRight: true,
-  },
-  {
-    eyebrow: "RECEPTION DASHBOARD",
-    title: "Total visibility. Right now.",
-    body:
-      "Morning Briefing shows occupancy, arrivals, departures, kitchen queue, and live operations — all updated in real time. One glance, full picture.",
-    bullets: ["Morning briefing", "Room status live", "Arrivals & departures", "Pending kitchen orders"],
-    image: baiaReception,
-    alt: "Reception dashboard with morning briefing and live operations",
-    imageRight: false,
-  },
-  {
-    eyebrow: "GUEST BILLING",
-    title: "Every peso captured.",
-    body:
-      "Orders auto-charge to the room folio. Guest reviews their bill, agrees digitally, receipt prints. No missed revenue. No end-of-night surprises.",
-    bullets: ["Auto room charges", "Live folio balance", "Digital bill agreement", "Printable receipt"],
-    image: baiaBill,
-    alt: "Guest bill with itemized room charges and I Agree button",
-    imageRight: true,
-    extraImage: baiaReceipt,
-    extraAlt: "Printed BAIA Boutique guest bill receipt with itemized charges",
-  },
-];
 
 const BrowserMockup = ({ src, alt }: { src: string; alt: string }) => (
   <div className="relative">
@@ -124,22 +64,24 @@ const StoryCard = ({ card }: { card: Card }) => (
       </div>
       <div className={card.imageRight ? "md:order-2" : "md:order-1"}>
         <div className="space-y-6 md:space-y-8">
-          <BrowserMockup src={card.image} alt={card.alt} />
-          {card.extraImage && (
-            <div className="relative mx-auto w-full max-w-[320px] sm:max-w-[360px] md:max-w-full">
+          {card.images[0] && (
+            <BrowserMockup src={card.images[0].url} alt={card.title} />
+          )}
+          {card.images.slice(1).map((img, i) => (
+            <div key={img.path || i} className="relative mx-auto w-full max-w-[320px] sm:max-w-[360px] md:max-w-full">
               <div
                 aria-hidden
                 className="absolute -inset-4 rounded-[24px] blur-2xl opacity-50"
                 style={{ background: `radial-gradient(circle at 50% 50%, ${GOLD}22, transparent 70%)` }}
               />
               <img
-                src={card.extraImage}
-                alt={card.extraAlt ?? ""}
+                src={img.url}
+                alt=""
                 loading="lazy"
                 className="relative block w-full h-auto rounded-lg shadow-2xl ring-1 ring-white/10 bg-white"
               />
             </div>
-          )}
+          ))}
         </div>
       </div>
     </div>
@@ -148,6 +90,26 @@ const StoryCard = ({ card }: { card: Card }) => (
 
 const BackofficeShowcaseSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const { data: cards = [] } = useQuery({
+    queryKey: ["resort-os-cards"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("resort_os_cards")
+        .select("*")
+        .eq("is_visible", true)
+        .order("sort_order", { ascending: true });
+      if (error) throw error;
+      return (data || []).map((r: any) => ({
+        id: r.id,
+        eyebrow: r.eyebrow || "",
+        title: r.title || "",
+        body: r.body || "",
+        bullets: Array.isArray(r.bullets) ? (r.bullets as string[]) : [],
+        images: Array.isArray(r.images) ? (r.images as CardImage[]) : [],
+        imageRight: !!r.image_right,
+      })) as Card[];
+    },
+  });
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -166,7 +128,7 @@ const BackofficeShowcaseSection = () => {
       observer.observe(el);
     });
     return () => observer.disconnect();
-  }, []);
+  }, [cards]);
 
   return (
     <section
@@ -205,11 +167,13 @@ const BackofficeShowcaseSection = () => {
         </div>
 
         {/* Story cards */}
+        {cards.length > 0 && (
         <div className="mt-14 md:mt-20 space-y-12 md:space-y-20">
           {cards.map((c) => (
-            <StoryCard key={c.title} card={c} />
+            <StoryCard key={c.id} card={c} />
           ))}
         </div>
+        )}
 
         {/* Bottom CTA */}
         <div
