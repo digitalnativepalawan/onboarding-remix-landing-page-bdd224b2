@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight, MessageCircle, X } from "lucide-react";
 
 const GOLD = "#C8A96E";
 
@@ -16,7 +16,7 @@ type Card = {
   imageRight: boolean;
 };
 
-const BrowserMockup = ({ src, alt }: { src: string; alt: string }) => (
+const BrowserMockup = ({ src, alt, onOpen }: { src: string; alt: string; onOpen: () => void }) => (
   <div className="relative">
     <div
       aria-hidden
@@ -29,12 +29,19 @@ const BrowserMockup = ({ src, alt }: { src: string; alt: string }) => (
         <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
         <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
       </div>
-      <img src={src} alt={alt} loading="lazy" className="block w-full h-auto object-contain" />
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={`Open ${alt}`}
+        className="block w-full cursor-zoom-in"
+      >
+        <img src={src} alt={alt} loading="lazy" className="block w-full h-auto object-contain" />
+      </button>
     </div>
   </div>
 );
 
-const StoryCard = ({ card }: { card: Card }) => (
+const StoryCard = ({ card, onOpenImage }: { card: Card; onOpenImage: (src: string, alt: string) => void }) => (
   <article
     className="fade-up-hidden bg-[#12121F] border rounded-2xl p-7 md:p-12 overflow-hidden"
     style={{ borderColor: `${GOLD}33` }}
@@ -65,7 +72,11 @@ const StoryCard = ({ card }: { card: Card }) => (
       <div className={card.imageRight ? "md:order-2" : "md:order-1"}>
         <div className="space-y-6 md:space-y-8">
           {card.images[0] && (
-            <BrowserMockup src={card.images[0].url} alt={card.title} />
+            <BrowserMockup
+              src={card.images[0].url}
+              alt={card.title}
+              onOpen={() => onOpenImage(card.images[0].url, card.title)}
+            />
           )}
           {card.images.slice(1).map((img, i) => (
             <div key={img.path || i} className="relative mx-auto w-full max-w-[320px] sm:max-w-[360px] md:max-w-full">
@@ -74,12 +85,19 @@ const StoryCard = ({ card }: { card: Card }) => (
                 className="absolute -inset-4 rounded-[24px] blur-2xl opacity-50"
                 style={{ background: `radial-gradient(circle at 50% 50%, ${GOLD}22, transparent 70%)` }}
               />
-              <img
-                src={img.url}
-                alt=""
-                loading="lazy"
-                className="relative block w-full h-auto rounded-lg shadow-2xl ring-1 ring-white/10 bg-white"
-              />
+              <button
+                type="button"
+                onClick={() => onOpenImage(img.url, card.title)}
+                aria-label={`Open ${card.title} image ${i + 2}`}
+                className="relative block w-full cursor-zoom-in"
+              >
+                <img
+                  src={img.url}
+                  alt=""
+                  loading="lazy"
+                  className="block w-full h-auto rounded-lg shadow-2xl ring-1 ring-white/10 bg-white"
+                />
+              </button>
             </div>
           ))}
         </div>
@@ -90,6 +108,22 @@ const StoryCard = ({ card }: { card: Card }) => (
 
 const BackofficeShowcaseSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightbox(null);
+    };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [lightbox]);
+
   const { data: cards = [] } = useQuery({
     queryKey: ["resort-os-cards"],
     queryFn: async () => {
@@ -170,7 +204,7 @@ const BackofficeShowcaseSection = () => {
         {cards.length > 0 && (
         <div className="mt-14 md:mt-20 space-y-12 md:space-y-20">
           {cards.map((c) => (
-            <StoryCard key={c.id} card={c} />
+            <StoryCard key={c.id} card={c} onOpenImage={(src, alt) => setLightbox({ src, alt })} />
           ))}
         </div>
         )}
@@ -208,6 +242,34 @@ const BackofficeShowcaseSection = () => {
           </div>
         </div>
       </div>
+
+      {lightbox && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={lightbox.alt}
+          onClick={() => setLightbox(null)}
+          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 md:p-10 animate-in fade-in duration-150"
+        >
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightbox(null);
+            }}
+            aria-label="Close image"
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+          <img
+            src={lightbox.src}
+            alt={lightbox.alt}
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-full max-h-[90vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+          />
+        </div>
+      )}
     </section>
   );
 };
