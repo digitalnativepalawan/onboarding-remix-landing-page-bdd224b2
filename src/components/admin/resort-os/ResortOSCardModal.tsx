@@ -67,12 +67,12 @@ export function ResortOSCardModal({ open, onOpenChange, initial, nextSortOrder, 
     }
     setSaving(true);
     const bullets = bulletsText.split("\n").map((s) => s.trim()).filter(Boolean);
-    const payload = {
+    const payload: any = {
       eyebrow: card.eyebrow,
       title: card.title,
       body: card.body,
       bullets,
-      images: card.images,
+      images: card.images as any,
       image_right: card.image_right,
       is_visible: card.is_visible,
       sort_order: card.sort_order,
@@ -82,7 +82,7 @@ export function ResortOSCardModal({ open, onOpenChange, initial, nextSortOrder, 
         const { error } = await supabase.from("resort_os_cards").update(payload).eq("id", initial.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("resort_os_cards").insert({ ...payload, id: draftId });
+        const { error } = await supabase.from("resort_os_cards").insert([{ ...payload, id: draftId }]);
         if (error) throw error;
       }
       toast.success("Card saved");
