@@ -11,6 +11,7 @@ import {
   DollarSign,
   Receipt,
   Settings2,
+  Hotel,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -28,6 +29,7 @@ import {
 const items = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard, end: true },
   { title: "Products", url: "/admin/products", icon: LayoutGrid },
+  { title: "Resort OS", url: "/admin/resort-os", icon: Hotel },
   { title: "Projects", url: "/admin/projects", icon: FolderKanban },
   { title: "Clients", url: "/admin/clients", icon: Users },
   { title: "Catalog", url: "/admin/catalog", icon: Package },
