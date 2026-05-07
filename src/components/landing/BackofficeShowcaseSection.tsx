@@ -109,6 +109,11 @@ const StoryCard = ({ card, onOpenImage }: { card: Card; onOpenImage: (src: strin
 const BackofficeShowcaseSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+  const [zoomed, setZoomed] = useState(false);
+
+  useEffect(() => {
+    if (!lightbox) setZoomed(false);
+  }, [lightbox]);
 
   useEffect(() => {
     if (!lightbox) return;
@@ -249,7 +254,8 @@ const BackofficeShowcaseSection = () => {
           aria-modal="true"
           aria-label={lightbox.alt}
           onClick={() => setLightbox(null)}
-          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 md:p-10 animate-in fade-in duration-150"
+          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm overflow-auto overscroll-contain animate-in fade-in duration-150"
+          style={{ touchAction: "pinch-zoom" }}
         >
           <button
             type="button"
@@ -258,16 +264,27 @@ const BackofficeShowcaseSection = () => {
               setLightbox(null);
             }}
             aria-label="Close image"
-            className="absolute top-4 right-4 sm:top-6 sm:right-6 inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors"
+            className="fixed top-4 right-4 sm:top-6 sm:right-6 z-10 inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
-          <img
-            src={lightbox.src}
-            alt={lightbox.alt}
-            onClick={(e) => e.stopPropagation()}
-            className="max-w-full max-h-[90vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
-          />
+          <div className="min-h-full w-full flex items-center justify-center p-4 sm:p-6 md:p-10">
+            <img
+              src={lightbox.src}
+              alt={lightbox.alt}
+              onClick={(e) => {
+                e.stopPropagation();
+                setZoomed((z) => !z);
+              }}
+              className={
+                zoomed
+                  ? "w-auto max-w-none h-auto max-h-none rounded-lg shadow-2xl cursor-zoom-out select-none"
+                  : "max-w-full max-h-[90vh] w-auto h-auto object-contain rounded-lg shadow-2xl cursor-zoom-in select-none"
+              }
+              style={zoomed ? { width: "200%" } : undefined}
+              draggable={false}
+            />
+          </div>
         </div>
       )}
     </section>
