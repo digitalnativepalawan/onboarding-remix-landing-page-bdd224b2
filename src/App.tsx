@@ -23,6 +23,7 @@ import MediaPage from "./pages/admin/MediaPage";
 import RevenuePage from "./pages/admin/RevenuePage";
 import ExpensesPage from "./pages/admin/ExpensesPage";
 import SiteSettingsPage from "./pages/admin/SiteSettingsPage";
+import ResortOSPage from "./pages/admin/ResortOSPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,6 +55,7 @@ const App = () => (
                 <Route path="revenue" element={<RevenuePage />} />
                 <Route path="expenses" element={<ExpensesPage />} />
                 <Route path="site-settings" element={<SiteSettingsPage />} />
+                <Route path="resort-os" element={<ResortOSPage />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
