@@ -12,6 +12,7 @@ import {
   Receipt,
   Settings2,
   Hotel,
+  MessageSquare,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -40,6 +41,7 @@ const items = [
   { title: "Revenue", url: "/admin/revenue", icon: DollarSign },
   { title: "Expenses", url: "/admin/expenses", icon: Receipt },
   { title: "Site Settings", url: "/admin/site-settings", icon: Settings2 },
+  { title: "Feedback", url: "/admin/feedback", icon: MessageSquare },
 ];
 
 export function AdminSidebar() {
