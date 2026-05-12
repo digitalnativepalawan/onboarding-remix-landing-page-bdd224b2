@@ -10,7 +10,6 @@ import LogoUploader from "@/components/admin/site-settings/LogoUploader";
 import ColorPicker from "@/components/admin/site-settings/ColorPicker";
 import ColorPreview from "@/components/admin/site-settings/ColorPreview";
 import FooterPreview from "@/components/admin/site-settings/FooterPreview";
-import AdminSettingsModal from "@/components/landing/AdminSettingsModal";
 import { DEFAULT_COLORS, type SiteSettingsRow } from "@/components/admin/site-settings/types";
 
 const EMPTY: SiteSettingsRow = {
@@ -42,7 +41,6 @@ export default function SiteSettingsPage() {
   const [s, setS] = useState<SiteSettingsRow>(EMPTY);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [legacyOpen, setLegacyOpen] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -210,15 +208,6 @@ export default function SiteSettingsPage() {
       {/* Footer preview */}
       <SectionCard icon={Settings2} title="Footer Preview" description="Live preview reflecting your current settings.">
         <FooterPreview s={s} />
-      </SectionCard>
-
-      {/* Legacy content settings */}
-      <SectionCard icon={ExternalLink} title="Landing Page Content"
-        description="FAQs, header link, blog posts, featured apps, and feedback.">
-        <Button size="sm" variant="outline" onClick={() => setLegacyOpen(true)}>
-          Open content manager
-        </Button>
-        <AdminSettingsModal open={legacyOpen} onOpenChange={setLegacyOpen} />
       </SectionCard>
 
     </div>
