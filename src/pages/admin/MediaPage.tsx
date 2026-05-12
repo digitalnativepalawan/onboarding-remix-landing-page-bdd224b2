@@ -11,6 +11,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Upload, LinkIcon, Trash2, Download, Copy, Image as ImageIcon, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
+import JSZip from "jszip";
 
 const CATEGORIES = [
   "uncategorized", "logo", "screenshot", "hero", "icon",
@@ -31,6 +33,9 @@ export default function MediaPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [urlOpen, setUrlOpen] = useState(false);
   const [preview, setPreview] = useState<any | null>(null);
+  const [selectMode, setSelectMode] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [downloading, setDownloading] = useState(false);
 
   const { data: items = [], isLoading } = useQuery({
     queryKey: ["media-library"],
@@ -77,6 +82,68 @@ export default function MediaPage() {
     qc.invalidateQueries({ queryKey: ["media-library"] });
   };
 
+  const toggleOne = (id: string) => {
+    setSelected((prev) => {
+      const n = new Set(prev);
+      n.has(id) ? n.delete(id) : n.add(id);
+      return n;
+    });
+  };
+  const allSelected = filtered.length > 0 && filtered.every((i: any) => selected.has(i.id));
+  const toggleAll = () => {
+    if (allSelected) setSelected(new Set());
+    else setSelected(new Set(filtered.map((i: any) => i.id)));
+  };
+
+  const downloadSelected = async () => {
+    const picks = items.filter((i: any) => selected.has(i.id));
+    if (!picks.length) return toast.error("Nothing selected");
+    setDownloading(true);
+    try {
+      if (picks.length === 1) {
+        const it = picks[0];
+        const res = await fetch(it.file_url);
+        const blob = await res.blob();
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = (it.title || it.file_path?.split("/").pop() || "image").replace(/[^\w.\-]/g, "_");
+        a.click();
+        URL.revokeObjectURL(a.href);
+      } else {
+        const zip = new JSZip();
+        const used = new Set<string>();
+        let ok = 0;
+        for (const it of picks) {
+          try {
+            const res = await fetch(it.file_url);
+            if (!res.ok) continue;
+            const blob = await res.blob();
+            const ext = (blob.type.split("/")[1] || "jpg").split("+")[0];
+            let base = (it.title || it.file_path?.split("/").pop()?.replace(/\.[^.]+$/, "") || "image").replace(/[^\w.\-]/g, "_");
+            let name = `${base}.${ext}`;
+            let n = 1;
+            while (used.has(name)) name = `${base}-${n++}.${ext}`;
+            used.add(name);
+            zip.file(name, blob);
+            ok++;
+          } catch {}
+        }
+        if (!ok) throw new Error("All downloads failed");
+        const out = await zip.generateAsync({ type: "blob" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(out);
+        a.download = `media-${new Date().toISOString().slice(0, 10)}.zip`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+      toast.success(`Downloaded ${picks.length} item(s)`);
+    } catch (e: any) {
+      toast.error(e.message || "Download failed");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -85,6 +152,13 @@ export default function MediaPage() {
           <p className="text-sm text-muted-foreground">Upload from device or import multiple URLs · search by category</p>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant={selectMode ? "default" : "outline"}
+            onClick={() => { setSelectMode((m) => !m); setSelected(new Set()); }}
+            className="flex-1 sm:flex-none"
+          >
+            {selectMode ? "Done" : "Select"}
+          </Button>
           <Button variant="outline" onClick={() => setUrlOpen(true)} className="flex-1 sm:flex-none">
             <LinkIcon className="h-4 w-4 mr-2" /> Import URLs
           </Button>
@@ -121,6 +195,25 @@ export default function MediaPage() {
         </Select>
       </div>
 
+      {selectMode && (
+        <Card className="p-3 flex flex-wrap items-center gap-3 sticky top-2 z-10">
+          <label className="flex items-center gap-2 text-sm cursor-pointer">
+            <Checkbox checked={allSelected} onCheckedChange={toggleAll} />
+            Select all ({filtered.length})
+          </label>
+          <span className="text-sm text-muted-foreground">{selected.size} selected</span>
+          <div className="ml-auto flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => setSelected(new Set())} disabled={!selected.size || downloading}>
+              Clear
+            </Button>
+            <Button size="sm" onClick={downloadSelected} disabled={!selected.size || downloading}>
+              <Download className="h-4 w-4 mr-2" />
+              {downloading ? "Preparing..." : `Download${selected.size > 1 ? " ZIP" : ""}`}
+            </Button>
+          </div>
+        </Card>
+      )}
+
       {/* grid */}
       {isLoading ? (
         <p className="text-sm text-muted-foreground py-8 text-center">Loading...</p>
@@ -132,8 +225,16 @@ export default function MediaPage() {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {filtered.map((it: any) => (
-            <Card key={it.id} className="group overflow-hidden hover:ring-2 hover:ring-primary transition cursor-pointer">
-              <button onClick={() => setPreview(it)} className="block w-full aspect-square bg-muted overflow-hidden">
+            <Card key={it.id} className={`relative group overflow-hidden hover:ring-2 hover:ring-primary transition cursor-pointer ${selectMode && selected.has(it.id) ? "ring-2 ring-primary" : ""}`}>
+              {selectMode && (
+                <div className="absolute top-1.5 left-1.5 z-10 bg-background/90 backdrop-blur rounded p-1">
+                  <Checkbox checked={selected.has(it.id)} onCheckedChange={() => toggleOne(it.id)} />
+                </div>
+              )}
+              <button
+                onClick={() => (selectMode ? toggleOne(it.id) : setPreview(it))}
+                className="block w-full aspect-square bg-muted overflow-hidden"
+              >
                 <img src={it.file_url} alt={it.alt_text || it.title || ""} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition" />
               </button>
               <div className="p-2 space-y-1">
