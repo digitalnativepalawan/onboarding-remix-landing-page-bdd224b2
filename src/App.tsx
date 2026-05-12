@@ -5,10 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LocaleProvider } from "@/contexts/LocaleContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import Index from "./pages/Index";
-import Setup from "./pages/Setup";
-import Dashboard from "./pages/Dashboard";
-import AdminPage from "./pages/AdminPage";
 import AdminLayout from "./components/admin/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
 import ProjectsPage from "./pages/admin/ProjectsPage";
@@ -38,10 +34,23 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/setup" element={<Setup />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/admin/legacy" element={<AdminPage />} />
+              <Route path="/" element={<AdminLayout />}>
+                <Route index element={<DashboardPage />} />
+                <Route path="projects" element={<ProjectsPage />} />
+                <Route path="projects/:id" element={<ProjectWorkspacePage />} />
+                <Route path="clients" element={<ClientsPage />} />
+                <Route path="catalog" element={<CatalogPage />} />
+                <Route path="products" element={<ProductsPage />} />
+                <Route path="quotes" element={<QuotesPage />} />
+                <Route path="tools" element={<ToolsPage />} />
+                <Route path="notes" element={<NotesPage />} />
+                <Route path="media" element={<MediaPage />} />
+                <Route path="revenue" element={<RevenuePage />} />
+                <Route path="expenses" element={<ExpensesPage />} />
+                <Route path="site-settings" element={<SiteSettingsPage />} />
+                <Route path="resort-os" element={<ResortOSPage />} />
+                <Route path="feedback" element={<FeedbackPage />} />
+              </Route>
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<DashboardPage />} />
                 <Route path="projects" element={<ProjectsPage />} />
